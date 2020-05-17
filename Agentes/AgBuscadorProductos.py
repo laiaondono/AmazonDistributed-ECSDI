@@ -13,18 +13,22 @@ Asume que el agente de registro esta en el puerto 9000
 @author: javier
 """
 
-from multiprocessing import Process, Queue
-import socket
 import time, random
-from rdflib import Namespace, Graph
-from flask import Flask, request
+import argparse
+import socket
+import sys
 import requests
-
-from AgentUtil.FlaskServer import shutdown_server
-from AgentUtil.Agent import Agent
+from multiprocessing import Queue, Process
+from flask import Flask, request
+from rdflib import URIRef, XSD,Namespace, Graph
+from Util.ACLMessages import *
+from Util.Agent import Agent
+from Util.FlaskServer import shutdown_server
+from Util.Logging import config_logger
+from Util.OntoNamespaces import ONTO
 
 __author__ = 'pau-laia-anna'
-
+logger = config_logger(level=1)
 
 # Configuration stuff
 hostname = socket.gethostname()
@@ -37,7 +41,7 @@ mss_cnt = 0
 
 # Datos del Agente
 
-AgBuscadorProductos = Agent('BuscadorProductos',
+AgBuscadorProductos = Agent('AgBuscadorProductos',
                        agn.AgenteSimple,
                        'http://%s:%d/comm' % (hostname, port),
                        'http://%s:%d/Stop' % (hostname, port))
@@ -56,6 +60,11 @@ cola1 = Queue()
 
 # Flask stuff
 app = Flask(__name__)
+
+def get_count():
+    global mss_cnt
+    mss_cnt += 1
+    return mss_cnt
 
 
 def test_suma():
@@ -83,19 +92,181 @@ def busca():
 
 
 @app.route("/comm")
-def comunicacion():
+def communication():
     """
-    Entrypoint de comunicacion
+    Communication Entrypoint
     """
-    resposta = test_suma()
-    return str(resposta)
+
+    logger.info('Peticion de informacion recibida')
+    global dsGraph
+
+    message = request.args['content']
+    gm = Graph()
+    gm.parse(data=message)
+
+    msgdic = get_message_properties(gm)
+
+    gr = None
+
+    if msgdic is None:
+        # Si no es, respondemos que no hemos entendido el mensaje
+        gr = build_message(Graph(), ACL['not-understood'], sender=AgBuscadorProductos.uri, msgcnt=get_count())
+    else:
+        # Obtenemos la performativa
+        if msgdic['performative'] != ACL.request:
+            # Si no es un request, respondemos que no hemos entendido el mensaje
+            gr = build_message(Graph(),
+                               ACL['not-understood'],
+                               sender=AgBuscadorProductos.uri,
+                               msgcnt=get_count())
+        else:
+            # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
+            # de registro
+            content = msgdic['content']
+            # Averiguamos el tipo de la accion
+            accion = gm.value(subject=content, predicate=RDF.type)
+
+            # Accion de busqueda
+            if accion == ONTO.BuscarProductos:
+                """
+                restriccions = gm.objects(content, ECSDI.Restringe)
+                restriccions_dict = {}
+                for restriccio in restriccions:
+                    if gm.value(subject=restriccio, predicate=RDF.type) == ECSDI.Restriccion_Marca:
+                        marca = gm.value(subject=restriccio, predicate=ECSDI.Marca)
+                        logger.info('MARCA: ' + marca)
+                        restriccions_dict['brand'] = marca
+                    elif gm.value(subject=restriccio, predicate=RDF.type) == ECSDI.Restriccion_modelo:
+                        modelo = gm.value(subject=restriccio, predicate=ECSDI.Modelo)
+                        logger.info('MODELO: ' + modelo)
+                        restriccions_dict['model'] = modelo
+                    elif gm.value(subject=restriccio, predicate=RDF.type) == ECSDI.Rango_precio:
+                        preu_max = gm.value(subject=restriccio, predicate=ECSDI.Precio_max)
+                        preu_min = gm.value(subject=restriccio, predicate=ECSDI.Precio_min)
+                        if preu_min:
+                            logger.info('Preu minim: ' + preu_min)
+                            restriccions_dict['min_price'] = preu_min.toPython()
+                        if preu_max:
+                            logger.info('Preu maxim: ' + preu_max)
+                            restriccions_dict['max_price'] = preu_max.toPython()
+
+                gr = findProducts(**restriccions_dict)
+
+            # Accion de comprar
+            elif accion == ECSDI.Peticion_compra:
+                logger.info("He rebut la peticio de compra")
+
+                sell = None
+                for item in gm.subjects(RDF.type, ECSDI.Compra):
+                    sell = item
+
+                gm.remove((content, None, None))
+                for item in gm.subjects(RDF.type, ACL.FipaAclMessage):
+                    gm.remove((item, None, None))
+
+                content = ECSDI['Vull_comprar_' + str(get_count())]
+                gm.add((content, RDF.type, ECSDI.Vull_comprar))
+                gm.add((content, ECSDI.compra, URIRef(sell)))
+                gr = gm
+
+                financial = get_agent_info(agn.FinancialAgent, DirectoryAgent, SellerAgent, get_count())
+
+                gr = send_message(
+                    build_message(gr, perf=ACL.request, sender=SellerAgent.uri, receiver=financial.uri,
+                                  msgcnt=get_count(),
+                                  content=content), financial.address)
+
+            elif accion == ECSDI.Peticion_retorno:
+                logger.info("He rebut la peticio de retorn")
+
+                for item in gm.subjects(RDF.type, ACL.FipaAclMessage):
+                    gm.remove((item, None, None))
+
+                gr = gm
+
+
+                financial = get_agent_info(agn.FinancialAgent, DirectoryAgent, SellerAgent, get_count())
+
+                gr = send_message(
+                    build_message(gr, perf=ACL.request, sender=SellerAgent.uri, receiver=financial.uri,
+                                  msgcnt=get_count(),
+                                  content=content), financial.address)
+
+            # No habia ninguna accion en el mensaje
+            else:
+                gr = build_message(Graph(),
+                                   ACL['not-understood'],
+                                   sender=DirectoryAgent.uri,
+                                   msgcnt=get_count())
+            """
+    logger.info('Respondemos a la peticion')
+
+    #serialize = gr.serialize(format='xml')
+    return "Peticion de busqueda recibida"
+
   
-@app.route("/search")
+@app.route("/searchtest")
 def busca():
     """
     Entrypoint de comunicacion
     """
+    query = """
+        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+        prefix default:<http://www.owl-ontologies.com/ECSDIAmazon.owl#>
+        prefix owl:<http://www.w3.org/2002/07/owl#>
+        SELECT DISTINCT ?producto ?nombre ?marca ?modelo ?precio ?peso
+        where {
+            { ?producto rdf:type default:Producto } UNION { ?producto rdf:type default:Producto_externo } .
+            ?producto default:Nombre ?nombre .
+            ?producto default:Marca ?marca .
+            ?producto default:Modelo ?modelo .
+            ?producto default:Precio ?precio .
+            ?producto default:Peso ?peso .
+            FILTER("""
+
+    if model is not None:
+        query += """str(?modelo) = '""" + model + """'"""
+        first = 1
+
+    if brand is not None:
+        if first == 1:
+            query += """ && """
+        query += """str(?marca) = '""" + brand + """'"""
+        second = 1
+
+    if first == 1 or second == 1:
+        query += """ && """
+    query += """?precio >= """ + str(min_price) + """ &&
+                ?precio <= """ + str(max_price) + """  )}
+                order by asc(UCASE(str(?nombre)))"""
+
+    graph_query = graph.query(query)
     resposta = busca()
+    """
+g = Graph()
+ 
+g.parse('C:/Users/pauca/Desktop/ECSDI/Ontologia.owl', format='xml')
+name = Namespace('C:/Users/pauca/Desktop/ECSDI/Ontologia.owl')
+#print(g.triples(None,FOAF.name,"hasdh"))
+
+for s, p, o in g:
+    if (str(s) == "http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4#Producto_5PLUYF"):
+        print(str(p) + " : " +str(o))
+    #print("Sujeto " + str(s))
+    #print("Predicado " + str(p))
+    #print("Objeto " + str(o))
+
+node = URIRef('http://mundo.mundial.org/persona/pedro')
+
+res = g.query( PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                    SELECT DISTINCT ?a ?Nombre
+                    WHERE {
+                        ?a foaf:age ?PrecioProducto .
+                        ?a foaf:name ?Nombre .
+                        FILTER {?PrecioProducto > 18}
+                        })
+                        """
     return str(resposta)  
     
 
