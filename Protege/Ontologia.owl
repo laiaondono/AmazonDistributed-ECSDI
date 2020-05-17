@@ -1,0 +1,794 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY OntologiaECSDI "http://www.owl-ontologies.com/OntologiaECSDI.owl#" >
+    <!ENTITY untitled-ontology-4 "http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4"
+     xml:base="http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-4="http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4#"
+     xmlns:OntologiaECSDI="http://www.owl-ontologies.com/OntologiaECSDI.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl">
+        <rdfs:comment></rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene -->
+
+    <owl:ObjectProperty rdf:about="&OntologiaECSDI;Contiene">
+        <rdfs:comment>Un lote contiene un conjunto de compras. Estas compras pueden ser pedidos completos que van a un mismo centro logístico o la subdivisión de un pedido en forma de subcompras para que cada centro logístico  pueda hacer llegar los productos de esta subcompra al cliente.</rdfs:comment>
+        <rdfs:range rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Lote"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#EntregadaPor -->
+
+    <owl:ObjectProperty rdf:about="&OntologiaECSDI;EntregadaPor">
+        <rdfs:comment>Esta relación indica que transportista entregará los productos de la compra.</rdfs:comment>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:range rdf:resource="&OntologiaECSDI;Transportista"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#EnviadoPor -->
+
+    <owl:ObjectProperty rdf:about="&OntologiaECSDI;EnviadoPor">
+        <rdfs:comment>En esta relación se indica el transportista que encargado de entregar el lote.</rdfs:comment>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Lote"/>
+        <rdfs:range rdf:resource="&OntologiaECSDI;Transportista"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#FacturaCompra -->
+
+    <owl:ObjectProperty rdf:about="&OntologiaECSDI;FacturaCompra">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:range rdf:resource="&OntologiaECSDI;Factura"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Procesa -->
+
+    <owl:ObjectProperty rdf:about="&OntologiaECSDI;Procesa">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;CentroLogístico"/>
+        <rdfs:range rdf:resource="&OntologiaECSDI;Compra"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosCompra -->
+
+    <owl:ObjectProperty rdf:about="&OntologiaECSDI;ProductosCompra">
+        <rdfs:comment>Una compra contiene unos productos.</rdfs:comment>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:range rdf:resource="&OntologiaECSDI;Producto"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#RestringidaPor -->
+
+    <owl:ObjectProperty rdf:about="&OntologiaECSDI;RestringidaPor">
+        <rdfs:comment>Esta relación indica las restricciones que deberan aplicarse a la búsqueda correspondiente.</rdfs:comment>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;BuscarProductos"/>
+        <rdfs:range rdf:resource="&OntologiaECSDI;Restricciones"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Ciudad -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;Ciudad">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;CentroLogístico"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Lote"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Fecha -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;Fecha">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:range rdf:resource="&xsd;dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Identificador -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;Identificador">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Accion"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;CentroLogístico"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Factura"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Lote"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Producto"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Restricciones"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Transportista"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Marca -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;Marca">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Producto"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;RestriccionMarca"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Nombre -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;Nombre">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Producto"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;RestriccionNombre"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Transportista"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Peso -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;Peso">
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioProducto -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;PrecioProducto">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Producto"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;RestriccionPrecio"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioTotal -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;PrecioTotal">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrioridadEntrega -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;PrioridadEntrega">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Lote"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#TarjetaCredito -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;TarjetaCredito">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Compra"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Valoracion -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;Valoracion">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;Producto"/>
+        <rdfs:domain rdf:resource="&OntologiaECSDI;RestriccionValoracion"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;Accion"/>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#BuscarProductos -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;BuscarProductos">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;Accion"/>
+        <rdfs:comment>Se buscan los productos aplicando las restricciones indicadas por el agente asistente y se le envian los productos resultantes.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#CentroLogístico -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;CentroLogístico"/>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;Compra">
+        <rdfs:comment>Esta clase representa la compra de ciertos productos por parte del agente asistente.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#ConsensuarTransportista -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;ConsensuarTransportista">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;EnviarPaquete"/>
+        <rdfs:comment>Se propone el envío de cierto número de paquetes indicando una ciudad de destino y un plazo máximo de entrega a un conjunto de servicios de transporte.
+Se elige un transportista para el envío de un lote, se le notifica del transporte que deberá realizar y se envía la información completa de la compra al agente asistente (fecha de entrega y nombre del transportista).
+Esta acción seguirá el protocolo FIPA-Contract-Net.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#EnviarPaquete -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;EnviarPaquete">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;Accion"/>
+        <rdfs:comment>Se asigna la entrega de la compra al centro logístico más cercano al cliente. Este centro logístico creará unos lotes que seran entregados por un transportista tras haber llegado a un acuerdo con el centro logístico.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;Factura"/>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#GenerarLotesEnvio -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;GenerarLotesEnvio">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;EnviarPaquete"/>
+        <rdfs:comment>Se instancian los lotes a enviar a partir de la ciudad de destino y la prioridad de los pedidos que hay que entregar.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;HacerPedido">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;Accion"/>
+        <rdfs:comment>Se crea la compra de los productos del pedido recibido por el agente asistente, se le envía la factura y se devuelve la instancia de la compra generada.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;Lote">
+        <rdfs:comment>En esta clase se representan los lotes de productos.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;Producto"/>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#RestriccionMarca -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;RestriccionMarca">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;Restricciones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#RestriccionNombre -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;RestriccionNombre">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;Restricciones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#RestriccionPrecio -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;RestriccionPrecio">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;Restricciones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#RestriccionValoracion -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;RestriccionValoracion">
+        <rdfs:subClassOf rdf:resource="&OntologiaECSDI;Restricciones"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Restricciones -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;Restricciones">
+        <rdfs:comment>Restricciones que indica el agente asistente para poder realizar la búsqueda de productos. Se pueden introducir varios tipos de restricciones, ya se por marca, nombrer, precio o valoración del producto.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Transportista -->
+
+    <owl:Class rdf:about="&OntologiaECSDI;Transportista">
+        <rdfs:comment>Servicio de transporte encargado de entregar al usuario productos comprados por su agente asistente.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_0X70P7 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_0X70P7">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">102.27105342164056</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">8679.171423146836</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>Identificador_0M0IV2</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_52TJL0</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_H7H8N6</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_10M2L2 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_10M2L2">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">164.021083452623</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">5559.854412826924</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>Identificador_K1HQ42</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_QQZIH1</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_94EUO0</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_2M271H -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_2M271H">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">189.6371423136819</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">3781.2109026360517</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Nombre>Nombre_VHRIOY</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_QTYVOW</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_742KWC</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_31WRD3 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_31WRD3">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">423.2398224784357</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">5104.018943609933</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>Identificador_I03RYT</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_XXSDQP</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_9AP9UE</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_39YNMQ -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_39YNMQ">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">1763.5373160189038</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">664.6060809836666</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Identificador>Identificador_CUVGE7</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_DEW0Y3</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_9WB78A</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4D8JUW -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_4D8JUW">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">3073.6299273692157</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">522.4521331135098</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Nombre>Nombre_2LSOON</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_L3YYA4</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_SGYFPG</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FC2MI -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_5FC2MI">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">425.3009778854724</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">810.4762488650796</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Marca>Marca_R2MDE3</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_609T0J</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_K97VNZ</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FPBES -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_5FPBES">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">2333.696814589761</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">950.698918385585</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Marca>Marca_XIN0C1</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_JVATYH</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_J3UGG9</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5JP1L4 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_5JP1L4">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">4381.7987457577465</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">862.213089438277</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Nombre>Nombre_SBUJNB</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_D8VSC3</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_72TDY6</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5PLUYF -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_5PLUYF">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">461.4268744270521</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">8740.529823033128</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Nombre>Nombre_DNKQ8H</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_6560Y0</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_AD0LZL</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_7OT44N -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_7OT44N">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">1627.3826471353448</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">633.7015914097602</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Nombre>Nombre_YT1J3B</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_YTIPMJ</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_0QE83R</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_7X94EJ -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_7X94EJ">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">6054.965444518448</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">761.6690279800325</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Identificador>Identificador_JV6L34</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_C5DTZN</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_GZXBUB</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_9I45O5 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_9I45O5">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">892.044108485548</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">920.519922998887</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Marca>Marca_DACJ1M</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_NVDOMA</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_WK6LLD</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_AMOTBI">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">19.408774393721238</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">362.9045022243116</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>Identificador_W9ZF77</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_33PLEM</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_K5J7IQ</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_B930E8 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_B930E8">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">591.5359374031605</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">7854.1486821249</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>Identificador_64WCM7</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_9N49T0</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_OL3869</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C1PBP1 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_C1PBP1">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">267.19400427926934</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">6310.912403339454</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Nombre>Nombre_7YP645</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_715FPW</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_UGILI9</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C5J4N7 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_C5J4N7">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">1935.1639152428713</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">614.3311847947052</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Marca>Marca_9U9YU4</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_EFR9ZU</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_2D6PPH</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C86GP2 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_C86GP2">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">410.7939099450125</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">9178.949130116405</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Marca>Marca_WQFUUG</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_5GVH5J</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_CMHSNH</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C9WXMR -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_C9WXMR">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">2943.819619862833</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">938.9895761499325</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Identificador>Identificador_98K1Y4</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_U390XK</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_EJ0MP2</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_G4Q24D -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_G4Q24D">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">6769.516141365963</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">863.5395144633754</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Marca>Marca_SESWZS</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_5SBZ9B</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_VSOCWN</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_H6CXR3 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_H6CXR3">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">33.19978260668233</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">4109.0910738591865</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Marca>Marca_R9BWDL</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_27NT6Z</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_GWNUQ3</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_IU0IN2 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_IU0IN2">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">7521.464202917922</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">897.3053170269138</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Identificador>Identificador_6APOMM</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_UOBFRU</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_RBLIHA</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_JPESDP -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_JPESDP">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">76.42498302847068</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">8275.78278299048</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Nombre>Nombre_AYHAOZ</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_7E9UAJ</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_HDOUL3</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_K9K1QJ -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_K9K1QJ">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">1651.7059814325153</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">584.1655297142873</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Nombre>Nombre_EKNDN1</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_33YTO6</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_O4Z902</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_MEK984 -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_MEK984">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">4420.570300766123</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">68.65992910715235</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Marca>Marca_LDAQ77</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_MS2MCD</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_CJDZOV</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_MMTPCW -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_MMTPCW">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">8057.64969586993</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">923.6460241453555</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Nombre>Nombre_DG7DA1</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Identificador>Identificador_25TQNJ</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_KYH9NE</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_NL5LIQ -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_NL5LIQ">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">482.76309325390775</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">6556.1647867542015</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>Identificador_W9RXJV</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_HKZOKC</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_4ZWYM2</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_ONWSKS -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_ONWSKS">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">286.6014438674844</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">6067.054598950926</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Nombre>Nombre_6HUN75</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_05RVGB</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Identificador>Identificador_DW9CE4</OntologiaECSDI:Identificador>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_TYZPFJ -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_TYZPFJ">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">532.0057920781645</OntologiaECSDI:Peso>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">9335.867302749923</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>Identificador_F3NVPD</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Marca>Marca_B98TKS</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Nombre>Nombre_FP7FJ5</OntologiaECSDI:Nombre>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_UOS5GD -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Producto_UOS5GD">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto rdf:datatype="&xsd;double">4743.437756067582</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Peso rdf:datatype="&xsd;double">668.9147342985024</OntologiaECSDI:Peso>
+        <OntologiaECSDI:Identificador>Identificador_1LBLUP</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Nombre_T1BWRH</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>Marca_9E8XXJ</OntologiaECSDI:Marca>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Test -->
+
+    <owl:NamedIndividual rdf:about="&OntologiaECSDI;Test">
+        <rdf:type rdf:resource="&OntologiaECSDI;Producto"/>
+        <OntologiaECSDI:PrecioProducto>40000</OntologiaECSDI:PrecioProducto>
+        <OntologiaECSDI:Identificador>AAAAAAAAA</OntologiaECSDI:Identificador>
+        <OntologiaECSDI:Nombre>Serie 1</OntologiaECSDI:Nombre>
+        <OntologiaECSDI:Marca>BMW</OntologiaECSDI:Marca>
+        <OntologiaECSDI:Peso>1500</OntologiaECSDI:Peso>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+
