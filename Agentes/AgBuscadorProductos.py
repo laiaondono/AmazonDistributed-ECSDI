@@ -20,6 +20,7 @@ import sys
 import requests
 from multiprocessing import Queue, Process
 from flask import Flask, request
+from pyparsing import Literal
 from rdflib import URIRef, XSD,Namespace, Graph
 from Util.ACLMessages import *
 from Util.Agent import Agent
@@ -210,39 +211,40 @@ def busca():
     """
     Entrypoint de comunicacion
     """
+    graph = Graph()
+    # WARNING: De moment no m'agafa el PATH relatiu, i li haig de posar l'absolut, s'ha de canviar depen de la màquina que ho executi.
+    ontologyFile = open('/Users/pauca/Documents/GitHub/ECSDI_Practica/Protege/Ontologia.owl')
+    graph.parse(ontologyFile, format='xml')
     query = """
         prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         prefix xsd:<http://www.w3.org/2001/XMLSchema#>
-        prefix default:<http://www.owl-ontologies.com/ECSDIAmazon.owl#>
+        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
         prefix owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?producto ?nombre ?marca ?modelo ?precio ?peso
+        SELECT DISTINCT ?producto ?nombre ?precio 
         where {
             { ?producto rdf:type default:Producto } UNION { ?producto rdf:type default:Producto_externo } .
             ?producto default:Nombre ?nombre .
-            ?producto default:Marca ?marca .
-            ?producto default:Modelo ?modelo .
-            ?producto default:Precio ?precio .
-            ?producto default:Peso ?peso .
-            FILTER("""
-
-    if model is not None:
-        query += """str(?modelo) = '""" + model + """'"""
-        first = 1
-
-    if brand is not None:
-        if first == 1:
-            query += """ && """
-        query += """str(?marca) = '""" + brand + """'"""
-        second = 1
-
-    if first == 1 or second == 1:
-        query += """ && """
-    query += """?precio >= """ + str(min_price) + """ &&
-                ?precio <= """ + str(max_price) + """  )}
-                order by asc(UCASE(str(?nombre)))"""
+            ?producto default:PrecioProducto ?precio
+            FILTER(?precio <1000)
+               }order by asc(UCASE(str(?nombre)))"""
 
     graph_query = graph.query(query)
-    resposta = busca()
+    """
+    result = Graph()
+    result.bind('ONTO',ONTO)
+    product_count=0
+    for row in graph_query:
+        nom = row.nombre
+        model = row.modelo
+        marca = row.marca
+        preu = row.precio
+        peso = row.peso
+        logger.debug(nom, marca, model, preu)
+        subject = row.producto
+        product_count += 1
+        result.add((subject, RDF.type, ONTO.Producte))
+        result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
+    """
     """
 g = Graph()
  
@@ -267,8 +269,12 @@ res = g.query( PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                         FILTER {?PrecioProducto > 18}
                         })
                         """
-    return str(resposta)  
-    
+    result = []
+    for row in graph_query:
+        print(row)
+        result.append(str(row.nombre) + "/" + str(row.precio))
+    return str(result)
+
 
 
 @app.route("/Stop")
