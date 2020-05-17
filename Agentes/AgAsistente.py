@@ -21,8 +21,8 @@ from flask import Flask, request
 import rdflib
 
 
-# from AgentUtil.FlaskServer import shutdown_server
-# from AgentUtil.Agent import Agent
+from Util.FlaskServer import shutdown_server
+from Util.Agent import Agent
 __author__ = 'pau-laia-anna'
 
 
@@ -68,9 +68,9 @@ def suma():
 
 @app.route("/comm")
 def comunicacion():
-    
+    """
     Entrypoint de comunicacion
-    
+    """
     global dsgraph
     global mss_cnt
     return str(resultats)
@@ -78,30 +78,30 @@ def comunicacion():
 
 @app.route("/Stop")
 def stop():
-    
+    """
     Entrypoint que para el agente
 
     :return:
-    
+    """
     tidyup()
     shutdown_server()
     return "Parando Servidor"
 
 
 def tidyup():
-    
+    """
     Acciones previas a parar el agente
-
+    """
     
     pass
 
 
 def agentbehavior1(cola):
-    
+    """
     Un comportamiento del agente
 
     :return:
-    
+    """
     pass
 
 
