@@ -25,11 +25,11 @@ from flask import Flask, request, render_template
 from rdflib import Graph, RDF, Namespace, RDFS
 from rdflib.namespace import FOAF
 
-from AgentUtil.OntoNamespaces import ACL, DSO
-from AgentUtil.FlaskServer import shutdown_server
-from AgentUtil.Agent import Agent
-from AgentUtil.ACLMessages import build_message, get_message_properties
-from AgentUtil.Logging import config_logger
+from Util.OntoNamespaces import ACL, DSO
+from Util.FlaskServer import shutdown_server
+from Util.Agent import Agent
+from Util.ACLMessages import build_message, get_message_properties
+from Util.Logging import config_logger
 
 __author__ = 'javier'
 
@@ -226,6 +226,10 @@ def tidyup():
     """
     global cola1
     cola1.put(0)
+
+
+def register_agent(agent):
+    pass
 
 
 def agentbehavior1(cola):

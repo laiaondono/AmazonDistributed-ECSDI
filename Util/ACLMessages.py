@@ -14,10 +14,10 @@ from rdflib import Graph
 import requests
 from rdflib.namespace import RDF
 
-from AgentUtil.OntoNamespaces import ACL
+from Util.OntoNamespaces import ACL
 
 
-def build_message(gmess, perf, sender=None, receiver=None,  content=None, msgcnt= 0):
+def build_message(gmess, perf, sender=None, receiver=None,  content=None, msgcnt=0):
     """
     Construye un mensaje como una performativa FIPA acl
     Asume que en el grafo que se recibe esta ya el contenido y esta ligado al
