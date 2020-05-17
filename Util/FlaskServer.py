@@ -6,13 +6,13 @@ Created on 31/01/2014 9:31
 
 Diferentes funciones comunes a los agentes implementados en ECSDI
 
-@author: bejar
+@author: pau-laia-anna
 
 """
 
 from flask import request
 
-__author__ = 'bejar'
+__author__ = 'pau-laia-anna'
 
 
 

@@ -8,7 +8,7 @@ __init__.py
 
     
 
-:Authors: bejar
+:Authors: pau-laia-anna
     
 
 :Version: 
@@ -17,4 +17,4 @@ __init__.py
 
 """
 
-__author__ = 'bejar'
+__author__ = 'pau-laia-anna'

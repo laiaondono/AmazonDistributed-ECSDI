@@ -10,7 +10,7 @@ Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
 Asume que el agente de registro esta en el puerto 9000
 
-@author: javier
+@author: pau-laia-anna
 """
 
 from multiprocessing import Process, Queue
