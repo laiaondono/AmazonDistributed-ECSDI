@@ -22,8 +22,7 @@ Logging
 
     Detalles en https://docs.python.org/2/howto/logging.html
 
-:Authors:
-    bejar
+:Authors: pau-laia-anna
 
 :Version: 
 
@@ -32,7 +31,7 @@ Logging
 
 import logging
 
-__author__ = 'bejar'
+__author__ = 'pau-laia-anna'
 
 def config_logger(level=0, file=None):
     """

@@ -10,7 +10,7 @@ Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
 Asume que el agente de registro esta en el puerto 9000
 
-@author: javier
+@author: pau-laia-anna
 """
 
 from multiprocessing import Process, Queue
@@ -20,11 +20,12 @@ from rdflib import URIRef,Namespace, Graph, FOAF
 from flask import Flask, request
 import rdflib
 
-from AgentUtil.FlaskServer import shutdown_server
-from AgentUtil.Agent import Agent
+
+from Util.FlaskServer import shutdown_server
+from Util.Agent import Agent
 __author__ = 'pau-laia-anna'
 
-"""
+
 # Configuration stuff
 hostname = socket.gethostname()
 port = 9011
@@ -67,9 +68,9 @@ def suma():
 
 @app.route("/comm")
 def comunicacion():
-    
+    """
     Entrypoint de comunicacion
-    
+    """
     global dsgraph
     global mss_cnt
     return str(resultats)
@@ -77,30 +78,30 @@ def comunicacion():
 
 @app.route("/Stop")
 def stop():
-    
+    """
     Entrypoint que para el agente
 
     :return:
-    
+    """
     tidyup()
     shutdown_server()
     return "Parando Servidor"
 
 
 def tidyup():
-    
+    """
     Acciones previas a parar el agente
-
+    """
     
     pass
 
 
 def agentbehavior1(cola):
-    
+    """
     Un comportamiento del agente
 
     :return:
-    
+    """
     pass
 
 
@@ -115,26 +116,3 @@ if __name__ == '__main__':
     # Esperamos a que acaben los behaviors
     ab1.join()
     print('The End')
-"""
-g = Graph()
- 
-g.parse('C:/Users/pauca/Desktop/ECSDI/Ontologia.owl', format='xml')
-name = Namespace('C:/Users/pauca/Desktop/ECSDI/Ontologia.owl')
-#print(g.triples(None,FOAF.name,"hasdh"))
-"""
-for s, p, o in g:
-    if (str(s) == "http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4#Producto_5PLUYF"):
-        print(str(p) + " : " +str(o))
-    #print("Sujeto " + str(s))
-    #print("Predicado " + str(p))
-    #print("Objeto " + str(o))
-"""
-node = URIRef('http://mundo.mundial.org/persona/pedro')
-
-res = g.query(""" PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    SELECT DISTINCT ?a ?Nombre
-                    WHERE {
-                        ?a foaf:age ?PrecioProducto .
-                        ?a foaf:name ?Nombre .
-                        FILTER {?PrecioProducto > 18}
-                        }""")
