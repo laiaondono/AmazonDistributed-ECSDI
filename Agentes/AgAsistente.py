@@ -158,7 +158,8 @@ def search_products():
 
             products_list = []
             product = {}
-            for row in gproducts:
+            for s,p,o in gproducts:
+                """
                 product['url'] = row.producto
                 product['id'] = row.id
                 product['name'] = row.nombre
@@ -175,8 +176,8 @@ def search_products():
                     product['brand'] = o
                 if p == ONTO.Precio:
                     product['price'] = o
-                """
-                products_list.append(product)
+                if product not in products_list:
+                    products_list.append(product)
 
             return render_template('search_products.html', products=products_list)
 
