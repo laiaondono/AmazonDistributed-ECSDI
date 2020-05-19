@@ -39,5 +39,5 @@ GEO = Namespace('http://www.w3.org/2003/01/geo/wgs84_pos#')
 DSO = Namespace('http://www.semanticweb.org/directory-service-ontology#')
 
 # ECSDI Ontology Namespace
-ONTO = Namespace('http://www.owl-ontologies.com/OntologiaECSDI.owl')
+ONTO = Namespace('http://www.owl-ontologies.com/OntologiaECSDI.owl#')
 

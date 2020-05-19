@@ -23,8 +23,10 @@ from Util.ACLMessages import build_message, send_message
 from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ONTO, ACL
+from Util.Logging import config_logger
 
 __author__ = 'pau-laia-anna'
+logger = config_logger(level=1)
 
 # Configuration stuff
 hostname = socket.gethostname()
@@ -113,7 +115,6 @@ def search_products():
             minPrice = request.form['minPrice']
             maxPrice = request.form['maxPrice']
             brand = request.form['brand']
-            print(name + " " + minPrice + " " + maxPrice + " " + brand)
             global mss_cnt
             g = Graph()
 
@@ -147,37 +148,27 @@ def search_products():
             msg = build_message(g, ACL.request, AgAsistente.uri, AgBuscadorProductos.uri, action, mss_cnt)
             mss_cnt += 1
             gproducts = send_message(msg, AgBuscadorProductos.address)
-            """
-            products_list = []
-            product = {}
-            product['name'] = "nomproductttt"
-            product['brand'] = "nbrandroductttt"
-            product['price'] = 33
-            products_list.append(product)
-            """
 
             products_list = []
-            product = {}
-            for s,p,o in gproducts:
-                """
-                product['url'] = row.producto
-                product['id'] = row.id
-                product['name'] = row.nombre
-                product['brand'] = row.marca
-                product['price'] = row.precio
-                """
-                if p == RDF.type:
-                    product['url'] = s
-                if p == ONTO.Identificador:
-                    product['id'] = o
-                if p == ONTO.Nombre:
-                    product['name'] = o
-                if p == ONTO.Marca:
-                    product['brand'] = o
-                if p == ONTO.Precio:
-                    product['price'] = o
-                if product not in products_list:
-                    products_list.append(product)
+            subjects_position = {}
+            pos = 0
+            for s, p, o in gproducts:
+                if s not in subjects_position:
+                    subjects_position[s] = pos
+                    pos += 1
+                    products_list.append({})
+                if s in subjects_position:
+                    product = products_list[subjects_position[s]]
+                    if p == RDF.type:
+                        product['url'] = s
+                    if p == ONTO.Identificador:
+                        product['id'] = o
+                    if p == ONTO.Nombre:
+                        product['name'] = o
+                    if p == ONTO.Marca:
+                        product['brand'] = o
+                    if p == ONTO.Precio:
+                        product['price'] = o
 
             return render_template('search_products.html', products=products_list)
 

@@ -21,16 +21,17 @@
         <form method="post">
             <table cellpadding="5px">
                 <tr>
+                    <th><b></b></th>
                     <th><b>NOMBRE</b></th>
                     <th><b>MARCA</b></th>
                     <th><b>PRECIO</b></th>
                 </tr>
                 {% for p in products %}
                     <tr>
+                        <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
                         <td>{{ p.name }}</td>
                         <td>{{ p.brand }}</td>
                         <td>{{ p.price }}</td>
-                        <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
                     </tr>
                 {% endfor %}
             </table>

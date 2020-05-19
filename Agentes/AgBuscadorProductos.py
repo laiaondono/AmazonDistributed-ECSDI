@@ -310,9 +310,10 @@ def agentbehavior1(cola):
     """
     pass
 
+
 def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.float_info.max, nombre=None):
     graph = Graph()
-    ontologyFile = open('/Users/pauca/Documents/GitHub/ECSDI_Practica/Protege/Ontologia.owl')
+    ontologyFile = open('../Protege/Ontologia.owl')
     graph.parse(ontologyFile, format='xml')
 
     first = second = 0
@@ -336,11 +337,11 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
     #if valoracion is not None:
         #query += """str(?valoracion) = '""" + str(valoracion) + """'"""
     if marca is not None:
-        if first==1:
+        if first == 1:
             query += """ && """
         query += """str(?marca) = '""" + marca + """'"""
-        second == 1
-    if first==1 or second == 1:
+        second = 1
+    if first == 1 or second == 1:
         query += """ && """
     query += """?precio >= """ + str(preciomin) + """ &&
                 ?precio <= """ + str(preciomax) + """  )}
@@ -360,14 +361,12 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         subject = row.producto
         product_count += 1
         result.add((subject, RDF.type, ONTO.Producto))
-        result.add((subject, ONTO.Marca, Literal(marca,datatype=XSD.string)))
+        result.add((subject, ONTO.Marca, Literal(marca, datatype=XSD.string)))
         result.add((subject, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
         result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
         result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
     return result
-
-
 
 
 if __name__ == '__main__':
