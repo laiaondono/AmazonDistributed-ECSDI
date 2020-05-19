@@ -21,7 +21,7 @@ import requests
 from multiprocessing import Queue, Process
 from flask import Flask, request
 from pyparsing import Literal
-from rdflib import URIRef, XSD,Namespace, Graph
+from rdflib import URIRef, XSD, Namespace, Graph
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.FlaskServer import shutdown_server
@@ -43,16 +43,15 @@ mss_cnt = 0
 # Datos del Agente
 
 AgBuscadorProductos = Agent('AgBuscadorProductos',
-                       agn.AgenteSimple,
-                       'http://%s:%d/comm' % (hostname, port),
-                       'http://%s:%d/Stop' % (hostname, port))
+                            agn.AgenteSimple,
+                            'http://%s:%d/comm' % (hostname, port),
+                            'http://%s:%d/Stop' % (hostname, port))
 
 # Directory agent address
 DirectoryAgent = Agent('DirectoryAgent',
                        agn.Directory,
                        'http://%s:9000/Register' % hostname,
                        'http://%s:9000/Stop' % hostname)
-
 
 # Global triplestore graph
 dsgraph = Graph()
@@ -62,6 +61,7 @@ cola1 = Queue()
 # Flask stuff
 app = Flask(__name__)
 
+
 def get_count():
     global mss_cnt
     mss_cnt += 1
@@ -69,27 +69,29 @@ def get_count():
 
 
 def test_suma():
-    peticion = {"numero1": random.randint(0,400), "numero2": random.randint(0,400)}
+    peticion = {"numero1": random.randint(0, 400), "numero2": random.randint(0, 400)}
     port_agprova = 9011
     uri = 'http://desktop-lrtmd2a:9011/sum'
     print(uri)
     print(peticion)
     headers = {'content-type': 'application/json'}
-    r= requests.get(uri,params=peticion, headers = headers)
+    r = requests.get(uri, params=peticion, headers=headers)
     print(r.text)
     return r.text
 
 
 def busca():
-    peticion = {"numero1": random.randint(0,400), "numero2": random.randint(0,400)}
+    peticion = {"numero1": random.randint(0, 400), "numero2": random.randint(0, 400)}
     port_agprova = 9011
     uri = 'http://desktop-lrtmd2a:9011/sum'
     print(uri)
     print(peticion)
     headers = {'content-type': 'application/json'}
-    r= requests.get(uri,params=peticion, headers = headers)
+    r = requests.get(uri, params=peticion, headers=headers)
     print(r.text)
     return r.text
+
+
 
 
 @app.route("/comm")
@@ -129,31 +131,36 @@ def communication():
 
             # Accion de busqueda
             if accion == ONTO.BuscarProductos:
-                """
-                restriccions = gm.objects(content, ECSDI.Restringe)
+                restriccions = gm.objects(content, ONTO.RestringidaPor)
                 restriccions_dict = {}
                 for restriccio in restriccions:
-                    if gm.value(subject=restriccio, predicate=RDF.type) == ECSDI.Restriccion_Marca:
-                        marca = gm.value(subject=restriccio, predicate=ECSDI.Marca)
-                        logger.info('MARCA: ' + marca)
-                        restriccions_dict['brand'] = marca
-                    elif gm.value(subject=restriccio, predicate=RDF.type) == ECSDI.Restriccion_modelo:
-                        modelo = gm.value(subject=restriccio, predicate=ECSDI.Modelo)
-                        logger.info('MODELO: ' + modelo)
-                        restriccions_dict['model'] = modelo
-                    elif gm.value(subject=restriccio, predicate=RDF.type) == ECSDI.Rango_precio:
-                        preu_max = gm.value(subject=restriccio, predicate=ECSDI.Precio_max)
-                        preu_min = gm.value(subject=restriccio, predicate=ECSDI.Precio_min)
-                        if preu_min:
-                            logger.info('Preu minim: ' + preu_min)
-                            restriccions_dict['min_price'] = preu_min.toPython()
-                        if preu_max:
-                            logger.info('Preu maxim: ' + preu_max)
-                            restriccions_dict['max_price'] = preu_max.toPython()
+                    if gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionMarca:
+                        marca = gm.value(subject=restriccio, predicate=ONTO.Marca)
+                        logger.info('BÚSQUEDA->Restriccion de Marca: ' + marca)
+                        restriccions_dict['marca'] = marca
 
-                gr = findProducts(**restriccions_dict)
+                    elif gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionPrecio:
+                        preciomax = gm.value(subject=restriccio, predicate=ONTO.PrecioMaximo)
+                        preciomin = gm.value(subject=restriccio, predicate=ONTO.PrecioMinimo)
+                        if preciomin:
+                            logger.info('BÚSQUEDA->Restriccion de precio maximo:' + preciomin)
+                            restriccions_dict['preciomin'] = preciomin.toPython()
+                        if preciomax:
+                            logger.info('BÚSQUEDA->Restriccion de precio maximo:' + preciomax)
+                            restriccions_dict['preciomax'] = preciomax.toPython()
+                    elif gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionNombre:
+                        nombre = gm.value(subject=restriccio, predicate=ONTO.Nombre)
+                        logger.info('BÚSQUEDA->Restriccion de Nombre: ' + marca)
+                        restriccions_dict['nombre'] = nombre
+                    elif gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionValoracion:
+                        valoracion = gm.value(subject=restriccio, predicate=ONTO.Valoracion)
+                        logger.info('BÚSQUEDA->Restriccion de Valoracion: ' + valoracion)
+                        restriccions_dict['valoracion'] = valoracion
+
+                gr = buscar_productos(**restriccions_dict)
 
             # Accion de comprar
+            """
             elif accion == ECSDI.Peticion_compra:
                 logger.info("He rebut la peticio de compra")
 
@@ -201,11 +208,10 @@ def communication():
                                    msgcnt=get_count())
             """
     logger.info('Respondemos a la peticion')
+    serialize = gr.serialize(format='xml')
+    return serialize, 200
 
-    #serialize = gr.serialize(format='xml')
-    return "Peticion de busqueda recibida"
 
-  
 @app.route("/searchtest")
 def busca():
     """
@@ -276,7 +282,6 @@ res = g.query( PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     return str(result)
 
 
-
 @app.route("/Stop")
 def stop():
     """
@@ -305,6 +310,61 @@ def agentbehavior1(cola):
     """
     pass
 
+def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.float_info.max, nombre=None):
+    graph = Graph()
+    ontologyFile = open('/Users/pauca/Documents/GitHub/ECSDI_Practica/Protege/Ontologia.owl')
+    graph.parse(ontologyFile, format='turtle')
+
+    first = second = 0
+    query = """
+        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+        prefix owl:<http://www.w3.org/2002/07/owl#>
+        SELECT DISTINCT ?producto ?nombre ?precio 
+        where {
+            { ?producto rdf:type default:Producto }.
+            ?producto default:Nombre ?nombre .
+            ?producto default:PrecioProducto ?precio .
+            ?producto default:Identificador ?id .
+            ?producto default:Valoracion ?valoracion .
+            FILTER("""
+
+    if nombre is not None:
+        query += """str(?nombre) = '""" + nombre + """'"""
+    if valoracion is not None:
+        query += """str(?valoracion) = '""" + valoracion + """'"""
+    if marca is not None:
+        query += """ && """
+        query += """str(?marca) = '""" + marca + """'"""
+    query += """ && """
+    query += """?precio >= """ + str(preciomin) + """ &&
+                ?precio <= """ + str(preciomax) + """  )}
+                order by asc(UCASE(str(?nombre)))"""
+
+    graph_query = graph.query(query)
+    result = Graph()
+    # Aqui hi havia un bind
+    product_count = 0
+    for row in graph_query:
+        nom = row.nombre
+        valoracion = row.valoracion
+        marca = row.marca
+        precio = row.precio
+        id = row.id
+        logger.debug(id, nom, marca, valoracion, precio)
+        subject = row.producto
+        product_count += 1
+        result.add((subject, RDF.type, ONTO.Producte))
+        result.add((subject, ONTO.Marca, Literal(marca, datatype=XSD.string)))
+        result.add((subject, ONTO.Valoracion, Literal(valoracion, datatype=XSD.float)))
+        result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
+        result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
+        result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
+    return result
+
+
+
 
 if __name__ == '__main__':
     # Ponemos en marcha los behaviors
@@ -317,5 +377,3 @@ if __name__ == '__main__':
     # Esperamos a que acaben los behaviors
     ab1.join()
     print('The End')
-
-
