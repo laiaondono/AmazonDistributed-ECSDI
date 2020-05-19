@@ -51,7 +51,7 @@ DirectoryAgent = Agent('DirectoryAgent',
 
 AgBuscadorProductos = Agent('AgBuscadorProductos',
                             agn.AgBuscadorProductos,
-                            'http://%s:9010/Search' % hostname,
+                            'http://%s:9010/comm' % hostname,
                             'http://%s:9010/Stop' % hostname)
 
 # Global triplestore graph
@@ -110,7 +110,7 @@ def search_products():
     else:
         if request.form['submit'] == 'Busca':
             name = request.form['name']
-            minPrice = request.form['maxPrice']
+            minPrice = request.form['minPrice']
             maxPrice = request.form['maxPrice']
             brand = request.form['brand']
             global mss_cnt

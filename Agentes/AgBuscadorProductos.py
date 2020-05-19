@@ -143,14 +143,14 @@ def communication():
                         preciomax = gm.value(subject=restriccio, predicate=ONTO.PrecioMaximo)
                         preciomin = gm.value(subject=restriccio, predicate=ONTO.PrecioMinimo)
                         if preciomin:
-                            logger.info('BÚSQUEDA->Restriccion de precio maximo:' + preciomin)
+                            logger.info('BÚSQUEDA->Restriccion de precio minimo:' + preciomin)
                             restriccions_dict['preciomin'] = preciomin.toPython()
                         if preciomax:
                             logger.info('BÚSQUEDA->Restriccion de precio maximo:' + preciomax)
                             restriccions_dict['preciomax'] = preciomax.toPython()
                     elif gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionNombre:
                         nombre = gm.value(subject=restriccio, predicate=ONTO.Nombre)
-                        logger.info('BÚSQUEDA->Restriccion de Nombre: ' + marca)
+                        logger.info('BÚSQUEDA->Restriccion de Nombre: ' + nombre)
                         restriccions_dict['nombre'] = nombre
                     elif gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionValoracion:
                         valoracion = gm.value(subject=restriccio, predicate=ONTO.Valoracion)
@@ -313,7 +313,7 @@ def agentbehavior1(cola):
 def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.float_info.max, nombre=None):
     graph = Graph()
     ontologyFile = open('/Users/pauca/Documents/GitHub/ECSDI_Practica/Protege/Ontologia.owl')
-    graph.parse(ontologyFile, format='turtle')
+    graph.parse(ontologyFile, format='xml')
 
     first = second = 0
     query = """
@@ -321,41 +321,45 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         prefix xsd:<http://www.w3.org/2001/XMLSchema#>
         prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
         prefix owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?producto ?nombre ?precio 
+        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca
         where {
             { ?producto rdf:type default:Producto }.
             ?producto default:Nombre ?nombre .
             ?producto default:PrecioProducto ?precio .
-            ?producto default:Identificador ?id .
-            ?producto default:Valoracion ?valoracion .
+            ?producto default:Marca ?marca .
+            ?producto default:Identificador ?id 
             FILTER("""
 
     if nombre is not None:
         query += """str(?nombre) = '""" + nombre + """'"""
-    if valoracion is not None:
-        query += """str(?valoracion) = '""" + valoracion + """'"""
+        first = 1
+    #if valoracion is not None:
+        #query += """str(?valoracion) = '""" + str(valoracion) + """'"""
     if marca is not None:
-        query += """ && """
+        if first==1:
+            query += """ && """
         query += """str(?marca) = '""" + marca + """'"""
-    query += """ && """
+        second == 1
+    if first==1 or second == 1:
+        query += """ && """
     query += """?precio >= """ + str(preciomin) + """ &&
                 ?precio <= """ + str(preciomax) + """  )}
                 order by asc(UCASE(str(?nombre)))"""
-
+    logger.info(query)
     graph_query = graph.query(query)
     result = Graph()
     # Aqui hi havia un bind
     product_count = 0
     for row in graph_query:
+        logger.info(row.nombre)
         nom = row.nombre
-        valoracion = row.valoracion
         marca = row.marca
         precio = row.precio
         id = row.id
         logger.debug(id, nom, marca, valoracion, precio)
         subject = row.producto
         product_count += 1
-        result.add((subject, RDF.type, ONTO.Producte))
+        result.add((subject, RDF.type, ONTO.Producto))
         result.add((subject, ONTO.Marca, Literal(marca, datatype=XSD.string)))
         result.add((subject, ONTO.Valoracion, Literal(valoracion, datatype=XSD.float)))
         result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
