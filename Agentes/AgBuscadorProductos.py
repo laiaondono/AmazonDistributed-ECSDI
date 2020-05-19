@@ -21,7 +21,7 @@ import requests
 from multiprocessing import Queue, Process
 from flask import Flask, request
 from pyparsing import Literal
-from rdflib import URIRef, XSD, Namespace, Graph
+from rdflib import URIRef, XSD, Namespace, Graph,Literal
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.FlaskServer import shutdown_server
@@ -360,8 +360,8 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         subject = row.producto
         product_count += 1
         result.add((subject, RDF.type, ONTO.Producto))
-        result.add((subject, ONTO.Marca, Literal(marca, datatype=XSD.string)))
-        result.add((subject, ONTO.Valoracion, Literal(valoracion, datatype=XSD.float)))
+        result.add((subject, ONTO.Marca, Literal(marca,datatype=XSD.string)))
+        result.add((subject, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
         result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
         result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))

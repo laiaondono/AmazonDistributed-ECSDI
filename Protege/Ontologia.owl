@@ -181,11 +181,29 @@
     
 
 
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioMaximo -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;PrecioMaximo">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;RestriccionPrecio"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioMinimo -->
+
+    <owl:DatatypeProperty rdf:about="&OntologiaECSDI;PrecioMinimo">
+        <rdfs:domain rdf:resource="&OntologiaECSDI;RestriccionPrecio"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioProducto -->
 
     <owl:DatatypeProperty rdf:about="&OntologiaECSDI;PrecioProducto">
         <rdfs:domain rdf:resource="&OntologiaECSDI;Producto"/>
-        <rdfs:domain rdf:resource="&OntologiaECSDI;RestriccionPrecio"/>
         <rdfs:range rdf:resource="&xsd;float"/>
     </owl:DatatypeProperty>
     

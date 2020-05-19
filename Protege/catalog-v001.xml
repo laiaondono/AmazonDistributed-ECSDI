@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="http://www.ict-omelette.eu/" uri="ECSDI/ECSDI2020/Ontologias/limon.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="http://www.nuin.org/ontology/fipa/acl" uri="ECSDI/exemple.owl.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="http://www.owl-ontologies.com/ECSDIAmazon.owl" uri="ECSDI/practica_exemple.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="http://www.semanticweb.org/directory-service-ontology" uri="ECSDI/ECSDI2020/Ontologias/DirectoryServiceOntology.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="http://www.semanticweb.org/directory-service-ontology#" uri="ECSDI/OntologiaExemple.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4" uri="Ontologia.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="shadowed:http://www.nuin.org/ontology/fipa/acl" uri="ECSDI/ECSDI2020/Ontologias/fipa-acl.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="shadowed:http://www.owl-ontologies.com/ECSDIAmazon.owl" uri="ECSDI/ecsdi-amazon-546da5ef50652f45ccf2b851781b95f275e5968c/protege/ECSDIAmazon.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="shadowed:http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4" uri="ECSDI/EntregaOntologia.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="shadowed:http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4" uri="ECSDI/PRACTICA/Protege/Ontologia.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1589886047256" name="shadowed:http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4" uri="ECSDI/ECSDI2020/dades.owl"/>
+    </group>
+</catalog>
