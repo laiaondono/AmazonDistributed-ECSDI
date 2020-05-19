@@ -113,6 +113,7 @@ def search_products():
             minPrice = request.form['minPrice']
             maxPrice = request.form['maxPrice']
             brand = request.form['brand']
+            print(name + " " + minPrice + " " + maxPrice + " " + brand)
             global mss_cnt
             g = Graph()
 
@@ -154,13 +155,27 @@ def search_products():
             product['price'] = 33
             products_list.append(product)
             """
+
             products_list = []
             product = {}
-            for s, o in gproducts:
-                product['url'] = s
-                product['name'] = o
-                product['brand'] = o
-                product['price'] = o
+            for row in gproducts:
+                product['url'] = row.producto
+                product['id'] = row.id
+                product['name'] = row.nombre
+                product['brand'] = row.marca
+                product['price'] = row.precio
+                """
+                if p == RDF.type:
+                    product['url'] = s
+                if p == ONTO.Identificador:
+                    product['id'] = o
+                if p == ONTO.Nombre:
+                    product['name'] = o
+                if p == ONTO.Marca:
+                    product['brand'] = o
+                if p == ONTO.Precio:
+                    product['price'] = o
+                """
                 products_list.append(product)
 
             return render_template('search_products.html', products=products_list)
