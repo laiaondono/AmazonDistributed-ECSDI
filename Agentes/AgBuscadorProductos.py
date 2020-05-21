@@ -366,7 +366,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
         result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
-    return result
+    return result,200
 
 
 if __name__ == '__main__':
