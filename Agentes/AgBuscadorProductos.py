@@ -13,15 +13,13 @@ Asume que el agente de registro esta en el puerto 9000
 @author: javier
 """
 
-import time, random
-import argparse
+import random
 import socket
 import sys
-import requests
 from multiprocessing import Queue, Process
 from flask import Flask, request
 from pyparsing import Literal
-from rdflib import URIRef, XSD, Namespace, Graph,Literal
+from rdflib import XSD, Namespace, Literal
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.FlaskServer import shutdown_server
@@ -366,7 +364,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
         result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
-    return result,200
+    return result
 
 
 if __name__ == '__main__':

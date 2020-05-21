@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="https://lh3.googleusercontent.com/-c9bKgaRfC3Q/AAAAAAAAAAI/AAAAAAAAJUE/Eo2MLCqyiZs/s0-c-k-no-ns/photo.jpg">
+    <title>ECSDI - Hacer pedido</title>
+</head>
+<body>
+    <h1>Hacer pedido</h1>
+    {% if products %}
+        <form method="post">
+            <table cellpadding="5px">
+                <tr>
+                    <th><b></b></th>
+                    <th><b>NOMBRE</b></th>
+                    <th><b>MARCA</b></th>
+                    <th><b>PRECIO</b></th>
+                </tr>
+                {% for p in products %}
+                    <tr>
+                        <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.brand }}</td>
+                        <td>{{ p.price }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <input type="text" name="city" placeholder="Ciudad"/><br>
+            <input type="text" name="priority" placeholder="Prioridad de entrega (1, 2 o 3)"/><br>
+            <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
+            <input type="submit" name="submit" value="Comprar">
+        </form>
+    {% else %}
+
+    {% endif %}
+</body>
+</html>
+
+
+<!-- id, ciudad, prioridad, targetacredito, precio total, numero productos, productos(info) -->
+
+<!-- fecha prevista de entrega, empresa transporte -->

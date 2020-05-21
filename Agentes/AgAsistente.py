@@ -16,6 +16,7 @@ Asume que el agente de registro esta en el puerto 9000
 from multiprocessing import Process, Queue
 import socket
 
+import flask
 from rdflib import Namespace, Graph, RDF, Literal, URIRef
 from flask import Flask, request, render_template
 
@@ -115,24 +116,16 @@ def tidyup():
 @app.route("/search_products", methods=['GET', 'POST'])
 def search_products():
     if request.method == 'GET':
-        return render_template('search_products.html', products=None)
+        return render_template('busqueda_productos.html', products=None)
     else:
         if request.form['submit'] == 'Busca':
+            global products_list
             name = request.form['name']
             minPrice = request.form['minPrice']
             maxPrice = request.form['maxPrice']
             brand = request.form['brand']
-            return render_template('search_products.html', products=buscar_productos(name, minPrice, maxPrice, brand))
-        elif request.form['submit'] == 'Comprar':
-            city = request.form['city']
-            priority = request.form['priority']
-            creditCard = request.form['creditCard']
-            products_to_buy = []
-            for p in request.form.getlist("checkbox"):
-                prod = products_list[int(p)]
-                product_checked = ONTO[prod['nombre']]
-                products_to_buy.append(product_checked)
-            return render_template('search_products.html', products=comprar_productos(products_to_buy, city, priority, creditCard))
+            products_list = buscar_productos(name, minPrice, maxPrice, brand)
+            return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
 
 
 def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = None):
@@ -175,6 +168,9 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
     pos = 0
     for s, p, o in gproducts:
         if s not in subjects_position:
+            print(s)
+            print(p)
+            print(o)
             subjects_position[s] = pos
             pos += 1
             products_list.append({})
@@ -193,20 +189,45 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
     return products_list
 
 
+@app.route("/hacer_pedido", methods=['GET', 'POST'])
+def hacer_pedido():
+    global products_list
+    if request.method == 'GET':
+        return render_template('nuevo_pedido.html', products=products_list, bill=None)
+    else:
+        if request.form['submit'] == 'Comprar':
+            city = request.form['city']
+            priority = request.form['priority']
+            creditCard = request.form['creditCard']
+            products_to_buy = []
+            for p in request.form.getlist("checkbox"):
+                prod = products_list[int(p)]
+                # print("prod " + str(prod))
+                product_checked = prod['url']
+                # print("product_checked " + str(product_checked))
+                products_to_buy.append(product_checked)
+            return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard))
+
+
 def comprar_productos(products_to_buy, city, priority, creditCard):
     global mss_cnt
     g = Graph()
     action = ONTO['HacerPedido_' + str(mss_cnt)]
     g.add((action, RDF.type, ONTO.HacerPedido))
-    g.add((city, ONTO.Ciudad, Literal(city)))
-    g.add((priority, ONTO.PrioridadEntrega, Literal(priority)))
-    g.add((creditCard, ONTO.TargetaCredito, Literal(creditCard)))
+
+    cityonto = ONTO[city]
+    g.add((cityonto, ONTO.Ciudad, Literal(city)))
+    priorityonto = ONTO[city]
+    g.add((priorityonto, ONTO.PrioridadEntrega, Literal(priority)))
+    creditCardonto = ONTO[city]
+    g.add((creditCardonto, ONTO.TargetaCredito, Literal(creditCard)))
     for p in products_to_buy:
-        g.add((action, ONTO.ProductosPedido, URIRef(p)))
+        g.add((action, ONTO.ProductosPedido, p))
+        # print(p)
 
     msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorCompra.uri, action, mss_cnt)
     mss_cnt += 1
-    factura = send_message(msg, AgGestorCompra.address)
+    gfactura = send_message(msg, AgGestorCompra.address)
 
     #rel productoscompra uriref productos, NumeroProductos, preciotitala
     products_bought = []
@@ -215,8 +236,8 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
     pos = 0
     msgdic = get_message_properties(g)
     content = msgdic['content']
-    prods = factura.objects(content, ONTO.ProductosCompra)
-    for s, p, o in factura:
+    prods = gfactura.objects(content, ONTO.ProductosCompra)
+    for s, p, o in gfactura:
         if s not in subjects_position:
             subjects_position[s] = pos
             pos += 1

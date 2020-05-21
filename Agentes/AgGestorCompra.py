@@ -112,19 +112,20 @@ def communication():
             if accion == ONTO.HacerPedido:
                 productos = gm.objects(content, ONTO.ProductosPedido)
                 numero_productos = 0
-                precio_total = 0
+                precio_total = 0.0
                 factura = gm
                 count = str(get_count())
                 identificador = ONTO["Factura_" + count]
                 accion = ONTO["EnviarFactura_" + count]
-                g.add((accion, RDF.type, ONTO.EnviarFactura))
+                factura.add((accion, RDF.type, ONTO.EnviarFactura))
                 factura.add((identificador, RDF.type, ONTO.Factura))
                 for producto in productos:
                     factura.add((identificador, ONTO.ProductosCompra, URIRef(producto)))
                     numero_productos += 1
-                    precio_total += gm.value(subject=producto, predicate=ONTO.PrecioProducto)
-                factura.add((identificador, ONTO.NumeroProductos, Literal(numero_productos, datatype=XSD.integer)))
-                factura.add((identificador, ONTO.PrecioTotal, Literal(precio_total, datatype=XSD.float)))
+                    print("OBJ " + str(gm.value(subject=producto, predicate=ONTO.PrecioProducto)))
+                    precio_total += float(str(gm.value(subject=producto, predicate=ONTO.PrecioProducto)))
+                factura.add((identificador, ONTO.NumeroProductos, Literal(numero_productos)))
+                factura.add((identificador, ONTO.PrecioTotal, Literal(precio_total)))
                 msg = build_message(factura, ACL.response, AgGestorCompra.uri, AgAsistente.uri, accion, count)
                 send_message(msg, AgAsistente.address)
                 procesar_compra(count, gm, precio_total, factura)
@@ -152,3 +153,25 @@ def procesar_compra(count=0, gm=Graph(), factura=Graph()):
     msg = build_message(compra, ACL.request, AgGestorCompra.uri, AgProcesadorPedidos.uri, accion, count)
     send_message(msg, AgProcesadorPedidos.address)
     """
+
+
+def agentbehavior1(cola):
+    """
+    Un comportamiento del agente
+
+    :return:
+    """
+    pass
+
+
+if __name__ == '__main__':
+    # Ponemos en marcha los behaviors
+    ab1 = Process(target=agentbehavior1, args=(cola1,))
+    ab1.start()
+
+    # Ponemos en marcha el servidor
+    app.run(host=hostname, port=port)
+
+    # Esperamos a que acaben los behaviors
+    ab1.join()
+    print('The End')
