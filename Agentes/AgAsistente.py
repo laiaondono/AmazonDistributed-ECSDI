@@ -35,8 +35,9 @@ port = 9011
 
 agn = Namespace("http://www.agentes.org#")
 
-# Contador de mensajes
+# Variables globales
 mss_cnt = 0
+products_list = []
 
 # Datos del Agente
 
@@ -45,16 +46,22 @@ AgAsistente = Agent('AgAsistente',
                     'http://%s:%d/comm' % (hostname, port),
                     'http://%s:%d/Stop' % (hostname, port))
 
+AgBuscadorProductos = Agent('AgBuscadorProductos',
+                            agn.AgBuscadorProductos,
+                            'http://%s:9010/comm' % hostname,
+                            'http://%s:9010/Stop' % hostname)
+
+AgGestorCompra = Agent('AgGestorCompra',
+                            agn.AgGestorCompra,
+                            'http://%s:9012/comm' % hostname,
+                            'http://%s:9012/Stop' % hostname)
+
 # Directory agent address
 DirectoryAgent = Agent('DirectoryAgent',
                        agn.Directory,
                        'http://%s:9000/Register' % hostname,
                        'http://%s:9000/Stop' % hostname)
 
-AgBuscadorProductos = Agent('AgBuscadorProductos',
-                            agn.AgBuscadorProductos,
-                            'http://%s:9010/comm' % hostname,
-                            'http://%s:9010/Stop' % hostname)
 
 # Global triplestore graph
 dsgraph = Graph()
@@ -115,62 +122,120 @@ def search_products():
             minPrice = request.form['minPrice']
             maxPrice = request.form['maxPrice']
             brand = request.form['brand']
-            global mss_cnt
-            g = Graph()
+            return render_template('search_products.html', products=buscar_productos(name, minPrice, maxPrice, brand))
+        elif request.form['submit'] == 'Comprar':
+            city = request.form['city']
+            priority = request.form['priority']
+            creditCard = request.form['creditCard']
+            products_to_buy = []
+            for p in request.form.getlist("checkbox"):
+                prod = products_list[int(p)]
+                product_checked = ONTO[prod['nombre']]
+                products_to_buy.append(product_checked)
+            return render_template('search_products.html', products=comprar_productos(products_to_buy, city, priority, creditCard))
 
-            action = ONTO['BuscarProductos_' + str(mss_cnt)]
-            g.add((action, RDF.type, ONTO.BuscarProductos))
 
-            if name:
-                nameRestriction = ONTO['RestriccionNombre_' + str(mss_cnt)]
-                g.add((nameRestriction, RDF.type, ONTO.RestriccionNombre))
-                g.add((nameRestriction, ONTO.Nombre, Literal(name))) # datatype=XSD.string !??!!?!?!?
-                g.add((action, ONTO.RestringidaPor, URIRef(nameRestriction)))
+def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = None):
+    global mss_cnt, products_list
+    g = Graph()
 
-            if minPrice:
-                minPriceRestriction = ONTO['RestriccionPrecio_' + str(mss_cnt)]
-                g.add((minPriceRestriction, RDF.type, ONTO.RestriccionPrecio))
-                g.add((minPriceRestriction, ONTO.PrecioMinimo, Literal(minPrice)))
-                g.add((action, ONTO.RestringidaPor, URIRef(minPriceRestriction)))
+    action = ONTO['BuscarProductos_' + str(mss_cnt)]
+    g.add((action, RDF.type, ONTO.BuscarProductos))
 
-            if maxPrice:
-                maxPriceRestriction = ONTO['RestriccionPrecio_' + str(mss_cnt)]
-                g.add((maxPriceRestriction, RDF.type, ONTO.RestriccionPrecio))
-                g.add((maxPriceRestriction, ONTO.PrecioMaximo, Literal(maxPrice)))
-                g.add((action, ONTO.RestringidaPor, URIRef(maxPriceRestriction)))
+    if name:
+        nameRestriction = ONTO['RestriccionNombre_' + str(mss_cnt)]
+        g.add((nameRestriction, RDF.type, ONTO.RestriccionNombre))
+        g.add((nameRestriction, ONTO.Nombre, Literal(name))) # datatype=XSD.string !??!!?!?!?
+        g.add((action, ONTO.RestringidaPor, URIRef(nameRestriction)))
 
-            if brand:
-                brandRestriction = ONTO['RestriccionMarca_' + str(mss_cnt)]
-                g.add((brandRestriction, RDF.type, ONTO.RestriccionMarca))
-                g.add((brandRestriction, ONTO.Marca, Literal(brand))) # datatype=XSD.string !??!!?!?!?
-                g.add((action, ONTO.RestringidaPor, URIRef(brandRestriction)))
+    if minPrice:
+        minPriceRestriction = ONTO['RestriccionPrecio_' + str(mss_cnt)]
+        g.add((minPriceRestriction, RDF.type, ONTO.RestriccionPrecio))
+        g.add((minPriceRestriction, ONTO.PrecioMinimo, Literal(minPrice)))
+        g.add((action, ONTO.RestringidaPor, URIRef(minPriceRestriction)))
 
-            msg = build_message(g, ACL.request, AgAsistente.uri, AgBuscadorProductos.uri, action, mss_cnt)
-            mss_cnt += 1
-            gproducts = send_message(msg, AgBuscadorProductos.address)
+    if maxPrice:
+        maxPriceRestriction = ONTO['RestriccionPrecio_' + str(mss_cnt)]
+        g.add((maxPriceRestriction, RDF.type, ONTO.RestriccionPrecio))
+        g.add((maxPriceRestriction, ONTO.PrecioMaximo, Literal(maxPrice)))
+        g.add((action, ONTO.RestringidaPor, URIRef(maxPriceRestriction)))
 
-            products_list = []
-            subjects_position = {}
-            pos = 0
-            for s, p, o in gproducts:
-                if s not in subjects_position:
-                    subjects_position[s] = pos
-                    pos += 1
-                    products_list.append({})
-                if s in subjects_position:
-                    product = products_list[subjects_position[s]]
-                    if p == RDF.type:
-                        product['url'] = s
-                    if p == ONTO.Identificador:
-                        product['id'] = o
-                    if p == ONTO.Nombre:
-                        product['name'] = o
-                    if p == ONTO.Marca:
-                        product['brand'] = o
-                    if p == ONTO.Precio:
-                        product['price'] = o
+    if brand:
+        brandRestriction = ONTO['RestriccionMarca_' + str(mss_cnt)]
+        g.add((brandRestriction, RDF.type, ONTO.RestriccionMarca))
+        g.add((brandRestriction, ONTO.Marca, Literal(brand))) # datatype=XSD.string !??!!?!?!?
+        g.add((action, ONTO.RestringidaPor, URIRef(brandRestriction)))
 
-            return render_template('search_products.html', products=products_list)
+    msg = build_message(g, ACL.request, AgAsistente.uri, AgBuscadorProductos.uri, action, mss_cnt)
+    mss_cnt += 1
+    gproducts = send_message(msg, AgBuscadorProductos.address)
+
+    products_list = []
+    subjects_position = {}
+    pos = 0
+    for s, p, o in gproducts:
+        if s not in subjects_position:
+            subjects_position[s] = pos
+            pos += 1
+            products_list.append({})
+        if s in subjects_position:
+            product = products_list[subjects_position[s]]
+            if p == RDF.type:
+                product['url'] = s
+            if p == ONTO.Identificador:
+                product['id'] = o
+            if p == ONTO.Nombre:
+                product['name'] = o
+            if p == ONTO.Marca:
+                product['brand'] = o
+            if p == ONTO.Precio:
+                product['price'] = o
+    return products_list
+
+
+def comprar_productos(products_to_buy, city, priority, creditCard):
+    global mss_cnt
+    g = Graph()
+    action = ONTO['HacerPedido_' + str(mss_cnt)]
+    g.add((action, RDF.type, ONTO.HacerPedido))
+    g.add((city, ONTO.Ciudad, Literal(city)))
+    g.add((priority, ONTO.PrioridadEntrega, Literal(priority)))
+    g.add((creditCard, ONTO.TargetaCredito, Literal(creditCard)))
+    for p in products_to_buy:
+        g.add((action, ONTO.ProductosPedido, URIRef(p)))
+
+    msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorCompra.uri, action, mss_cnt)
+    mss_cnt += 1
+    factura = send_message(msg, AgGestorCompra.address)
+
+    #rel productoscompra uriref productos, NumeroProductos, preciotitala
+    products_bought = []
+    """
+    subjects_position = {}
+    pos = 0
+    msgdic = get_message_properties(g)
+    content = msgdic['content']
+    prods = factura.objects(content, ONTO.ProductosCompra)
+    for s, p, o in factura:
+        if s not in subjects_position:
+            subjects_position[s] = pos
+            pos += 1
+            products_list.append({})
+        if s in subjects_position:
+            product = products_list[subjects_position[s]]
+            if p == RDF.type:
+                product['url'] = s
+            if p == ONTO.Identificador:
+                product['id'] = o
+            if p == ONTO.Nombre:
+                product['name'] = o
+            if p == ONTO.Marca:
+                product['brand'] = o
+            if p == ONTO.Precio:
+                product['price'] = o
+    """
+    return products_bought
+
 
 
 def agentbehavior1(queue):
