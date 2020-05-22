@@ -19,7 +19,7 @@ import sys
 from multiprocessing import Queue, Process
 from flask import Flask, request
 from pyparsing import Literal
-from rdflib import XSD, Namespace, Literal
+from rdflib import XSD, Namespace, Literal, URIRef
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.FlaskServer import shutdown_server
@@ -217,7 +217,8 @@ def busca():
     """
     graph = Graph()
     # WARNING: De moment no m'agafa el PATH relatiu, i li haig de posar l'absolut, s'ha de canviar depen de la màquina que ho executi.
-    ontologyFile = open('/Users/pauca/Documents/GitHub/ECSDI_Practica/Protege/Ontologia.owl')
+    ontologyFile = open('../Data/Productos')
+    print(ontologyFile)
     graph.parse(ontologyFile, format='xml')
     query = """
         prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -229,50 +230,10 @@ def busca():
             { ?producto rdf:type default:Producto } UNION { ?producto rdf:type default:Producto_externo } .
             ?producto default:Nombre ?nombre .
             ?producto default:PrecioProducto ?precio
-            FILTER(?precio <1000)
+            FILTER(?precio <10000)
                }order by asc(UCASE(str(?nombre)))"""
 
     graph_query = graph.query(query)
-    """
-    result = Graph()
-    result.bind('ONTO',ONTO)
-    product_count=0
-    for row in graph_query:
-        nom = row.nombre
-        model = row.modelo
-        marca = row.marca
-        preu = row.precio
-        peso = row.peso
-        logger.debug(nom, marca, model, preu)
-        subject = row.producto
-        product_count += 1
-        result.add((subject, RDF.type, ONTO.Producte))
-        result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
-    """
-    """
-g = Graph()
- 
-g.parse('C:/Users/pauca/Desktop/ECSDI/Ontologia.owl', format='xml')
-name = Namespace('C:/Users/pauca/Desktop/ECSDI/Ontologia.owl')
-#print(g.triples(None,FOAF.name,"hasdh"))
-
-for s, p, o in g:
-    if (str(s) == "http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4#Producto_5PLUYF"):
-        print(str(p) + " : " +str(o))
-    #print("Sujeto " + str(s))
-    #print("Predicado " + str(p))
-    #print("Objeto " + str(o))
-
-node = URIRef('http://mundo.mundial.org/persona/pedro')
-
-res = g.query( PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    SELECT DISTINCT ?a ?Nombre
-                    WHERE {
-                        ?a foaf:age ?PrecioProducto .
-                        ?a foaf:name ?Nombre .
-                        FILTER {?PrecioProducto > 18}
-                        })
-                        """
     result = []
     for row in graph_query:
         print(row)
@@ -291,14 +252,12 @@ def stop():
     shutdown_server()
     return "Parando Servidor"
 
-
 def tidyup():
     """
     Acciones previas a parar el agente
 
     """
     pass
-
 
 def agentbehavior1(cola):
     """
@@ -308,10 +267,49 @@ def agentbehavior1(cola):
     """
     pass
 
+def añadir_productos():
+    graph = Graph()
+    ontologyFile = open('../Data/Productos')
+    graph.parse(ontologyFile, format='xml')
+
+    for i in range(30):
+        subject = URIRef("http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5PLUYF"+ str(random.randint(1000,20000)))
+        graph.add((subject, RDF.type, ONTO.Producto))
+        graph.add((subject, ONTO.Marca, Literal("Nike", datatype=XSD.string)))
+        graph.add((subject, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
+        graph.add((subject, ONTO.PrecioProducto, Literal(random.randint(1000, 2000), datatype=XSD.float)))
+        graph.add((subject, ONTO.Identificador, Literal(str(random.randint(1000, 2000)), datatype=XSD.string)))
+        graph.add((subject, ONTO.Nombre, Literal("Producto_5PLUYF"+str(random.randint(1000,20000)), datatype=XSD.string)))
+    result = []
+    query = """
+        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+        prefix owl:<http://www.w3.org/2002/07/owl#>
+        SELECT DISTINCT ?producto ?nombre ?precio 
+        where {
+            { ?producto rdf:type default:Producto } UNION { ?producto rdf:type default:Producto_externo } .
+            ?producto default:Nombre ?nombre .
+            ?producto default:PrecioProducto ?precio
+            FILTER(?precio <10000)
+               }order by asc(UCASE(str(?nombre)))"""
+
+    graph_query = graph.query(query)
+    count = 0
+    for row in graph_query:
+        print(row)
+        count+=1
+        result.append(str(row.nombre) + "/" + str(row.precio))
+    print(count)
+    ofile  = open('../Data/Productos', "wb")
+    ofile.write(graph.serialize(format='xml'))
+    ofile.close()
+    return str(result)
+
 
 def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.float_info.max, nombre=None):
     graph = Graph()
-    ontologyFile = open('../Protege/Ontologia.owl')
+    ontologyFile = open('../Data/Productos')
     graph.parse(ontologyFile, format='xml')
 
     first = second = 0
