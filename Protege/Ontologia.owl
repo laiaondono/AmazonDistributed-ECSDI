@@ -110,6 +110,7 @@
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Ciudad">
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#CentroLogístico"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
@@ -221,6 +222,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#PrioridadEntrega">
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
@@ -232,6 +234,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#TarjetaCredito">
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
     </owl:DatatypeProperty>
