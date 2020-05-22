@@ -93,6 +93,15 @@
     
 
 
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosFactura -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosFactura">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosPedido -->
 
     <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosPedido">

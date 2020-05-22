@@ -13,21 +13,15 @@ Asume que el agente de registro esta en el puerto 9000
 @author: pau-laia-anna
 """
 
-import time, random
-import argparse
 import socket
-import sys
-import requests
 from multiprocessing import Queue, Process
 from flask import Flask, request
 from pyparsing import Literal
-from rdflib import URIRef, XSD, Namespace, Graph
+from rdflib import URIRef, Namespace, XSD
 from Util.ACLMessages import *
 from Util.Agent import Agent
-from Util.FlaskServer import shutdown_server
 from Util.Logging import config_logger
 from Util.OntoNamespaces import ONTO
-from datetime import datetime
 
 __author__ = 'pau-laia-anna'
 logger = config_logger(level=1)
@@ -123,29 +117,40 @@ def communication():
                 for c in ciudad:
                     city = gm.value(subject=c, predicate=ONTO.Ciudad)
                     graffactura.add((c, RDF.type, ONTO.Ciudad))
-                    graffactura.add((factura, ONTO.Ciudad, Literal(city)))
+                    graffactura.add((c, ONTO.Ciudad, city))
+                    graffactura.add((factura, ONTO.Ciudad, c))
 
-                prioridad = gm.objects(content, ONTO.Prioridad)
+                prioridad = gm.objects(content, ONTO.PrioridadEntrega)
                 for p in prioridad:
-                    priority = gm.value(subject=p, predicate=ONTO.Prioridad)
-                    graffactura.add((factura, ONTO.Prioridad, Literal(priority)))
+                    priority = gm.value(subject=p, predicate=ONTO.PrioridadEntrega)
+                    graffactura.add((p, RDF.type, ONTO.PrioridadEntrega))
+                    graffactura.add((p, ONTO.PrioridadEntrega, priority))
+                    graffactura.add((factura, ONTO.PrioridadEntrega, p))
 
                 tarjcred = gm.objects(content, ONTO.TarjetaCredito)
                 for t in tarjcred:
                     creditCard = gm.value(subject=t, predicate=ONTO.TarjetaCredito)
-                    graffactura.add((factura, ONTO.TarjetaCredito, Literal(creditCard)))
+                    graffactura.add((t, RDF.type, ONTO.TarjetaCredito))
+                    graffactura.add((t, ONTO.TarjetaCredito, creditCard))
+                    graffactura.add((factura, ONTO.TarjetaCredito, t))
 
                 productos = gm.objects(content, ONTO.ProductosPedido)
                 for producto in productos:
-                    prod = gm.value(subject=producto, predicate=ONTO.Producto)
-                    print(prod)
-                    graffactura.add((factura, ONTO.ProductosCompra, URIRef(producto)))
                     numero_productos += 1
-                    print("sujeto " + producto)
-                    print("OBJ " + str(gm.value(subject=producto, predicate=ONTO.PrecioProducto)))
-                    precio_total += float(str(gm.value(subject=producto, predicate=ONTO.PrecioProducto)))
-                graffactura.add((factura, ONTO.NumeroProductos, Literal(numero_productos)))
-                graffactura.add((factura, ONTO.PrecioTotal, Literal(precio_total)))
+                    precio_total += float(gm.value(subject=producto, predicate=ONTO.PrecioProducto))
+                    nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
+                    nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
+                    graffactura.add((nomSuj, RDF.type, ONTO.Nombre))
+                    graffactura.add((nomSuj, ONTO.Nombre, nombreProd))
+                    graffactura.add((factura, ONTO.ProductosFactura, nomSuj))
+
+                #graffactura.add((factura, ONTO.NumeroProductos, Literal(numero_productos)))
+                print(str(precio_total))
+                priceOnto = ONTO['PrecioTotal_' + str(count)]
+                graffactura.add((priceOnto, RDF.type, ONTO.PrecioTotal))
+                graffactura.add((priceOnto, ONTO.PrecioTotal, Literal(precio_total)))
+                graffactura.add((factura, ONTO.PrecioTotal, priceOnto))
+
                 msg = build_message(graffactura, ACL.response, AgGestorCompra.uri, AgAsistente.uri, accion, count)
                 send_message(msg, AgAsistente.address)
                 procesar_compra(count, gm, precio_total, graffactura)

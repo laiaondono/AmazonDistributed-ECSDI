@@ -6,8 +6,8 @@
     <title>ECSDI - Hacer pedido</title>
 </head>
 <body>
-    <h1>Hacer pedido</h1>
     {% if products %}
+        <h1>Hacer pedido</h1>
         <form method="post">
             <table cellpadding="5px">
                 <tr>
@@ -30,8 +30,38 @@
             <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
             <input type="submit" name="submit" value="Comprar">
         </form>
-    {% else %}
-
+    {% else %} <!-- if bill -->
+        <h1>Datos Compra</h1>
+        <table cellpadding="5px">
+            <tr>
+                <th><b>NOMBRE</b></th>
+            </tr>
+            {% for p in bill.products %}
+                <tr>
+                    <td>{{ n.name }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <th><b>PRECIO TOTAL</b></th>
+                <th><b>{{ bill.price }}</b></th>
+            </tr>
+            <tr>
+                <th><b>DATOS USUARIO</b></th>
+                <th><b></b></th>
+            </tr>
+            <tr>
+                <th><b>CIUDAD</b></th>
+                <th><b>{{ bill.city }}</b></th>
+            </tr>
+            <tr>
+                <th><b>PRIORIDAD ENTREGA</b></th>
+                <th><b>{{ bill.priority }}</b></th>
+            </tr>
+            <tr>
+                <th><b>TARJETA CRÉDITO</b></th>
+                <th><b>{{ bill.creditCard }}</b></th>
+            </tr>
+        </table>
     {% endif %}
 </body>
 </html>

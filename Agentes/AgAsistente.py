@@ -214,8 +214,18 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
     g.add((action, ONTO.TarjetaCredito, URIRef(creditCardonto)))
 
     for p in products_to_buy:
-        print(p)
         g.add((p['url'], RDF.type, ONTO.Producto))
+        for atr in p:
+            if (atr == "id"):
+                g.add((p['url'], ONTO.Indentificador, p[atr]))
+            elif (atr == "name"):
+                g.add((p['url'], ONTO.Nombre, p[atr]))
+            elif (atr == "url"):
+                g.add((p['url'], ONTO.Indentificador, p[atr]))
+            elif (atr == "brand"):
+                g.add((p['url'], ONTO.Marca, p[atr]))
+            elif (atr == "price"):
+                g.add((p['url'], ONTO.PrecioProducto, p[atr]))
         g.add((action, ONTO.ProductosPedido, p['url']))
 
 
@@ -223,34 +233,23 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
     mss_cnt += 1
     gfactura = send_message(msg, AgGestorCompra.address)
 
-    # rel productoscompra uriref productos, NumeroProductos, preciotitala
-    products_bought = []
-
-    subjects_position = {}
-    pos = 0
-    # msgdic = get_message_properties(g)
-    # content = msgdic['content']
-    # prods = gfactura.objects(content, ONTO.ProductosCompra)
-
+    info_bill = {}
+    #LA FACTURA (info_bill) HA DE TENIR: city, prioridad, tar credit, array de noms de productes, preu total
+    products_name = []
     for s, p, o in gfactura:
-        if s not in subjects_position:
-            subjects_position[s] = pos
-            pos += 1
-            products_list.append({})
-        if s in subjects_position:
-            product = products_list[subjects_position[s]]
-            if p == RDF.type:
-                product['url'] = s
-            if p == ONTO.Identificador:
-                product['id'] = o
-            if p == ONTO.Nombre:
-                product['name'] = o
-            if p == ONTO.Marca:
-                product['brand'] = o
-            if p == ONTO.Precio:
-                product['price'] = o
+        if p == ONTO.Ciudad:
+            info_bill['city'] = o
+        if p == ONTO.PrioridadEntrega:
+            info_bill['priority'] = o
+        if p == ONTO.TarjetaCredito:
+            info_bill['creditCard'] = o
+        if p == ONTO.PrecioTotal:
+            info_bill['price'] = o
+        if p == ONTO.Nombre:
+            products_name.append(o)
+    info_bill['products'] = products_name
 
-    return products_bought
+    return info_bill
 
 
 

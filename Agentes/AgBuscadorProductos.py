@@ -10,7 +10,7 @@ Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
 Asume que el agente de registro esta en el puerto 9000
 
-@author: javier
+@author: pau-laia-anna
 """
 
 import random
@@ -218,7 +218,6 @@ def busca():
     graph = Graph()
     # WARNING: De moment no m'agafa el PATH relatiu, i li haig de posar l'absolut, s'ha de canviar depen de la màquina que ho executi.
     ontologyFile = open('../Data/Productos')
-    print(ontologyFile)
     graph.parse(ontologyFile, format='xml')
     query = """
         prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -300,7 +299,6 @@ def añadir_productos():
         print(row)
         count+=1
         result.append(str(row.nombre) + "/" + str(row.precio))
-    print(count)
     ofile  = open('../Data/Productos', "wb")
     ofile.write(graph.serialize(format='xml'))
     ofile.close()
