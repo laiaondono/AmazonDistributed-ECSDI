@@ -110,25 +110,45 @@ def communication():
 
             # Accion de busqueda
             if accion == ONTO.HacerPedido:
-                productos = gm.objects(content, ONTO.ProductosPedido)
                 numero_productos = 0
                 precio_total = 0.0
-                factura = gm
+                graffactura = Graph()  #city, priority, targ credit, urirefs productes
                 count = str(get_count())
-                identificador = ONTO["Factura_" + count]
+                factura = ONTO["Factura_" + count]
                 accion = ONTO["EnviarFactura_" + count]
-                factura.add((accion, RDF.type, ONTO.EnviarFactura))
-                factura.add((identificador, RDF.type, ONTO.Factura))
+                graffactura.add((accion, RDF.type, ONTO.EnviarFactura))
+                graffactura.add((factura, RDF.type, ONTO.Factura))
+                graffactura.add((accion, ONTO.FacturaEnviada, URIRef(factura)))
+                ciudad = gm.objects(content, ONTO.Ciudad)
+                for c in ciudad:
+                    city = gm.value(subject=c, predicate=ONTO.Ciudad)
+                    graffactura.add((c, RDF.type, ONTO.Ciudad))
+                    graffactura.add((factura, ONTO.Ciudad, Literal(city)))
+
+                prioridad = gm.objects(content, ONTO.Prioridad)
+                for p in prioridad:
+                    priority = gm.value(subject=p, predicate=ONTO.Prioridad)
+                    graffactura.add((factura, ONTO.Prioridad, Literal(priority)))
+
+                tarjcred = gm.objects(content, ONTO.TarjetaCredito)
+                for t in tarjcred:
+                    creditCard = gm.value(subject=t, predicate=ONTO.TarjetaCredito)
+                    graffactura.add((factura, ONTO.TarjetaCredito, Literal(creditCard)))
+
+                productos = gm.objects(content, ONTO.ProductosPedido)
                 for producto in productos:
-                    factura.add((identificador, ONTO.ProductosCompra, URIRef(producto)))
+                    prod = gm.value(subject=producto, predicate=ONTO.Producto)
+                    print(prod)
+                    graffactura.add((factura, ONTO.ProductosCompra, URIRef(producto)))
                     numero_productos += 1
+                    print("sujeto " + producto)
                     print("OBJ " + str(gm.value(subject=producto, predicate=ONTO.PrecioProducto)))
                     precio_total += float(str(gm.value(subject=producto, predicate=ONTO.PrecioProducto)))
-                factura.add((identificador, ONTO.NumeroProductos, Literal(numero_productos)))
-                factura.add((identificador, ONTO.PrecioTotal, Literal(precio_total)))
-                msg = build_message(factura, ACL.response, AgGestorCompra.uri, AgAsistente.uri, accion, count)
+                graffactura.add((factura, ONTO.NumeroProductos, Literal(numero_productos)))
+                graffactura.add((factura, ONTO.PrecioTotal, Literal(precio_total)))
+                msg = build_message(graffactura, ACL.response, AgGestorCompra.uri, AgAsistente.uri, accion, count)
                 send_message(msg, AgAsistente.address)
-                procesar_compra(count, gm, precio_total, factura)
+                procesar_compra(count, gm, precio_total, graffactura)
 
 
 def procesar_compra(count=0, gm=Graph(), factura=Graph()):

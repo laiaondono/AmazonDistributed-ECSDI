@@ -75,14 +75,6 @@ resultats = []
 app = Flask(__name__, template_folder='../templates')
 
 
-@app.route("/sum")
-def suma():
-    num1 = request.args['numero1']
-    num2 = request.args['numero2']
-    resultats.append(int(num1) + int(num2))
-    return str(int(num1) + int(num2))
-
-
 @app.route("/comm")
 def comunicacion():
     """
@@ -168,9 +160,6 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
     pos = 0
     for s, p, o in gproducts:
         if s not in subjects_position:
-            print(s)
-            print(p)
-            print(o)
             subjects_position[s] = pos
             pos += 1
             products_list.append({})
@@ -202,10 +191,7 @@ def hacer_pedido():
             products_to_buy = []
             for p in request.form.getlist("checkbox"):
                 prod = products_list[int(p)]
-                # print("prod " + str(prod))
-                product_checked = prod['url']
-                # print("product_checked " + str(product_checked))
-                products_to_buy.append(product_checked)
+                products_to_buy.append(prod)
             return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard))
 
 
@@ -217,26 +203,35 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
 
     cityonto = ONTO[city]
     g.add((cityonto, ONTO.Ciudad, Literal(city)))
+    g.add((action, ONTO.Ciudad, URIRef(cityonto)))
+
     priorityonto = ONTO[city]
     g.add((priorityonto, ONTO.PrioridadEntrega, Literal(priority)))
+    g.add((action, ONTO.PrioridadEntrega, URIRef(priorityonto)))
+
     creditCardonto = ONTO[city]
-    g.add((creditCardonto, ONTO.TargetaCredito, Literal(creditCard)))
+    g.add((creditCardonto, ONTO.TarjetaCredito, Literal(creditCard)))
+    g.add((action, ONTO.TarjetaCredito, URIRef(creditCardonto)))
+
     for p in products_to_buy:
-        g.add((action, ONTO.ProductosPedido, p))
-        # print(p)
+        print(p)
+        g.add((p['url'], RDF.type, ONTO.Producto))
+        g.add((action, ONTO.ProductosPedido, p['url']))
+
 
     msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorCompra.uri, action, mss_cnt)
     mss_cnt += 1
     gfactura = send_message(msg, AgGestorCompra.address)
 
-    #rel productoscompra uriref productos, NumeroProductos, preciotitala
+    # rel productoscompra uriref productos, NumeroProductos, preciotitala
     products_bought = []
-    """
+
     subjects_position = {}
     pos = 0
-    msgdic = get_message_properties(g)
-    content = msgdic['content']
-    prods = gfactura.objects(content, ONTO.ProductosCompra)
+    # msgdic = get_message_properties(g)
+    # content = msgdic['content']
+    # prods = gfactura.objects(content, ONTO.ProductosCompra)
+
     for s, p, o in gfactura:
         if s not in subjects_position:
             subjects_position[s] = pos
@@ -254,7 +249,7 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
                 product['brand'] = o
             if p == ONTO.Precio:
                 product['price'] = o
-    """
+
     return products_bought
 
 
