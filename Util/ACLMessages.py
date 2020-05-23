@@ -52,13 +52,24 @@ def send_message(gmess, address):
     """
     msg = gmess.serialize(format='xml')
     r = requests.get(address, params={'content': msg})
-
     # Procesa la respuesta y la retorna como resultado como grafo
     gr = Graph()
     gr.parse(data=r.text)
 
     return gr
 
+def send_message_response(gmess, address):
+    """
+    Envia un mensaje usando un GET y retorna la respuesta como
+    un grafo RDF
+    """
+    msg = gmess.serialize(format='xml')
+    print(msg)
+    requests.get(address, params={'content': msg})
+
+    # Procesa la respuesta y la retorna como resultado como grafo
+
+    return 200
 
 def get_message_properties(msg):
     """

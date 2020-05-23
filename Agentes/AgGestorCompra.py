@@ -17,11 +17,13 @@ import socket
 from multiprocessing import Queue, Process
 from flask import Flask, request
 from pyparsing import Literal
-from rdflib import URIRef, Namespace, XSD
+import requests
+from rdflib import Namespace, Graph, RDF, Literal, URIRef
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.Logging import config_logger
-from Util.OntoNamespaces import ONTO
+from Util.OntoNamespaces import ONTO,ACL
+from Util.FlaskServer import shutdown_server
 
 __author__ = 'pau-laia-anna'
 logger = config_logger(level=1)
@@ -50,7 +52,7 @@ DirectoryAgent = Agent('DirectoryAgent',
 # Directory agent address
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
-                    'http://%s:9011/Register' % hostname,
+                    'http://%s:9011/comm' % hostname,
                     'http://%s:9011/Stop' % hostname)
 AgProcesadorPedidos = Agent('AgAsistente',
                             agn.AgAsistente,
@@ -107,32 +109,38 @@ def communication():
                 numero_productos = 0
                 precio_total = 0.0
                 graffactura = Graph()  #city, priority, targ credit, urirefs productes
-                count = str(get_count())
+                count_real = get_count()
+                count = str(count_real)
                 factura = ONTO["Factura_" + count]
                 accion = ONTO["EnviarFactura_" + count]
+
                 graffactura.add((accion, RDF.type, ONTO.EnviarFactura))
-                graffactura.add((factura, RDF.type, ONTO.Factura))
                 graffactura.add((accion, ONTO.FacturaEnviada, URIRef(factura)))
+                graffactura.add((factura, RDF.type, ONTO.Factura))
+                
                 ciudad = gm.objects(content, ONTO.Ciudad)
                 for c in ciudad:
                     city = gm.value(subject=c, predicate=ONTO.Ciudad)
                     graffactura.add((c, RDF.type, ONTO.Ciudad))
                     graffactura.add((c, ONTO.Ciudad, city))
-                    graffactura.add((factura, ONTO.Ciudad, c))
+                    graffactura.add((factura, ONTO.Ciudad, Literal(city)))
+                    break
 
                 prioridad = gm.objects(content, ONTO.PrioridadEntrega)
                 for p in prioridad:
                     priority = gm.value(subject=p, predicate=ONTO.PrioridadEntrega)
                     graffactura.add((p, RDF.type, ONTO.PrioridadEntrega))
                     graffactura.add((p, ONTO.PrioridadEntrega, priority))
-                    graffactura.add((factura, ONTO.PrioridadEntrega, p))
+                    graffactura.add((factura, ONTO.PrioridadEntrega, Literal(priority)))
+                    break
 
                 tarjcred = gm.objects(content, ONTO.TarjetaCredito)
                 for t in tarjcred:
                     creditCard = gm.value(subject=t, predicate=ONTO.TarjetaCredito)
                     graffactura.add((t, RDF.type, ONTO.TarjetaCredito))
                     graffactura.add((t, ONTO.TarjetaCredito, creditCard))
-                    graffactura.add((factura, ONTO.TarjetaCredito, t))
+                    graffactura.add((factura, ONTO.TarjetaCredito, Literal(creditCard)))
+                    break
 
                 productos = gm.objects(content, ONTO.ProductosPedido)
                 for producto in productos:
@@ -144,19 +152,20 @@ def communication():
                     graffactura.add((nomSuj, ONTO.Nombre, nombreProd))
                     graffactura.add((factura, ONTO.ProductosFactura, nomSuj))
 
-                #graffactura.add((factura, ONTO.NumeroProductos, Literal(numero_productos)))
-                print(str(precio_total))
+                graffactura.add((factura, ONTO.NumeroProductos, Literal(numero_productos)))
                 priceOnto = ONTO['PrecioTotal_' + str(count)]
                 graffactura.add((priceOnto, RDF.type, ONTO.PrecioTotal))
                 graffactura.add((priceOnto, ONTO.PrecioTotal, Literal(precio_total)))
-                graffactura.add((factura, ONTO.PrecioTotal, priceOnto))
+                graffactura.add((factura, ONTO.PrecioTotal, Literal(precio_total)))
 
-                msg = build_message(graffactura, ACL.response, AgGestorCompra.uri, AgAsistente.uri, accion, count)
-                send_message(msg, AgAsistente.address)
-                procesar_compra(count, gm, precio_total, graffactura)
+                #msg = build_message(graffactura, ACL.response, AgGestorCompra.uri, AgAsistente.uri, accion, count_real)
+                #print(msg.serialize(format='xml'))
+                #print(requests.get(AgAsistente.uri, params={'content': msg}).text)
+                #send_message(msg, AgAsistente.address)
+                return graffactura.serialize(format='xml'), 200
 
 
-def procesar_compra(count=0, gm=Graph(), factura=Graph()):
+def procesar_compra(count=0, gm=Graph(), precio_total =0.0, factura=Graph()):
     logger.info("Procesando compra...")
     """
     compra = Graph()

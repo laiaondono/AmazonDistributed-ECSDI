@@ -20,7 +20,7 @@ import flask
 from rdflib import Namespace, Graph, RDF, Literal, URIRef
 from flask import Flask, request, render_template
 
-from Util.ACLMessages import build_message, send_message
+from Util.ACLMessages import *
 from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ONTO, ACL
@@ -74,16 +74,17 @@ resultats = []
 # Flask stuff
 app = Flask(__name__, template_folder='../templates')
 
-
+@app.route("/")
+def initialize():
+    """
+    Entrypoint de comunicacion
+    """
+    return render_template('inicio.html')
 @app.route("/comm")
 def comunicacion():
     """
     Entrypoint de comunicacion
     """
-    global dsgraph
-    global mss_cnt
-    return str(resultats)
-
 
 @app.route("/Stop")
 def stop():
@@ -252,7 +253,6 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
     return info_bill
 
 
-
 def agentbehavior1(queue):
     """
     Un comportamiento del agente
@@ -274,4 +274,5 @@ if __name__ == '__main__':
 
     # Esperamos a que acaben los behaviors
     ab1.join()
-    print('The End')
+
+    ('The End')

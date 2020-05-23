@@ -70,11 +70,8 @@ def test_suma():
     peticion = {"numero1": random.randint(0, 400), "numero2": random.randint(0, 400)}
     port_agprova = 9011
     uri = 'http://desktop-lrtmd2a:9011/sum'
-    print(uri)
-    print(peticion)
     headers = {'content-type': 'application/json'}
     r = requests.get(uri, params=peticion, headers=headers)
-    print(r.text)
     return r.text
 
 
@@ -82,11 +79,9 @@ def busca():
     peticion = {"numero1": random.randint(0, 400), "numero2": random.randint(0, 400)}
     port_agprova = 9011
     uri = 'http://desktop-lrtmd2a:9011/sum'
-    print(uri)
-    print(peticion)
+
     headers = {'content-type': 'application/json'}
     r = requests.get(uri, params=peticion, headers=headers)
-    print(r.text)
     return r.text
 
 
@@ -235,7 +230,6 @@ def busca():
     graph_query = graph.query(query)
     result = []
     for row in graph_query:
-        print(row)
         result.append(str(row.nombre) + "/" + str(row.precio))
     return str(result)
 
@@ -296,7 +290,6 @@ def añadir_productos():
     graph_query = graph.query(query)
     count = 0
     for row in graph_query:
-        print(row)
         count+=1
         result.append(str(row.nombre) + "/" + str(row.precio))
     ofile  = open('../Data/Productos', "wb")
@@ -340,18 +333,15 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
     query += """?precio >= """ + str(preciomin) + """ &&
                 ?precio <= """ + str(preciomax) + """  )}
                 order by asc(UCASE(str(?nombre)))"""
-    logger.info(query)
     graph_query = graph.query(query)
     result = Graph()
     # Aqui hi havia un bind
     product_count = 0
     for row in graph_query:
-        logger.info(row.nombre)
         nom = row.nombre
         marca = row.marca
         precio = row.precio
         id = row.id
-        logger.debug(id, nom, marca, valoracion, precio)
         subject = row.producto
         product_count += 1
         result.add((subject, RDF.type, ONTO.Producto))

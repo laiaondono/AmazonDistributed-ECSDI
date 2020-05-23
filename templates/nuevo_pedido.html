@@ -34,11 +34,11 @@
         <h1>Datos Compra</h1>
         <table cellpadding="5px">
             <tr>
-                <th><b>NOMBRE</b></th>
+                <th><b>NOMBRE PRODUCTOS</b></th>
             </tr>
             {% for p in bill.products %}
                 <tr>
-                    <td>{{ n.name }}</td>
+                    <td>{{ p }}</td>
                 </tr>
             {% endfor %}
             <tr>
@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <th><b>DATOS USUARIO</b></th>
-                <th><b></b></th>
+                <th><b></b>-</th>
             </tr>
             <tr>
                 <th><b>CIUDAD</b></th>
