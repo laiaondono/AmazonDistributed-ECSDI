@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+   xmlns:OntologiaECSDI="http://www.owl-ontologies.com/OntologiaECSDI.owl#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra_900813131">
+    <OntologiaECSDI:ProductosFactura rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4D8JUW"/>
+    <OntologiaECSDI:PrecioTotal rdf:datatype="http://www.w3.org/2001/XMLSchema#float">10606.07359577286</OntologiaECSDI:PrecioTotal>
+    <OntologiaECSDI:TarjetaCredito rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ES78gdfgsdg</OntologiaECSDI:TarjetaCredito>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
+    <OntologiaECSDI:ProductosFactura rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_39YNMQ"/>
+    <OntologiaECSDI:ProductosFactura rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"/>
+    <OntologiaECSDI:ProductosFactura rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FC2MI"/>
+    <OntologiaECSDI:ProductosFactura rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_K9K1QJ"/>
+    <OntologiaECSDI:Ciudad rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Shangai</OntologiaECSDI:Ciudad>
+    <OntologiaECSDI:PrioridadEntrega rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1</OntologiaECSDI:PrioridadEntrega>
+    <OntologiaECSDI:ProductosFactura rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C9WXMR"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI">
+    <OntologiaECSDI:Nombre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nombre_33PLEM</OntologiaECSDI:Nombre>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FC2MI">
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene"/>
+    <OntologiaECSDI:Nombre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nombre_609T0J</OntologiaECSDI:Nombre>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4D8JUW">
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene"/>
+    <OntologiaECSDI:Nombre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nombre_2LSOON</OntologiaECSDI:Nombre>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C9WXMR">
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene"/>
+    <OntologiaECSDI:Nombre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nombre_U390XK</OntologiaECSDI:Nombre>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_39YNMQ">
+    <OntologiaECSDI:Nombre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nombre_9WB78A</OntologiaECSDI:Nombre>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_K9K1QJ">
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene"/>
+    <OntologiaECSDI:Nombre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nombre_EKNDN1</OntologiaECSDI:Nombre>
+  </rdf:Description>
+</rdf:RDF>

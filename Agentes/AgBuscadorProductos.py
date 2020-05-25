@@ -309,13 +309,14 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         prefix xsd:<http://www.w3.org/2001/XMLSchema#>
         prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
         prefix owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca
+        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca ?peso
         where {
             { ?producto rdf:type default:Producto }.
             ?producto default:Nombre ?nombre .
             ?producto default:PrecioProducto ?precio .
             ?producto default:Marca ?marca .
-            ?producto default:Identificador ?id 
+            ?producto default:Identificador ?id . 
+            ?producto default:Peso ?peso .
             FILTER("""
 
     if nombre is not None:
@@ -341,6 +342,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         nom = row.nombre
         marca = row.marca
         precio = row.precio
+        peso = row.peso
         id = row.id
         subject = row.producto
         product_count += 1
@@ -350,6 +352,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
         result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
+        result.add((subject, ONTO.Peso, Literal(peso, datatype=XSD.float)))
     return result
 
 

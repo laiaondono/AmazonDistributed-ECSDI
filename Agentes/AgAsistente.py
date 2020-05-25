@@ -176,6 +176,8 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
                 product['brand'] = o
             if p == ONTO.Precio:
                 product['price'] = o
+            if p == ONTO.Peso:
+                product["weight"] = o
     return products_list
 
 
@@ -193,6 +195,7 @@ def hacer_pedido():
             for p in request.form.getlist("checkbox"):
                 prod = products_list[int(p)]
                 products_to_buy.append(prod)
+            render_template("info.html")
             return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard))
 
 
@@ -227,6 +230,8 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
                 g.add((p['url'], ONTO.Marca, p[atr]))
             elif (atr == "price"):
                 g.add((p['url'], ONTO.PrecioProducto, p[atr]))
+            elif (atr == "weight"):
+                g.add((p['url'], ONTO.Peso, p[atr]))
         g.add((action, ONTO.ProductosPedido, p['url']))
 
 
