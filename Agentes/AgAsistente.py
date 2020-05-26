@@ -41,7 +41,8 @@ mss_cnt = 0
 products_list = []
 
 # Datos del Agente
-
+global compra
+compra = False
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
                     'http://%s:%d/comm' % (hostname, port),
@@ -74,6 +75,7 @@ resultats = []
 # Flask stuff
 app = Flask(__name__, template_folder='../templates')
 
+
 @app.route("/")
 def initialize():
     """
@@ -85,6 +87,41 @@ def comunicacion():
     """
     Entrypoint de comunicacion
     """
+    message = request.args['content']
+    gm = Graph()
+    gm.parse(data=message)
+
+    msgdic = get_message_properties(gm)
+    
+    gr = None
+    if msgdic is None:
+        mss_cnt+=1
+        # Si no es, respondemos que no hemos entendido el mensaje
+        gr = build_message(Graph(), ACL['not-understood'], sender=AgAsistente.uri, msgcnt=str(mss_cnt))
+    else:
+        # Obtenemos la performativa
+        if msgdic['performative'] != ACL.request:
+            # Si no es un request, respondemos que no hemos entendido el mensaje
+            gr = build_message(Graph(),
+                               ACL['not-understood'],
+                               sender=AgAsistente.uri,
+                               msgcnt=str(mss_cnt))
+        else:
+            # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
+            # de registro
+            print("Actualitzat")
+            global compra
+            compra=True
+            content = msgdic['content']
+            # Averiguamos el tipo de la accion
+            accion = gm.value(subject=content, predicate=RDF.type)
+            p = Process(target=hacer_redirect,args=())
+            p.start()
+            gr =Graph()
+            return gr.serialize(format="xml"),200
+
+def hacer_redirect():
+    return flask.redirect("http://%s:%d/" % (hostname, port))
 
 @app.route("/Stop")
 def stop():
@@ -187,6 +224,7 @@ def hacer_pedido():
     if request.method == 'GET':
         return render_template('nuevo_pedido.html', products=products_list, bill=None)
     else:
+        print(request.form)
         if request.form['submit'] == 'Comprar':
             city = request.form['city']
             priority = request.form['priority']
@@ -195,9 +233,14 @@ def hacer_pedido():
             for p in request.form.getlist("checkbox"):
                 prod = products_list[int(p)]
                 products_to_buy.append(prod)
-            render_template("info.html")
             return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard))
-
+        elif request.form['submit'] == 'visualizar':
+            print("Holaaa")
+            global compra
+            if not compra:
+                return render_template("Espera.html")
+            else:
+                return "Ya tienes los datos boyyyyy"
 
 def comprar_productos(products_to_buy, city, priority, creditCard):
     global mss_cnt
@@ -273,7 +316,7 @@ if __name__ == '__main__':
     # Ponemos en marcha los behaviors
     ab1 = Process(target=agentbehavior1, args=(cola1,))
     ab1.start()
-
+    compra =False
     # Ponemos en marcha el servidor
     app.run(host=hostname, port=port)
 

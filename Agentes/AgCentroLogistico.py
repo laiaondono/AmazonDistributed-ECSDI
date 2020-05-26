@@ -111,49 +111,89 @@ def communication():
 
             # Accion de busqueda
             if accion == ONTO.EnviarPaquete:
-                productos = gm.objects(content, ONTO.Contiene)
-                graph = Graph()
+                #Se genera un grafo con la informacion necesaria para negociar el envío.
                 count = get_count()
-                identificador = "Lote_" + str(count)
-                subject = "http://www.owl-ontologies.com/OntologiaECSDI.owl#" + identificador
-                graph.add((subject, RDF.type, ONTO.Lote))
-                graph.add((subject, ONTO.Identificador, Literal(identificador, datatype=XSD.string)))
-                ciudad = gm.objects(content, ONTO.Ciudad)
+                action= ONTO["ConsensuarTransportista_"+ str(count)]
+                lote = ONTO["Lote_"+str(count)]
+                graph = Graph()
+                peso_total = 0
+                graph.add((action, RDF.type, ONTO.ConsensuarTransportista))
+                graph.add((lote,RDF.type,ONTO.Lote))
+                for s,p,o in gm:
+                    if p == ONTO.Ciudad:
+                        graph.add((lote, ONTO.Ciudad, Literal(o,datatype=XSD.string)))
+                    elif p == ONTO.PrioridadEntrega:
+                        graph.add((lote, ONTO.PrioridadEntrega, Literal(o,datatype=XSD.float)))
+                    elif p == ONTO.NombreCL:
+                        graph.add((action, ONTO.NombreCL,Literal(o,datatype=XSD.string)))
+                    elif p ==ONTO.Peso:
+                        peso_total+=float(o)
+                    elif p == ONTO.Nombre:
+                        graph.add((s, RDF.type, ONTO.Producto))
+                        graph.add((s, ONTO.Nombre, Literal(o,datatype=XSD.string)))
+                        graph.add((lote, ONTO.Contiene, URIRef(s)))
+                graph.add((lote,ONTO.Peso,Literal(peso_total,datatype=XSD.float)))
+                #La accion es consensuar transportista, y conteine un lote como informacion.
+                graph.add((action, ONTO.Lote,URIRef(lote)))
+                """
+                #A partir de aqui se añaden los atributos del lote.
+                graph.add((lote,ONTO.Identificador,Literal(lote,datatype=XSD.string)))
+                ciudad = gm.objects(item, ONTO.Ciudad)
                 for c in ciudad:
                     city = gm.value(subject=c, predicate=ONTO.Ciudad)
-                    graph.add((subject, ONTO.Ciudad, Literal(city)))
+                    graph.add((lote, ONTO.Ciudad, Literal(city)))
+                    print(city)
                     break
-                prioridad = gm.objects(content, ONTO.PrioridadEntrega)
+                prioridad = gm.objects(item, ONTO.PrioridadEntrega)
                 for p in prioridad:
                     priority = gm.value(subject=p, predicate=ONTO.PrioridadEntrega)
-                    graph.add((subject, ONTO.PrioridadEntrega, Literal(priority)))
+                    graph.add((lote, ONTO.PrioridadEntrega, Literal(priority)))
+                    print(priority)
                     break
-                cl = gm.objects(content, ONTO.NombreCL)
+                cl = gm.objects(item, ONTO.NombreCL)
                 for clog in cl:
                     centro = gm.value(subject=clog, predicate=ONTO.NombreCL)
-                peso_total = 0
-                for producto in productos:
-                    nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
-                    peso_total += gm.value(subject=producto, predicate=ONTO.Peso)
-                    # nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
-                    # graph.add((nomSuj, RDF.type, ONTO.Producto))
-                    # graph.add((nomSuj, ONTO.Nombre, nombreProd))
-                    # graph.add((subject, ONTO.Contiene, URIRef(nomSuj)))
-                graph.add((subject, ONTO.Peso, peso_total))
-                graph.add((subject, ONTO.NombreCL, centro))
+                    graph.add((action, ONTO.NombreCL, Literal(centro,datatype=XSD.string)))
+                    print(centro)
+                    break
+                    peso_total = 0
+                    productos = gm.objects(item, ONTO.ProductosCompra)
+                    for producto in productos:
+                        #A parte del peso, añadimos los nombres simulando que lo necesitan los transportistas.
+                        nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
+                        peso_total += gm.value(subject=producto, predicate=ONTO.Peso)
+                        nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
+                        graph.add((nomSuj, RDF.type, ONTO.Producto))
+                        graph.add((nomSuj, ONTO.Nombre, Literal(nombreProd,datatype=XSD.string)))
+                        graph.add((lote, ONTO.Contiene, URIRef(nomSuj)))
+                    graph.add((action, ONTO.Peso, Literal(peso_total, datatype=XSD.float)))
+                    """
                 gr = send_message(
-                    build_message(gm, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, accion, count), AgTransportista.address)
+                    build_message(graph, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, action, count), AgTransportista.address)
                 info = {}
                 for s, p, o in gr:
                     if p == ONTO.PrecioTransporte:
                         info["PrecioTransporte"] = o
                     elif p == ONTO.Fecha:
                         info["Fecha"] = o
-                gr = Graph()
+                    elif p == ONTO.Nombre:
+                        info["NombreTransportista"] = o
+                compra = ONTO["Compra_" + str(count)]
+                gm.add((compra,ONTO.FechaEntrega,Literal(info["Fecha"],datatype=XSD.string)))
+                transportista = ONTO[info["NombreTransportista"]]
+                gm.add((transportista,RDF.type,ONTO.Transportista))
+                gm.add((transportista,ONTO.NombreTransportista,Literal(info["NombreTransportista"],datatype=XSD.string)))
+                gm.add((compra,ONTO.EntregadaPor,URIRef(transportista)))
+                gm.add((compra,ONTO.FechaEntrega,Literal(info["Fecha"],datatype=XSD.string)))
+                grafo_confirmacion =Graph()
                 accion = ONTO["ConfirmarTransportista_" + str(count)]
+                grafo_confirmacion.add((accion, RDF.type, ONTO.ConfirmarTransportista))
                 grr = send_message(
-                    build_message(gr, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, accion, count), AgTransportista.address)
-                return gr.serialize(format="xml"), 200
+                    build_message(grafo_confirmacion, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, accion, count), AgTransportista.address)
+                return gm.serialize(format="xml"), 200
+            else:
+                resposta= Graph()
+                return resposta.serialize(format="xml"),200
 
 
 @app.route("/Stop")

@@ -30,7 +30,7 @@ from opencage.geocoder import OpenCageGeocode
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic, great_circle
 from geopy import geocoders
-from datetime import datetime
+import datetime
 import time
 __author__ = 'pau-laia-anna'
 logger = config_logger(level=1)
@@ -113,20 +113,42 @@ def communication():
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
             peso_total=0
+            city=""
+            priority=0.0
+            centro=""
             if accion == ONTO.ConsensuarTransportista:
+                for s,p,o in gm:
+                    if p == ONTO.Peso:
+                        peso_total=float(o)
+                    elif p == ONTO.Ciudad:
+                        city=str(o)
+                    elif p == ONTO.PrioridadEntrega:
+                        priority=float(o)
+                    elif p ==ONTO.NombreCL:
+                        centro=str(o)
+                """   
                 peso = gm.objects(content,ONTO.Peso)
                 for p in peso:
                     peso_total = gm.value(subject=p,predicate=ONTO.Peso)
                     break
+                print(peso_total)
                 ciudad = gm.objects(content, ONTO.Ciudad)
+                city=""
                 for c in ciudad:
                     city = gm.value(subject=c, predicate=ONTO.Ciudad)
+                    break
                 prioridad = gm.objects(content, ONTO.PrioridadEntrega)
-                for p in prioridad:
-                    priority = gm.value(subject=p, predicate=ONTO.PrioridadEntrega)
+                priority=0
+                for pr in prioridad:
+                    priority = gm.value(subject=pr, predicate=ONTO.PrioridadEntrega)
+                    break
                 cl = gm.objects(content, ONTO.NombreCL)
+                centro=""
                 for clog in cl:
                     centro = gm.value(subject=clog,predicate=ONTO.NombreCL)
+                    break
+                """
+                fecha=""
                 if priority == 1:
                     fecha =str(datetime.datetime.now() + datetime.timedelta(days=1))
                 elif priority == 2:
@@ -136,26 +158,31 @@ def communication():
                 geolocator = Nominatim(user_agent='myapplication')
                 location = geolocator.geocode(city)
                 location = (location.latitude, location.longitude)
+                dist_fromcentro=0
                 if centro=="Barcelona":
                     dist_fromcentro = great_circle(location_bcn, location).km
                 elif centro =="Pekin":
                     dist_fromcentro = great_circle(location_ny, location).km
                 elif centro =="New York":
                     dist_fromcentro = great_circle(location_ny, location).km
-                precio_envio= peso_total*50+0.10*dist_fromcentro
+                precio_envio= peso_total*1+0.01*dist_fromcentro
+                print("Fecha: " + str(fecha)+  "/ Precio_envio: "+ str(precio_envio))
                 count = get_count()
-                subject = URIRef("http://www.owl-ontologies.com/OntologiaECSDI.owl#RespuestaTransportista_"+str(count))
+                subject = ONTO["RespuestaTransportista_"+str(count)]
                 respuesta=Graph()
                 respuesta.add((subject,RDF.type,ONTO.RespuestaTransportista))
-                respuesta.add((subject,ONTO.Fecha,fecha))
-                respuesta.add((subject,ONTO.PrecioTransporte,precio_envio))
-                ref = URIRef("http://www.owl-ontologies.com/OntologiaECSDI.owl#Transportista_Nacex")
+                respuesta.add((subject,ONTO.Fecha,Literal(fecha,datatype=XSD.string)))
+                respuesta.add((subject,ONTO.PrecioTransporte,Literal(precio_envio,datatype=XSD.float)))
+                ref = ONTO["Transportista_NACEX"]
                 respuesta.add((ref,RDF.type,ONTO.Transportista))
-                respuesta.add((ref,ONTO.Nombre,"NACEX"))
-                respuesta.add((ref,ONTO.Identificador,"Transportista_Nacex"))
+                respuesta.add((ref,ONTO.Nombre,Literal("NACEX",datatype=XSD.float)))
+                respuesta.add((ref,ONTO.Identificador,Literal("Transportista_Nacex",datatype=XSD.string)))
                 respuesta.add((subject,ONTO.Transportista,URIRef(ref)))
                 return respuesta.serialize(format="xml"),200
             elif accion == ONTO.ConfirmarTransportista:
+                grr = Graph()
+                return grr.serialize(format="xml"),200
+            else:
                 grr = Graph()
                 return grr.serialize(format="xml"),200
 

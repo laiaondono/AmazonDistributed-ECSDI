@@ -69,17 +69,9 @@ AgProcesadorPedidos = Agent('AgAsistente',
                             'http://%s:9013/Register' % hostname,
                             'http://%s:9013/Stop' % hostname)
 AgCentroLogistico = Agent('AgCentroLogistico',
-                          agn.AgCentroLogisticoBCN,
+                          agn.AgCentroLogistico,
                           'http://%s:9014/comm' % hostname,
                           'http://%s:9014/Stop' % hostname)
-AgCentroLogisticoNY = Agent('AgCentroLogisticoBCN',
-                            agn.AgAsistente,
-                            'http://%s:9015/comm' % hostname,
-                            'http://%s:9015/Stop' % hostname)
-AgCentroLogisticoPK = Agent('AgCentroLogisticoBCN',
-                            agn.AgAsistente,
-                            'http://%s:9016/comm' % hostname,
-                            'http://%s:9016/Stop' % hostname)
 
 # Global triplestore graph
 dsgraph = Graph()
@@ -135,39 +127,40 @@ def communication():
 
             # Accion de busqueda
             if accion == ONTO.HacerPedido:
+                # Llega una nueva peticion de una compra. Primero generamos la factura.
                 numero_productos = 0
                 precio_total = 0.0
-                graffactura = Graph()  # city, priority, targ credit, urirefs productes
+                graffactura = Graph()
+                # Llamamos a get_count para generar un numero de factura.
                 count_real = get_count()
                 count = str(count_real)
+                # Generamos la factura
                 factura = ONTO["Factura_" + count]
                 accion = ONTO["EnviarFactura_" + count]
-
+                # Añadimos al grafo la accion enviar factura, y referenciamos la factura con la URIRef.
                 graffactura.add((accion, RDF.type, ONTO.EnviarFactura))
                 graffactura.add((accion, ONTO.FacturaEnviada, URIRef(factura)))
+                # Añadimos al grafo un objecto factura, en el que añadiremos cosas.
                 graffactura.add((factura, RDF.type, ONTO.Factura))
 
                 ciudad = gm.objects(content, ONTO.Ciudad)
                 for c in ciudad:
                     city = gm.value(subject=c, predicate=ONTO.Ciudad)
-                    graffactura.add((c, RDF.type, ONTO.Ciudad))
-                    graffactura.add((c, ONTO.Ciudad, city))
+                    # Añadimos el atributo ciudad en la factura.
                     graffactura.add((factura, ONTO.Ciudad, Literal(city)))
                     break
 
                 prioridad = gm.objects(content, ONTO.PrioridadEntrega)
                 for p in prioridad:
                     priority = gm.value(subject=p, predicate=ONTO.PrioridadEntrega)
-                    graffactura.add((p, RDF.type, ONTO.PrioridadEntrega))
-                    graffactura.add((p, ONTO.PrioridadEntrega, priority))
+                    # Añadimos el atributo Prioridad de Entrega en la factura.
                     graffactura.add((factura, ONTO.PrioridadEntrega, Literal(priority)))
                     break
 
                 tarjcred = gm.objects(content, ONTO.TarjetaCredito)
                 for t in tarjcred:
                     creditCard = gm.value(subject=t, predicate=ONTO.TarjetaCredito)
-                    graffactura.add((t, RDF.type, ONTO.TarjetaCredito))
-                    graffactura.add((t, ONTO.TarjetaCredito, creditCard))
+                    # Añadimos el atributo Tarjeta de credito en la factura.
                     graffactura.add((factura, ONTO.TarjetaCredito, Literal(creditCard)))
                     break
 
@@ -175,22 +168,18 @@ def communication():
                 for producto in productos:
                     numero_productos += 1
                     precio_total += float(gm.value(subject=producto, predicate=ONTO.PrecioProducto))
+                    # Generamos un nuevo objeto producto y lo añadimos a la relacion ProductosFactura
                     nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
                     nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
-                    graffactura.add((nomSuj, RDF.type, ONTO.Nombre))
+                    graffactura.add((nomSuj, RDF.type, ONTO.Producto))
                     graffactura.add((nomSuj, ONTO.Nombre, nombreProd))
-                    graffactura.add((factura, ONTO.ProductosFactura, nomSuj))
+                    graffactura.add((factura, ONTO.ProductosFactura, URIRef(nomSuj)))
 
+                # Añadimos el precio total y el numero de productos en la factura.
                 graffactura.add((factura, ONTO.NumeroProductos, Literal(numero_productos)))
-                priceOnto = ONTO['PrecioTotal_' + str(count)]
-                graffactura.add((priceOnto, RDF.type, ONTO.PrecioTotal))
-                graffactura.add((priceOnto, ONTO.PrecioTotal, Literal(precio_total)))
                 graffactura.add((factura, ONTO.PrecioTotal, Literal(precio_total)))
 
-                # msg = build_message(graffactura, ACL.response, AgGestorCompra.uri, AgAsistente.uri, accion, count_real)
-                # print(msg.serialize(format='xml'))
-                # print(requests.get(AgAsistente.uri, params={'content': msg}).text)
-                # send_message(msg, AgAsistente.address)
+                # Empezamos a procesar la compra mientras se devuelve la factura
                 empezar_proceso = Process(target=procesar_compra, args=(
                     count_real, graffactura, gm, precio_total, content, priority, creditCard))
                 empezar_proceso.start()
@@ -199,12 +188,13 @@ def communication():
 
 def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, content="", prioridad=0, tarjeta=""):
     logger.info("Procesando compra...")
-    ciudad = gm.objects(content, ONTO.Ciudad)
-    accion = ONTO["EnviarPaquete_" + str(count)]
-    centro = ""
     city = ""
+    # Obtenemos la ciudad de destino
+    ciudad = gm.objects(content, ONTO.Ciudad)
     for c in ciudad:
         city = gm.value(subject=c, predicate=ONTO.Ciudad)
+    print(city)
+    # Calculamos que Centro Logistico asignar a la compra.
     geolocator = Nominatim(user_agent='myapplication')
     location = geolocator.geocode(city)
     location = (location.latitude, location.longitude)
@@ -223,75 +213,77 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
         logger.info("El Centro Logistico de Nueva York se encargará de la compra_" + str(count))
         # request_envio("New York", gm)
         centro = "New York"
+    # Empezamos a crear el grafo con la información de la compra para que el CentroLogístico pueda enviar la compra.
+    accion = ONTO["EnviarPaquete_" + str(count)]
     graph = Graph()
-    PedidosFile = open('../Data/PedidosEnCurso')
-    graph.parse(PedidosFile, format='xml')
+    compra = ONTO["Compra_" + str(count)]
+    # El grafo tiene la accion enviar paquete. En esta accion tiene que constar la relacion Envia, que relaciona el envio con la compra.
+    graph.add((accion, RDF.type, ONTO.EnviarPaquete))
+    # Generamos una compra que constará en el grafo. Primero añadimos atributos basicos.
+    graph.add((compra,RDF.type,ONTO.Compra))
+    graph.add((compra, ONTO.Ciudad, Literal(city, datatype=XSD.string)))
+    graph.add((compra, ONTO.Identificador, Literal(compra, datatype=XSD.string)))
+    graph.add((compra, ONTO.PrecioTotal, Literal(preutotal, datatype=XSD.float)))
+    graph.add((compra, ONTO.PrioridadEntrega, Literal(prioridad, datatype=XSD.float)))
+    graph.add((compra, ONTO.TarjetaCredito, Literal(tarjeta, datatype=XSD.string)))
+    # Añadimos los datos de los productos.
+    productos = gm.objects(content, ONTO.ProductosPedido)
+    for producto in productos:
+        # Generamos un objeto producto y le asignamos atributos.
+        nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
+        nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
+        peso = gm.value(subject=producto, predicate=ONTO.Peso)
+        graph.add((nomSuj, RDF.type, ONTO.Producto))
+        graph.add((nomSuj, ONTO.Nombre, nombreProd))
+        graph.add((nomSuj, ONTO.Peso, peso))
+        # Añadimos el producto en la relacion ProductosCompra.
+        graph.add((compra, ONTO.ProductosCompra, URIRef(nomSuj)))
+    # Añadimos el nombre del centro logístico.
+    graph.add((compra, ONTO.NombreCL, Literal(centro, datatype=XSD.string)))
+    # Enviamos los datos de la compra para que el centro logístico pueda enviarla.
+    graph.add((accion, ONTO.Envia, URIRef(compra)))
+    msg = build_message(graph, ACL.request, AgGestorCompra.uri, AgCentroLogistico.uri, accion, count)
+    gr = send_message(msg, AgCentroLogistico.address)
+    # El centro logístico nos devuelve el mismo grafo pero añadiendo el transportista que envia la compra, y la fecha de llegada.
+    # informacion_entrega = {}
+    # for s, p, o in gr:
+    #    if p == ONTO.PrecioTransporte:
+    #        informacion_entrega["PrecioTransporte"] = o
+    #    elif p == ONTO.Fecha:
+    #        informacion_entrega["Fecha"] = o
+    #   elif p == ONTO.Nombre:
+    #        informacion_entrega["Nombre"] = o
+    # logger.info("El transportista " + str(informacion_entrega["Nombre"]) + " se entregará la compra en la fecha: " +
+    #           informacion_entrega["Fecha"])
+    # Leemos el contenido que hay en el registro de pedidos.
+    PedidosFile = open('../Data/RegistroPedidos')
     graphfinal = Graph()
-    PedidosFile = open('../Data/PedidosFinalizados')
-    graphfinal.parse(PedidosFile, format='xml')
-    identificador = "Compra_" + str(random.randint(1000, 25000)) + str(random.randint(1000, 25000))
-    uri = "http://www.owl-ontologies.com/OntologiaECSDI.owl#" + identificador
-    subject = URIRef(uri)
-    graph.add((subject, RDF.type, ONTO.Compra))
-    graph.add((subject, ONTO.Ciudad, Literal(city, datatype=XSD.string)))
-    graph.add((subject, ONTO.Identificador, Literal(identificador, datatype=XSD.string)))
-    graph.add((subject, ONTO.PrecioTotal, Literal(preutotal, datatype=XSD.float)))
-    graph.add((subject, ONTO.PrioridadEntrega, Literal(prioridad, datatype=XSD.float)))
-    graph.add((subject, ONTO.TarjetaCredito, Literal(tarjeta, datatype=XSD.string)))
+    graphfinal.parse(PedidosFile, format='turtle')
+    grafrespuesta=Graph()
+    grafrespuesta.add((compra, RDF.type, ONTO.Compra))
+    grafrespuesta.add((compra, ONTO.PrecioTotal, Literal(preutotal, datatype=XSD.float)))
+    grafrespuesta.add((compra, ONTO.TarjetaCredito, Literal(tarjeta, datatype=XSD.string)))
+    grafrespuesta.add((compra, ONTO.Ciudad, Literal(city, datatype=XSD.string)))
     productos = gm.objects(content, ONTO.ProductosPedido)
     for producto in productos:
         nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
         nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
-        peso = gm.value(subject=producto, predicate=ONTO.Peso)
-        graph.add((nomSuj, RDF.type, ONTO.Contiene))
-        graph.add((nomSuj, ONTO.Nombre, nombreProd))
-        graph.add((nomSuj, ONTO.Peso, peso))
-        graph.add((subject, ONTO.ProductosFactura, URIRef(nomSuj)))
-    graph.add((subject, ONTO.NombreCL, centro))
-    PedidosFile = open('../Data/PedidosEnCurso', 'wb')
-    PedidosFile.write(graph.serialize(format='xml'))
-    PedidosFile.close()
-    logger.info("La compra_" + str(count) + " se ha registrado en la base de datos.")
-    msg = build_message(graph, ACL.request, AgGestorCompra.uri, AgCentroLogistico.uri, accion, count)
-    gr = send_message(msg, AgCentroLogistico.address)
-    graphfinal += graph
-    informacion_entrega = {}
-    for s, p, o in gr:
-        if p == ONTO.PrecioTransporte:
-            informacion_entrega["PrecioTransporte"] = o
-        elif p == ONTO.Fecha:
-            informacion_entrega["Fecha"] = o
-        elif p == ONTO.Nombre:
-            informacion_entrega["Nombre"] = o
-    logger.info("El transportista "+ str(informacion_entrega["nombre"])+ " se entregará la compra en la fecha: "+ informacion_entrega["Fecha"])
-    graphfinal.add((subject, ONTO.Fecha, informacion_entrega["Fecha"]))
-    graphfinal.add((subject, ONTO.Nombre, informacion_entrega["Nombre"]))
+        # Añadimos el producto en la relacion ProductosCompra.
+        grafrespuesta.add((compra, ONTO.ProductosCompra, Literal(nomSuj,datatype=XSD.string)))
 
-    PedidosHechos = open('../Data/PedidosFinalizados', 'wb')
-    PedidosHechos.write(graphfinal.serialize(format='xml'))
+    for s, p, o in gr:
+        if p == ONTO.FechaEntrega:
+            grafrespuesta.add((compra,ONTO.FechaEntrega,Literal(o,datatype=XSD.string)))
+        elif p == ONTO.NombreTransportista:
+            grafrespuesta.add((compra,ONTO.NombreTransportista,Literal(o,datatype=XSD.string)))
+    graphfinal += grafrespuesta
+    # Añadimos la nueva compra y lo escribimos otra vez.
+    PedidosFile = open('../Data/RegistroPedidos', 'wb')
+    PedidosFile.write(graphfinal.serialize(format='turtle'))
     PedidosFile.close()
-    logger.info("La compra ya se ha enviado y ha quedado registrada en la base de datos.")
+    msg = build_message(grafrespuesta, ACL.request, AgGestorCompra.uri, AgAsistente.uri, accion, count)
+    gr = send_message(msg, AgAsistente.address)
     return
-    """
-    compra = Graph()
-    id = ONTO["ProcesarCompra_" + str(count)]
-    msgdic = get_message_properties(gm)
-    content = msgdic['content']
-    productos = gm.objects(content, ONTO.Producto)
-    date = ONTO[datetime.today().strftime('%Y-%m-%d')]
-    compra.add(id, RDF.type, ONTO.Compra)
-    compra.add(id, ONTO.PrioridadEntrega, gm.objects(content, ONTO.PrioridadEntrega))
-    compra.add(id, ONTO.Ciudad, gm.objects(content, ONTO.Ciudad))
-    compra.add(id, ONTO.TarjetaCredito, gm.objects(content, ONTO.TarjetaCredito))
-    compra.add(id, ONTO.Fecha, date)
-    compra.add(id, ONTO.Factura, URIRef(factura))
-    for prod in productos:
-        compra.add(id, ONTO.ProductosCompra, URIRef(prod))
-    accion = ONTO["Procesar_compra" + str(count)]
-    g.add((accion, RDF.type, ONTO.ProcesarCompra))
-    msg = build_message(compra, ACL.request, AgGestorCompra.uri, AgProcesadorPedidos.uri, accion, count)
-    send_message(msg, AgProcesadorPedidos.address)
-    """
 
 
 def agentbehavior1(cola):

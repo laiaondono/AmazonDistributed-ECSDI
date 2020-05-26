@@ -1,0 +1,135 @@
+@prefix ns2: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns2:Compra_1 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:13:02.042235"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "2126.4418182432155"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_39YNMQ"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_10 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:30:57.014758"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "0.0"^^xsd:float ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_11 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:32:12.874469"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "3436.5344295935274"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4D8JUW"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_12 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:34:22.073315"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "2298.068417467183"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C5J4N7"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_13 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:35:55.389410"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "3306.7241220871447"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C9WXMR"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_14 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:37:03.234032"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "3279.08862856786"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_7OT44N"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_K9K1QJ"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_15 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:44:40.475722"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "5371.698344836399"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4D8JUW"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C5J4N7"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_16 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:46:01.931185"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "1990.2871493596563"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_7OT44N"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_2 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:14:30.074429"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "3144.1730634548403"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FC2MI"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FPBES"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_3 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:20:44.274469"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "5200.071745612431"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_39YNMQ"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4D8JUW"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_4 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:21:33.228510"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "6017.449547232049"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4D8JUW"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C9WXMR"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_5 a ns2:Compra ;
+    ns2:Ciudad "Madrid"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-30 20:22:20.650064"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "4268.860729832632"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FPBES"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C5J4N7"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_7 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:24:49.561139"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "1935.1639152428713"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C5J4N7"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_8 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:27:31.564890"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "3586.8698966753864"^^xsd:float ;
+    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C5J4N7"^^xsd:string,
+        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_K9K1QJ"^^xsd:string ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
+ns2:Compra_9 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:FechaEntrega "2020-05-27 20:29:02.897784"^^xsd:string ;
+    ns2:NombreTransportista "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "0.0"^^xsd:float ;
+    ns2:TarjetaCredito "ES78gdfgsdg"^^xsd:string .
+
