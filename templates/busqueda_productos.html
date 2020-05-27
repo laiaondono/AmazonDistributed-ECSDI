@@ -2,24 +2,51 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="https://lh3.googleusercontent.com/-c9bKgaRfC3Q/AAAAAAAAAAI/AAAAAAAAJUE/Eo2MLCqyiZs/s0-c-k-no-ns/photo.jpg">
+    <link rel="shortcut icon"
+          href="https://lh3.googleusercontent.com/-c9bKgaRfC3Q/AAAAAAAAAAI/AAAAAAAAJUE/Eo2MLCqyiZs/s0-c-k-no-ns/photo.jpg">
     <title>ECSDI - Búsqueda de productos</title>
 </head>
-<body>
-    <h1>Búsqueda de productos</h1>
-    <!-- <a href="javascript:history.back()">< Volver</a> -->
-    {% if not products %}
+<style>
+    .content {
+        text-align: center;
+    }
+
+    .active {
+        background-image: linear-gradient(to top, #fffbf9 0%, #97c4ff 100%);
+        height: 900px;
+
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    table#table1 {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<div class="active">
+    <div class="content">
+        <body>
+        <h1>Búsqueda de productos</h1>
+        <!-- <a href="javascript:history.back()">< Volver</a> -->
+        {% if not products %}
         <form method="post">
             <input type="text" name="name" placeholder="Nombre"/><br>
+            <br>
             <input type="text" name="brand" placeholder="Marca"/><br>
+            <br>
             <input type="text" name="minPrice" placeholder="Precio mínimo"/><br>
+            <br>
             <input type="text" name="maxPrice" placeholder="Precio máximo"/><br>
-
+            <br>
             <input type="submit" name="submit" value="Busca">
         </form>
-    {% else %}
+        {% else %}
         <form method="post">
-            <table cellpadding="5px">
+            <table cellpadding="5px" id="table1">
                 <tr>
                     <th><b></b></th>
                     <th><b>NOMBRE</b></th>
@@ -27,19 +54,24 @@
                     <th><b>PRECIO</b></th>
                 </tr>
                 {% for p in products %}
-                    <tr>
-                        <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.brand }}</td>
-                        <td>{{ p.price }}</td>
-                    </tr>
+                <tr>
+                    <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.brand }}</td>
+                    <td>{{ p.price }}</td>
+                </tr>
                 {% endfor %}
             </table>
-                <input type="text" name="city" placeholder="Ciudad"/><br>
-                <input type="text" name="priority" placeholder="Prioridad de entrega (1, 2 o 3)"/><br>
-                <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
+            <input type="text" name="city" placeholder="Ciudad"/><br>
+            <br>
+            <input type="text" name="priority" placeholder="Prioridad de entrega (1, 2 o 3)"/><br>
+            <br>
+            <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
+            <br>
             <input type="submit" name="submit" value="Comprar">
         </form>
-    {% endif %}
-</body>
+        {% endif %}
+        </body>
+    </div>
+</div>
 </html>

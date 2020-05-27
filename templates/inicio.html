@@ -4,16 +4,67 @@
     <meta charset="UTF-8">
     <title>Amazon ECSDI</title>
 </head>
-<body>
-    <h1>INSTRUCCIONES PARA USAR EL AGENTE ASISTENTE</h1>
-    <h2>/search_products</h2>
-    <p>Indicas las restricciones y le das a Buscar. De entre el resultado de los articulos, selecciona <br>
-    los que quieras, rellena la informacion, y dale a comprar.</p>
-    <h2>/valorar</h2>
-    <p>Introduce el nombre de el articulo que quieras valorar. Elige una puntuacion y valora un producto.</p>
-    <h2>/devolver</h2>
-    <p>Se mostraran todas las compras hechas. Elige la que quieras devolver y dale a devolver.</p>
-    <h2>/añadir_producto</h2>
-    <p>Rellena la informacion para añadir un producto de tu empresa.</p>
-</body>
+<style>
+    .content {
+        text-align: center;
+    }
+
+    .active {
+        background-image: linear-gradient(to top, #fffbf9 0%, #97c4ff 100%);
+        height: 900px;
+
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    table#table1 {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    table#table2 {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<div class="active">
+    <div class="content">
+        <body>
+        <h1>INSTRUCCIONES PARA USAR EL AGENTE ASISTENTE</h1>
+        <br>
+        <br>
+        <form method="post">
+            <input type="submit" name="submit" value="search_products">
+        </form>
+        <p>/search_products --> Indicas las restricciones y le das a Buscar. De entre el resultado de los articulos,
+            selecciona <br>
+            los que quieras, rellena la informacion, y dale a comprar.</p>
+        <br>
+        <br>
+        <form method="post">
+            <input type="submit" name="submit" value="valorar">
+        </form>
+        <p>/valorar --> Introduce el nombre de el articulo que quieras valorar. Elige una puntuacion y valora un
+            producto.</p>
+        <br>
+        <br>
+        <form method="post">
+            <input type="submit" name="submit" value="devolver">
+        </form>
+        <p>/devolver --> Se mostraran todas las compras hechas. Elige la que quieras devolver y dale a devolver.</p>
+        <br>
+        <br>
+        <form method="post">
+            <input type="submit" name="submit" value="añadir_producto">
+        </form>
+        <p>/añadir_producto --> Rellena la informacion para añadir un producto de tu empresa.</p>
+        <br>
+        <br>
+        </body>
+    </div>
+</div>
 </html>

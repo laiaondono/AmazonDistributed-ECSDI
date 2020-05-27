@@ -43,6 +43,12 @@ products_list = []
 # Datos del Agente
 global compra
 compra = False
+global grafo_respuesta
+grafo_respuesta = Graph()
+global info_bill
+info_bill = {}
+global completo
+completo = False
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
                     'http://%s:%d/comm' % (hostname, port),
@@ -76,12 +82,18 @@ resultats = []
 app = Flask(__name__, template_folder='../templates')
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def initialize():
     """
     Entrypoint de comunicacion
     """
-    return render_template('inicio.html')
+    if request.method == 'GET':
+        return render_template('inicio.html', products=None)
+    else:
+        if request.form['submit'] == 'search_products':
+            return flask.redirect("http://%s:%d/search_products" % (hostname, port))
+        else:
+            return  render_template('inicio.html', products=None)
 @app.route("/comm")
 def comunicacion():
     """
@@ -109,14 +121,13 @@ def comunicacion():
         else:
             # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
             # de registro
-            print("Actualitzat")
-            global compra
-            compra=True
+            global grafo_respuesta
+            grafo_respuesta = gm
+            global completo
+            completo = True
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
-            p = Process(target=hacer_redirect,args=())
-            p.start()
             gr =Graph()
             return gr.serialize(format="xml"),200
 
@@ -222,9 +233,8 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
 def hacer_pedido():
     global products_list
     if request.method == 'GET':
-        return render_template('nuevo_pedido.html', products=products_list, bill=None)
+        return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False)
     else:
-        print(request.form)
         if request.form['submit'] == 'Comprar':
             city = request.form['city']
             priority = request.form['priority']
@@ -233,14 +243,22 @@ def hacer_pedido():
             for p in request.form.getlist("checkbox"):
                 prod = products_list[int(p)]
                 products_to_buy.append(prod)
-            return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard))
-        elif request.form['submit'] == 'visualizar':
-            print("Holaaa")
-            global compra
-            if not compra:
-                return render_template("Espera.html")
+            return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard),intento=False, completo =False)
+        elif request.form['submit'] == "Visualizar datos completos":
+            global completo
+            global info_bill
+            if not completo:
+                return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=True, completo=False)
             else:
-                return "Ya tienes los datos boyyyyy"
+                global grafo_respuesta
+                for s,p,o in grafo_respuesta:
+                    if p == ONTO.FechaEntrega:
+                        info_bill["FechaEntrega"]=str(o)[:16]
+                    if p==ONTO.NombreTransportista:
+                        info_bill["NombreTransportista"]=o
+                return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=False, completo =True)
+        elif request.form['submit'] == "Volver al inicio":
+            return flask.redirect("http://%s:%d/" % (hostname, port))
 
 def comprar_productos(products_to_buy, city, priority, creditCard):
     global mss_cnt
@@ -281,7 +299,7 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
     msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorCompra.uri, action, mss_cnt)
     mss_cnt += 1
     gfactura = send_message(msg, AgGestorCompra.address)
-
+    global info_bill
     info_bill = {}
     #LA FACTURA (info_bill) HA DE TENIR: city, prioridad, tar credit, array de noms de productes, preu total
     products_name = []

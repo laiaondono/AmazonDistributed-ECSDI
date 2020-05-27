@@ -2,14 +2,44 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="https://lh3.googleusercontent.com/-c9bKgaRfC3Q/AAAAAAAAAAI/AAAAAAAAJUE/Eo2MLCqyiZs/s0-c-k-no-ns/photo.jpg">
-    <title>ECSDI - Hacer pedido</title>
+    <link rel="shortcut icon"
+          href="https://lh3.googleusercontent.com/-c9bKgaRfC3Q/AAAAAAAAAAI/AAAAAAAAJUE/Eo2MLCqyiZs/s0-c-k-no-ns/photo.jpg">
+    <title>Pedido</title>
 </head>
-<body>
-    {% if products %}
+<style>
+    .content {
+        text-align: center;
+    }
+
+    .active {
+        background-image: linear-gradient(to top, #fffbf9 0%, #97c4ff 100%);
+        height: 900px;
+
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    table#table1 {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    table#table2 {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<div class="active">
+    <div class="content">
+        <body>
+        {% if products %}
         <h1>Hacer pedido</h1>
         <form method="post">
-            <table cellpadding="5px">
+            <table cellpadding="5px" id="table2">
                 <tr>
                     <th><b></b></th>
                     <th><b>NOMBRE</b></th>
@@ -17,56 +47,83 @@
                     <th><b>PRECIO</b></th>
                 </tr>
                 {% for p in products %}
-                    <tr>
-                        <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.brand }}</td>
-                        <td>{{ p.price }}</td>
-                    </tr>
+                <tr>
+                    <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.brand }}</td>
+                    <td>{{ p.price }}</td>
+                </tr>
                 {% endfor %}
             </table>
             <input type="text" name="city" placeholder="Ciudad"/><br>
+            <br>
             <input type="text" name="priority" placeholder="Prioridad de entrega (1, 2 o 3)"/><br>
+            <br>
             <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
+            <br>
             <input type="submit" name="submit" value="Comprar">
         </form>
-    {% else %} <!-- if bill -->
+        {% else %} <!-- if bill -->
+        <br>
+        <br>
         <h1>Datos Compra</h1>
-        <table cellpadding="5px">
+        <table cellpadding="5px" id="table1">
             <tr>
-                <th><b>NOMBRE PRODUCTOS</b></th>
+                <th><b><i>NOMBRE PRODUCTOS</i></b></th>
             </tr>
             {% for p in bill.products %}
-                <tr>
-                    <td>{{ p }}</td>
-                </tr>
+            <tr>
+                <td>{{ p }}</td>
+            </tr>
             {% endfor %}
             <tr>
-                <th><b>PRECIO TOTAL</b></th>
+                <th><b><i>PRECIO TOTAL</i></b></th>
                 <th><b>{{ bill.price }}</b></th>
             </tr>
             <tr>
-                <th><b>DATOS USUARIO</b></th>
+                <th><b><i>DATOS USUARIO</i></b></th>
                 <th><b></b>-</th>
             </tr>
             <tr>
-                <th><b>CIUDAD</b></th>
+                <th><b><i>CIUDAD</i></b></th>
                 <th><b>{{ bill.city }}</b></th>
             </tr>
             <tr>
-                <th><b>PRIORIDAD ENTREGA</b></th>
+                <th><b><i>PRIORIDAD ENTREGA</i></b></th>
                 <th><b>{{ bill.priority }}</b></th>
             </tr>
             <tr>
-                <th><b>TARJETA CRÉDITO</b></th>
+                <th><b><i>TARJETA CRÉDITO</i></b></th>
                 <th><b>{{ bill.creditCard }}</b></th>
             </tr>
+            {% if intento %}
+            <p style="color:red;"> Los datos completos del pedido aun no estan disponibles. Por favor, espere un
+                momento.</p>
+            {% endif %}
+            {% if completo %}
+            <tr>
+                <th><b><i>FECHA DE ENTREGA</i></b></th>
+                <th><b>{{ bill.FechaEntrega }}</b></th>
+            </tr>
+            <tr>
+                <th><b><i>NOMBRE TRANSPORTISTA</i></b></th>
+                <th><b>{{ bill.NombreTransportista }}</b></th>
+            </tr>
+            {% endif %}
         </table>
+        {% if not completo %}
         <form method="post">
-            <input type="submit" name="submit" value="visualizar">
+            <input type="submit" name="submit" value="Visualizar datos completos">
         </form>
-    {% endif %}
-</body>
+        {% else %}
+        <form method="post">
+            <input type="submit" name="submit" value="Volver al inicio">
+        </form>
+        {% endif %}
+        {% endif %}
+        </body>
+    </div>
+</div>
 </html>
 
 
