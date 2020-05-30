@@ -41,6 +41,8 @@ mss_cnt = 0
 products_list = []
 
 # Datos del Agente
+global nombreusuario
+nombreusuario = ""
 global compra
 compra = False
 global grafo_respuesta
@@ -87,6 +89,7 @@ def initialize():
     """
     Entrypoint de comunicacion
     """
+    global nombreusuario
     if request.method == 'GET':
         return render_template('inicio.html', products=None)
     else:
