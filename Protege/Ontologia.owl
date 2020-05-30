@@ -83,6 +83,15 @@
     
 
 
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Ofrece -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Ofrece">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#VendedorExterno"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Procesa -->
 
     <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Procesa">
@@ -121,6 +130,25 @@
     
 
 
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Realiza -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Realiza">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#AgenteAsistente"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#RealizaTransferencia -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#RealizaTransferencia">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#ServicioPago"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#CobrarCompra"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#DevolverDinero"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#RestringidaPor -->
 
     <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#RestringidaPor">
@@ -154,7 +182,6 @@
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Ciudad -->
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Ciudad">
-        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#AgenteAsistente"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#CentroLogístico"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
@@ -194,6 +221,7 @@
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Restricciones"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Transportista"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#VendedorExterno"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
@@ -215,6 +243,7 @@
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#RestriccionNombre"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Transportista"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#VendedorExterno"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
@@ -311,7 +340,6 @@
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#TarjetaCredito -->
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#TarjetaCredito">
-        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#AgenteAsistente"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido"/>
@@ -569,6 +597,14 @@
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ValorarProducto">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
         <rdfs:comment>Esta clase representa la acción de valorar producto. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#VendedorExterno -->
+
+    <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#VendedorExterno">
+        <rdfs:comment>Esta clase representa el vendedor externo.</rdfs:comment>
     </owl:Class>
 </rdf:RDF>
 
