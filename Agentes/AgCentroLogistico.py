@@ -110,14 +110,15 @@ def communication():
             accion = gm.value(subject=content, predicate=RDF.type)
 
             # Accion de busqueda
-            if accion == ONTO.EnviarPaquete:
+            if accion == ONTO.ProcesarEnvio:
                 #Se genera un grafo con la informacion necesaria para negociar el envío.
                 count = get_count()
-                action= ONTO["ConsensuarTransportista_"+ str(count)]
+                action= ONTO["PedirPreciosEnvio_"+ str(count)]
                 lote = ONTO["Lote_"+str(count)]
                 graph = Graph()
                 peso_total = 0
-                graph.add((action, RDF.type, ONTO.ConsensuarTransportista))
+                graph.add((action, RDF.type, ONTO.PedirPreciosEnvio))
+                # TODO un lote no equival a una compra, son diverses compres amb igual ciutat i prioritat (per exemple)
                 graph.add((lote,RDF.type,ONTO.Lote))
                 for s,p,o in gm:
                     if p == ONTO.Ciudad:
@@ -133,7 +134,7 @@ def communication():
                         graph.add((s, ONTO.Nombre, Literal(o,datatype=XSD.string)))
                         graph.add((lote, ONTO.Contiene, URIRef(s)))
                 graph.add((lote,ONTO.Peso,Literal(peso_total,datatype=XSD.float)))
-                #La accion es consensuar transportista, y conteine un lote como informacion.
+                #La accion es pedir precios envio, y conteine un lote como informacion.
                 graph.add((action, ONTO.Lote,URIRef(lote)))
                 """
                 #A partir de aqui se añaden los atributos del lote.
@@ -168,6 +169,7 @@ def communication():
                         graph.add((lote, ONTO.Contiene, URIRef(nomSuj)))
                     graph.add((action, ONTO.Peso, Literal(peso_total, datatype=XSD.float)))
                     """
+                # TODO FIPA-CONTRACT NEt
                 gr = send_message(
                     build_message(graph, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, action, count), AgTransportista.address)
                 info = {}
@@ -185,13 +187,14 @@ def communication():
                 gm.add((transportista,ONTO.NombreTransportista,Literal(info["NombreTransportista"],datatype=XSD.string)))
                 gm.add((compra,ONTO.EntregadaPor,URIRef(transportista)))
                 gm.add((compra,ONTO.FechaEntrega,Literal(info["Fecha"],datatype=XSD.string)))
-                grafo_confirmacion =Graph()
-                accion = ONTO["ConfirmarTransportista_" + str(count)]
-                grafo_confirmacion.add((accion, RDF.type, ONTO.ConfirmarTransportista))
+                grafo_confirmacion = Graph()
+                accion = ONTO["EnviarPaquete_" + str(count)]
+                grafo_confirmacion.add((accion, RDF.type, ONTO.EnviarPaquete))
                 grr = send_message(
                     build_message(grafo_confirmacion, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, accion, count), AgTransportista.address)
                 return gm.serialize(format="xml"), 200
             else:
+                # TODO respuesta pedirpreciosenvio y predir contraofertas
                 resposta= Graph()
                 return resposta.serialize(format="xml"),200
 

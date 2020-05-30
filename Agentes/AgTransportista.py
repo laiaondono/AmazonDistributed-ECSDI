@@ -116,7 +116,7 @@ def communication():
             city=""
             priority=0.0
             centro=""
-            if accion == ONTO.ConsensuarTransportista:
+            if accion == ONTO.PedirPreciosEnvio:
                 for s,p,o in gm:
                     if p == ONTO.Peso:
                         peso_total=float(o)
@@ -168,18 +168,19 @@ def communication():
                 precio_envio= peso_total*1+0.01*dist_fromcentro
                 print("Fecha: " + str(fecha)+  "/ Precio_envio: "+ str(precio_envio))
                 count = get_count()
-                subject = ONTO["RespuestaTransportista_"+str(count)]
+                subject = ONTO["PedirPreciosEnvio_"+str(count)]
                 respuesta=Graph()
-                respuesta.add((subject,RDF.type,ONTO.RespuestaTransportista))
+                respuesta.add((subject,RDF.type,ONTO.PedirPreciosEnvio))
                 respuesta.add((subject,ONTO.Fecha,Literal(fecha,datatype=XSD.string)))
                 respuesta.add((subject,ONTO.PrecioTransporte,Literal(precio_envio,datatype=XSD.float)))
+                # TODO afegir mes transportistes
                 ref = ONTO["Transportista_NACEX"]
                 respuesta.add((ref,RDF.type,ONTO.Transportista))
                 respuesta.add((ref,ONTO.Nombre,Literal("NACEX",datatype=XSD.float)))
                 respuesta.add((ref,ONTO.Identificador,Literal("Transportista_Nacex",datatype=XSD.string)))
                 respuesta.add((subject,ONTO.Transportista,URIRef(ref)))
                 return respuesta.serialize(format="xml"),200
-            elif accion == ONTO.ConfirmarTransportista:
+            elif accion == ONTO.EnviarPaquete:
                 grr = Graph()
                 return grr.serialize(format="xml"),200
             else:

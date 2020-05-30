@@ -97,6 +97,8 @@ def initialize():
             return flask.redirect("http://%s:%d/search_products" % (hostname, port))
         else:
             return  render_template('inicio.html', products=None)
+
+
 @app.route("/comm")
 def comunicacion():
     """
@@ -109,6 +111,7 @@ def comunicacion():
     msgdic = get_message_properties(gm)
     
     gr = None
+    global mss_cnt
     if msgdic is None:
         mss_cnt+=1
         # Si no es, respondemos que no hemos entendido el mensaje
@@ -225,7 +228,7 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
                 product['name'] = o
             if p == ONTO.Marca:
                 product['brand'] = o
-            if p == ONTO.Precio:
+            if p == ONTO.PrecioProducto:
                 product['price'] = o
             if p == ONTO.Peso:
                 product["weight"] = o

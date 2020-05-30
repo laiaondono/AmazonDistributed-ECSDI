@@ -301,6 +301,7 @@ def añadir_productos():
 def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.float_info.max, nombre=None):
     graph = Graph()
     ontologyFile = open('../Data/Productos')
+    # TODO buscar tambe en productes externos
     graph.parse(ontologyFile, format='xml')
 
     first = second = 0
@@ -349,7 +350,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         result.add((subject, RDF.type, ONTO.Producto))
         result.add((subject, ONTO.Marca, Literal(marca, datatype=XSD.string)))
         result.add((subject, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
-        result.add((subject, ONTO.Precio, Literal(precio, datatype=XSD.float)))
+        result.add((subject, ONTO.PrecioProducto, Literal(precio, datatype=XSD.float)))
         result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
         result.add((subject, ONTO.Peso, Literal(peso, datatype=XSD.float)))

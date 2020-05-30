@@ -214,11 +214,11 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
         # request_envio("New York", gm)
         centro = "New York"
     # Empezamos a crear el grafo con la información de la compra para que el CentroLogístico pueda enviar la compra.
-    accion = ONTO["EnviarPaquete_" + str(count)]
+    accion = ONTO["ProcesarEnvio_" + str(count)]
     graph = Graph()
     compra = ONTO["Compra_" + str(count)]
     # El grafo tiene la accion enviar paquete. En esta accion tiene que constar la relacion Envia, que relaciona el envio con la compra.
-    graph.add((accion, RDF.type, ONTO.EnviarPaquete))
+    graph.add((accion, RDF.type, ONTO.ProcesarEnvio))
     # Generamos una compra que constará en el grafo. Primero añadimos atributos basicos.
     graph.add((compra,RDF.type,ONTO.Compra))
     graph.add((compra, ONTO.Ciudad, Literal(city, datatype=XSD.string)))
