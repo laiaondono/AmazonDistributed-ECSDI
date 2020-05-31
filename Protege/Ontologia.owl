@@ -389,7 +389,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#AñadirProductoExterno">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de añadir producto externo. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de añadir producto externo. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
@@ -398,7 +398,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#BuscarProductos">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de buscar productos. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de buscar productos. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
@@ -415,7 +415,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#CobrarCompra">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de cobrar compra. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de cobrar compra. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
@@ -440,7 +440,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#DevolverProducto">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de devolver producto. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de devolver producto. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
@@ -473,7 +473,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de hacer un pedido. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de hacer un pedido. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
@@ -514,7 +514,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProcesarEnvio">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de procesar envío. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de procesar envío. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
@@ -531,7 +531,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#RecomendarProductos">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de recomendar productos. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de recomendar productos. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
@@ -596,7 +596,7 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ValorarProducto">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
-        <rdfs:comment>Esta clase representa la acción de valorar producto. La descripción de ésta se encuentra en la documentación de la entrega (2.1.1).</rdfs:comment>
+        <rdfs:comment>Esta clase representa la acción de valorar producto. La descripción de ésta se encuentra en la documentación de la entrega (2.1).</rdfs:comment>
     </owl:Class>
     
 
