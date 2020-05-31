@@ -25,6 +25,15 @@
     
 
 
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Añade -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Añade">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#AñadirProductoExterno"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene -->
 
     <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Contiene">
@@ -65,20 +74,47 @@
     
 
 
-    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#FacturaCompra -->
-
-    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#FacturaCompra">
-        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
-        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
-    </owl:ObjectProperty>
-    
-
-
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#FacturaEnviada -->
 
     <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#FacturaEnviada">
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#EnviarFactura"/>
         <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#PedirPreciosEnvio"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#LoteContraOfertas -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#LoteContraOfertas">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#PedirContraofertasPreciosEnvio"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#LoteEntregado -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#LoteEntregado">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#CobrarCompra"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#LoteFinal -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#LoteFinal">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#EnviarPaquete"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
     </owl:ObjectProperty>
     
 
@@ -126,15 +162,6 @@
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido"/>
         <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Realiza -->
-
-    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Realiza">
-        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#AgenteAsistente"/>
-        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
     </owl:ObjectProperty>
     
 
@@ -213,9 +240,9 @@
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Identificador -->
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Identificador">
-        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#CentroLogístico"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Compra"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#EnviarPaquete"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
@@ -278,6 +305,24 @@
     
 
 
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioKg -->
+
+    <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioKg">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Transportista"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioKm -->
+
+    <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioKm">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Transportista"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioMaximo -->
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioMaximo">
@@ -320,6 +365,7 @@
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#PrecioTransporte">
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#PedirContraofertasPreciosEnvio"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
     </owl:DatatypeProperty>
     
@@ -353,6 +399,7 @@
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Valoracion">
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#RestriccionValoracion"/>
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#ValorarProducto"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
     </owl:DatatypeProperty>
     
@@ -480,9 +527,7 @@
 
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote -->
 
-    <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote">
-        <rdfs:comment>En esta clase se representan los lotes de productos.</rdfs:comment>
-    </owl:Class>
+    <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote"/>
     
 
 
@@ -498,14 +543,6 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#PedirPreciosEnvio">
         <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProcesarEnvio"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#ProcesarCompra -->
-
-    <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProcesarCompra">
-        <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#HacerPedido"/>
     </owl:Class>
     
 
@@ -606,6 +643,20 @@
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#VendedorExterno">
         <rdfs:comment>Esta clase representa el vendedor externo.</rdfs:comment>
     </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotations
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote">
+        <rdfs:comment>En esta clase se representan los lotes de productos.</rdfs:comment>
+    </rdf:Description>
 </rdf:RDF>
 
 
