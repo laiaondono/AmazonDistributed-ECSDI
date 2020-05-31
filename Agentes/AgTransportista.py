@@ -72,6 +72,9 @@ location_ny = ( Nominatim(user_agent='myapplication').geocode("New York").latitu
 location_bcn = (Nominatim(user_agent='myapplication').geocode("Barcelona").latitude,Nominatim(user_agent='myapplication').geocode("Barcelona").longitude)
 location_pk = (Nominatim(user_agent='myapplication').geocode("Pekín").latitude,Nominatim(user_agent='myapplication').geocode("Pekín").longitude)
 
+# TODO vectors: per a cada CL: preu x kg, preu x km, transportistas
+
+
 # Global triplestore graph
 dsgraph = Graph()
 
