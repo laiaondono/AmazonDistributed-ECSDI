@@ -349,6 +349,7 @@
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Nombre -->
 
     <owl:DatatypeProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Nombre">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#AñadirProductoExterno"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#CobrarVendedorExterno"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#PagarVendedorExterno"/>
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
