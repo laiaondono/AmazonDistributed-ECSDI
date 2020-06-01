@@ -340,6 +340,58 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
     # Aqui hi havia un bind
     product_count = 0
     for row in graph_query:
+        nom_prod = row.nombre
+        marca_prod = row.marca
+        precio_prod = row.precio
+        peso_prod = row.peso
+        id_prod = row.id
+        subject_prod = row.producto
+        product_count += 1
+        result.add((subject_prod, RDF.type, ONTO.Producto))
+        result.add((subject_prod, ONTO.Marca, Literal(marca_prod, datatype=XSD.string)))
+        result.add((subject_prod, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
+        result.add((subject_prod, ONTO.PrecioProducto, Literal(precio_prod, datatype=XSD.float)))
+        result.add((subject_prod, ONTO.Identificador, Literal(id_prod, datatype=XSD.string)))
+        result.add((subject_prod, ONTO.Nombre, Literal(nom_prod, datatype=XSD.string)))
+        result.add((subject_prod, ONTO.Peso, Literal(peso_prod, datatype=XSD.float)))
+    graphexternos = Graph()
+    ontologyFileExtern = open('../Data/ProductosExternos')
+    # TODO buscar tambe en productes externos
+    graphexternos.parse(ontologyFileExtern, format='xml')
+    first = second = 0
+    query = """
+        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+        prefix owl:<http://www.w3.org/2002/07/owl#>
+        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca ?peso
+        where {
+            { ?producto rdf:type default:Producto }.
+            ?producto default:Nombre ?nombre .
+            ?producto default:PrecioProducto ?precio .
+            ?producto default:Marca ?marca .
+            ?producto default:Identificador ?id . 
+            ?producto default:Peso ?peso .
+            FILTER("""
+
+    if nombre is not None:
+        query += """str(?nombre) = '""" + nombre + """'"""
+        first = 1
+    #if valoracion is not None:
+    #query += """str(?valoracion) = '""" + str(valoracion) + """'"""
+    if marca is not None:
+        if first == 1:
+            query += """ && """
+        query += """str(?marca) = '""" + marca + """'"""
+        second = 1
+    if first == 1 or second == 1:
+        query += """ && """
+    query += """?precio >= """ + str(preciomin) + """ &&
+                ?precio <= """ + str(preciomax) + """  )}
+                order by asc(UCASE(str(?nombre)))"""
+    graph_query_externos = graphexternos.query(query)
+    product_count = 0
+    for row in graph_query_externos:
         nom = row.nombre
         marca = row.marca
         precio = row.precio
