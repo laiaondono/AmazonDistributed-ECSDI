@@ -102,6 +102,15 @@
     
 
 
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#HistorialDe -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#HistorialDe">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#ActualizarHistorial"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Usuario"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote -->
 
     <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Lote">
@@ -189,6 +198,15 @@
 
     <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosFactura">
         <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Factura"/>
+        <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosHistorial -->
+
+    <owl:ObjectProperty rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductosHistorial">
+        <rdfs:domain rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#ActualizarHistorial"/>
         <rdfs:range rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
     </owl:ObjectProperty>
     
@@ -486,6 +504,14 @@
 
     <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion">
         <rdfs:comment>Esta clase incluye las acciones que realiza el sistema en las que el agente que las ejecuta interactura con otros agentes o actores externos del sistema.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.owl-ontologies.com/OntologiaECSDI.owl#ActualizarHistorial -->
+
+    <owl:Class rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ActualizarHistorial">
+        <rdfs:subClassOf rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Accion"/>
     </owl:Class>
     
 
