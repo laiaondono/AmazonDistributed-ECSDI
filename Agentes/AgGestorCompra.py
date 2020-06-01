@@ -21,7 +21,7 @@ from pyparsing import Literal
 import requests
 from rdflib import Namespace, Graph, RDF, Literal, URIRef, XSD
 
-from Agentes import AgCentroLogistico
+#from Agentes import AgCentroLogistico
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.Logging import config_logger
@@ -184,6 +184,7 @@ def communication():
                     count_real, graffactura, gm, precio_total, content, priority, creditCard))
                 empezar_proceso.start()
                 return graffactura.serialize(format='xml'), 200
+            # TODO si la accio es cobrar compra (et ve del ag transportista)
 
 
 def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, content="", prioridad=0, tarjeta=""):
@@ -276,6 +277,8 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
             grafrespuesta.add((compra,ONTO.FechaEntrega,Literal(o,datatype=XSD.string)))
         elif p == ONTO.NombreTransportista:
             grafrespuesta.add((compra,ONTO.NombreTransportista,Literal(o,datatype=XSD.string)))
+        elif p == ONTO.Lote:
+            grafrespuesta.add((compra,ONTO.Lote,s)) # TODO pot estar malament
     graphfinal += grafrespuesta
     # Añadimos la nueva compra y lo escribimos otra vez.
     PedidosFile = open('../Data/RegistroPedidos', 'wb')

@@ -22,7 +22,7 @@ from flask import Flask, request
 from pyparsing import Literal
 from rdflib import URIRef, XSD, Namespace, Graph, Literal
 
-from Agentes import AgTransportista
+#from Agentes import AgTransportista
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.FlaskServer import shutdown_server
@@ -118,7 +118,6 @@ def communication():
                 graph = Graph()
                 peso_total = 0
                 graph.add((action, RDF.type, ONTO.PedirPreciosEnvio))
-                # TODO un lote no equival a una compra, son diverses compres amb igual ciutat i prioritat (per exemple)
                 graph.add((lote,RDF.type,ONTO.Lote))
                 for s,p,o in gm:
                     if p == ONTO.Ciudad:
@@ -126,7 +125,7 @@ def communication():
                     elif p == ONTO.PrioridadEntrega:
                         graph.add((lote, ONTO.PrioridadEntrega, Literal(o,datatype=XSD.float)))
                     elif p == ONTO.NombreCL:
-                        graph.add((action, ONTO.NombreCL,Literal(o,datatype=XSD.string)))
+                        graph.add((lote, ONTO.NombreCL,Literal(o,datatype=XSD.string)))
                     elif p ==ONTO.Peso:
                         peso_total+=float(o)
                     elif p == ONTO.Nombre:
@@ -181,11 +180,11 @@ def communication():
                     elif p == ONTO.Nombre:
                         info["NombreTransportista"] = o
                 compra = ONTO["Compra_" + str(count)]
-                gm.add((compra,ONTO.FechaEntrega,Literal(info["Fecha"],datatype=XSD.string)))
                 transportista = ONTO[info["NombreTransportista"]]
                 gm.add((transportista,RDF.type,ONTO.Transportista))
                 gm.add((transportista,ONTO.NombreTransportista,Literal(info["NombreTransportista"],datatype=XSD.string)))
                 gm.add((compra,ONTO.EntregadaPor,URIRef(transportista)))
+                gm.add((compra,ONTO.Lote,lote)) # TODO OJO que es SUJETOOOO NO OBJETO
                 gm.add((compra,ONTO.FechaEntrega,Literal(info["Fecha"],datatype=XSD.string)))
                 grafo_confirmacion = Graph()
                 accion = ONTO["EnviarPaquete_" + str(count)]

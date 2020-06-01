@@ -173,6 +173,7 @@ def search_products():
             brand = request.form['brand']
             products_list = buscar_productos(name, minPrice, maxPrice, brand)
             return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
+        # TODO modificar html x si no hi ha cap producte que cumpleixi restriccions
 
 
 def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = None):
@@ -239,6 +240,7 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
 def hacer_pedido():
     global products_list
     if request.method == 'GET':
+        # TODO ciudad, prioridad  (que nomes pot ser 1, 2 o 3)y tarjeta credit no pot estar buida
         return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False)
     else:
         if request.form['submit'] == 'Comprar':
@@ -265,6 +267,7 @@ def hacer_pedido():
                 return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=False, completo =True)
         elif request.form['submit'] == "Volver al inicio":
             return flask.redirect("http://%s:%d/" % (hostname, port))
+
 
 def comprar_productos(products_to_buy, city, priority, creditCard):
     global mss_cnt
