@@ -38,7 +38,7 @@ agn = Namespace("http://www.agentes.org#")
 # Contador de mensajes
 mss_cnt = 7 # tenim 6 productes externs afegits per defecte
 # Datos del Agente
-
+numeros_cuenta = {'Nike':"ESBN00909191",'IKEA':"ESBN0123442212",'Apple':"ESBN91120302102"}
 AgVendedorExterno = Agent('AgVendedorExterno',
                     agn.AgVendedorExterno,
                     'http://%s:%d/comm' % (hostname, port),
@@ -160,7 +160,31 @@ def communication():
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
-            #if accion =
+            nombre_empresa = ""
+            if accion == ONTO.PagarVendedorExterno:
+                for s,p,o in gm:
+                    if p == ONTO.Nombre:
+                        nombre_empresa = str(o)
+                        break
+                graphrespuesta = Graph()
+                accion=ONTO["PagarVendedorExterno"]
+                graphrespuesta.add((accion,RDF.type,ONTO.PagarVendedorExterno))
+                if nombre_empresa != "Nike" and nombre_empresa != "IKEA" and nombre_empresa != "Apple":
+                    return graphrespuesta.serialize(format='xml'),200
+                elif accion == ONTO.AvisarEnvio:
+                    g = Graph()
+                    action = ONTO["AvisarEnvio_" + str(get_count())]
+                    g.add((action, RDF.type, ONTO.AvisarEnvio))
+                    print("recibidooooo")
+                    return g.serialize(format="xml"),200
+                else:
+                    global numeros_cuenta
+                    graphrespuesta.add((accion,ONTO.NumeroCuenta,Literal(numeros_cuenta[str(nombre_empresa)])))
+                    return graphrespuesta.serialize(format='xml'),200
+
+
+
+
 
             # Accion de busqueda
         # if accion == ONTO.HacerPedido:

@@ -30,56 +30,47 @@
 <div class="active">
     <div class="content">
         <body>
-        <h1>Búsqueda de productos</h1>
+        <h1>Mis productos</h1>
         <!-- <a href="javascript:history.back()">< Volver</a> -->
         <br>
         <p>Usuario activo: {{usuario}}</p>
         <br>
-        {% if not products or busquedafallida %}
-        <form method="post">
-            <input type="text" name="name" placeholder="Nombre"/><br>
-            <br>
-            <input type="text" name="brand" placeholder="Marca"/><br>
-            <br>
-            <input type="text" name="minPrice" placeholder="Precio mínimo"/><br>
-            <br>
-            <input type="text" name="maxPrice" placeholder="Precio máximo"/><br>
-            <br>
-            <input type="text" name="valoracionminima" placeholder="Valoracion minima (max 5)"/><br>
-            <br>
-            <input type="submit" name="submit" value="Busca">
-            {% if busquedafallida %}
-            <p style="color:red;"> No se han encontrado productos para esas restricciones.Vuelve a intentarlo</p>
-            {% endif %}
+        {% if not products  %}}
+        <p style="color:red;"> Aún no has comprado ningún producto</p>
         </form>
         {% else %}
         <form method="post">
             <table cellpadding="5px" id="table1">
                 <tr>
-                    <th><b></b></th>
                     <th><b>NOMBRE</b></th>
                     <th><b>MARCA</b></th>
-                    <th><b>PRECIO</b></th>
-                    <th><b>VALORACION</b></th>
                 </tr>
                 {% for p in products %}
                 <tr>
-                    <td><input type="checkbox" name="checkbox" value="{{ products.index(p) }}"></td>
-                    <td>{{ p.name }}</td>
-                    <td>{{ p.brand }}</td>
-                    <td>{{ p.price }}</td>
-                    <td>{{ p.rating }}</td>
+                    <td>{{ p.producto }}</td>
+                    <td>{{ p.marca }}</td>
                 </tr>
                 {% endfor %}
             </table>
-            <input type="text" name="city" placeholder="Ciudad"/><br>
             <br>
-            <input type="text" name="priority" placeholder="Prioridad de entrega (1, 2 o 3)"/><br>
             <br>
-            <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
+            <input type="text" name="producto" placeholder="Nombre Producto"/><br>
+            <p>Introduce el nombre del producto y indica si quieres valorar o devolver.</p>
+            <p>En caso de valorar, introduce tu nota del 1 al 5 en el siguiente espacio</p>
+            <input type="text" name="valoracion" placeholder="Valoracion(1-5)"/>
             <br>
-            <input type="submit" name="submit" value="Comprar">
+            {% if intento %}
+            <p style="color:red;"> Por favor, pon un nombre válido y una valoracion entre 1 y 5.</p>
+            {% endif %}
+            {% if valorado %}
+            <p style="color:red;"> Ya has valorado este producto.</p>
+            {% endif %}
+            <table>
+                <input type="submit" name="submit" value="Valorar">
+                <input type="submit" name="submit" value="Devolver">
+            </table>
         </form>
+        <br>
         <br>
         <form method="post">
             <input type="submit" name="submit" value="Volver al inicio">

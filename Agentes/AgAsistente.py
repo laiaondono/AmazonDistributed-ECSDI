@@ -39,7 +39,8 @@ agn = Namespace("http://www.agentes.org#")
 # Variables globales
 mss_cnt = 0
 products_list = []
-
+global my_products
+my_products = [{}]
 # Datos del Agente
 global nombreusuario
 nombreusuario = ""
@@ -51,6 +52,8 @@ global info_bill
 info_bill = {}
 global completo
 completo = False
+global productos_valorados
+productos_valorados = []
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
                     'http://%s:%d/comm' % (hostname, port),
@@ -110,8 +113,8 @@ def initialize():
         elif request.form['submit'] == 'registro_usuario':
             nombreusuario = request.form['name']
             return  render_template('inicio.html', products=None, usuario=nombreusuario)
-        else:
-            return request.form['submit']
+        elif request.form['submit'] == 'ProductosComprados':
+            return flask.redirect("http://%s:%d/misproductos" % (hostname, port))
 
 
 @app.route("/comm")
@@ -273,6 +276,73 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
     return products_list
 
 
+@app.route("/misproductos", methods=['GET', 'POST'])
+def mis_productos():
+    if request.method == 'GET':
+        global my_products
+        global nombreusuario
+        my_products=[]
+        PedidosFile = open('../Data/RegistroPedidos')
+        graphpedidos = Graph()
+        graphpedidos.parse(PedidosFile, format='turtle')
+        subjects_user = []
+        productos_user = []
+        for s,p,o in graphpedidos:
+            if p == ONTO.DNI and str(o) == nombreusuario:
+                subjects_user.append(s)
+        for s,p,o in graphpedidos:
+            if s in subjects_user and p == ONTO.ProductosCompra:
+                productos_user.append(str(o))
+        for producto in productos_user:
+            PedidosFile = open('../Data/Productos')
+            graphproductos = Graph()
+            graphproductos.parse(PedidosFile, format='xml')
+            PedidosFile = open('../Data/ProductosExternos')
+            graphproductosexternos = Graph()
+            graphproductosexternos.parse(PedidosFile, format='xml')
+            query ="""prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+            prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+            prefix owl:<http://www.w3.org/2002/07/owl#>
+            SELECT DISTINCT ?producto ?nombre ?marca ?id
+            where {
+                { ?producto rdf:type default:Producto }.
+            ?producto default:Nombre ?nombre .
+            ?producto default:PrecioProducto ?precio .
+            ?producto default:Marca ?marca .
+            ?producto default:Identificador ?id .
+            ?producto default:Valoracion ?valoracion .
+            FILTER( str(?nombre) = '""" + str(producto)+"""')}"""
+            graphproductos = graphproductos.query(query)
+            graphproductosexternos = graphproductosexternos.query(query)
+            for row in graphproductos:
+                info = {'producto': row.nombre, 'identificador': row.id, 'marca': row.marca}
+                my_products.append(info)
+            for row in graphproductosexternos:
+                info = {'producto': row.nombre, 'identificador': row.id, 'marca': row.marca}
+                my_products.append(info)
+        return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False)
+    else:
+        if request.form['submit'] == 'Valorar':
+            global nombreusuario,productos_valorados
+            producto = request.form['producto']
+            val = float(request.form['valoracion'])
+            graphvaloracion = Graph()
+            accion = ONTO["ValorarProducto"]
+            if (producto == "" or val < 1 or val > 5):
+                return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True)
+            if (producto in productos_valorados):
+                return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = False,valorado = True)
+            graphvaloracion.add((accion,RDF.type,ONTO.ValorarProducto))
+            graphvaloracion.add((accion,ONTO.DNI,Literal(nombreusuario)))
+            graphvaloracion.add((accion,ONTO.Nombre,Literal(producto)))
+            graphvaloracion.add((accion,ONTO.Valoracion,Literal(val)))
+            msg = build_message(graphvaloracion,ACL.request, AgAsistente.uri, AgProcesadorOpiniones.uri, accion, mss_cnt)
+            send_message(msg,AgProcesadorOpiniones.address)
+            productos_valorados.append(producto)
+            return flask.redirect("http://%s:%d/" % (hostname, port))
+
+
 @app.route("/hacer_pedido", methods=['GET', 'POST'])
 def hacer_pedido():
     global products_list
@@ -373,7 +443,10 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
     creditCardonto = ONTO[city]
     g.add((creditCardonto, ONTO.TarjetaCredito, Literal(creditCard)))
     g.add((action, ONTO.TarjetaCredito, URIRef(creditCardonto)))
-
+    usuario = ONTO["Usuario"]
+    g.add((usuario,RDF.type,ONTO.Usuario))
+    g.add((usuario,ONTO.DNI,Literal(nombreusuario)))
+    g.add((action, ONTO.DNI, URIRef(nombreusuario)))
     for p in products_to_buy:
         g.add((p['url'], RDF.type, ONTO.Producto))
         for atr in p:

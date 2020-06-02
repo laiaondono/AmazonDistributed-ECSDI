@@ -146,7 +146,7 @@ def comunicacion():
                 PedidosFile.close()
                 return gr.serialize(format="xml"),200
 
-            if accion == ONTO.ValorarProducto:
+            elif accion == ONTO.ValorarPermitido:
                 # Avisamos al AgAsistente de que ya se puede realizar la valoracion de los productos del grafo
                 empezar_proceso = Process(target=Valorar, args=(gm,accion))
                 empezar_proceso.start()
@@ -154,6 +154,48 @@ def comunicacion():
                 #Returnem ACK al AgGestorCompra conforme ho hem rebut
                 grr = Graph()
                 return grr.serialize(format="xml"),200
+            elif accion == ONTO.ValorarProducto:
+                for s,p,o in gm:
+                    if p == ONTO.DNI:
+                        dni_user = str(o)
+                    elif p == ONTO.Nombre:
+                        nombre_producto = str(o)
+                    elif p == ONTO.Valoracion:
+                        valoracion = float(o)
+                ValoracionesFile = open('../Data/Valoraciones')
+                graphvaloraciones = Graph()
+                graphvaloraciones.parse(ValoracionesFile, format='turtle')
+                count = 0
+                for s,p,o in graphvaloraciones:
+                    if p == ONTO.DNI:
+                        count+=1
+                accion = ONTO["Valoracion_"str(count)]
+                graphvaloraciones.add((accion, RDF.type, ONTO.Valoracion))
+                graphvaloraciones.add((accion, ONTO.DNI, Literal(dni_user)))
+                graphvaloraciones.add((accion,ONTO.Nombre,Literal(nombre_producto)))
+                graphvaloraciones.add((accion,ONTO.Valoracion,Literal(valoracion)))
+                ValoracionesFile = open('../Data/Valoraciones','wb')
+                ValoracionesFile.write(graphvaloraciones.serialize(format='turtle'))
+                ProductosFile = open('../Data/Productos')
+                graphproductos = Graph()
+                graphproductos.parse(ProductosFile, format='xml')
+                subject = ""
+                for s,p,o in graphproductos:
+                    if p == ONTO.Nombre and str(o) == nombre_producto:
+                        subject = str(s)
+                        break
+                if subject != "":
+                    for s,p,o in graphproductos:
+                        if s ==subject and p == ONTO.Valoracion:
+                            valoracion = float(o)
+                        if s == subject  and p == ONTO.CantidadValoraciones:
+                            cantidad = int(o)
+
+
+
+
+
+
 
 def Valorar(gm, accion):
     msg = build_message(gm, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri, accion, get_count())
