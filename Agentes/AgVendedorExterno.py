@@ -160,6 +160,7 @@ def communication():
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
+            #if accion =
 
             # Accion de busqueda
         # if accion == ONTO.HacerPedido:

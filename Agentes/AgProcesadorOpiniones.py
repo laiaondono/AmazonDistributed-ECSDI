@@ -188,12 +188,14 @@ def recomendar():
         cat_otros = 0
         precio_medio = 0
         numero_precios = 0
-        print(p)
+        print(prod)
+        subjects_user=[]
         for s,p,o in historial:
             if p == ONTO.DNI:
                 if prod['usuario']==str(o):
                     subjects_user.append(str(s))
         print(subjects_user)
+        print(len(subjects_user))
         for s,p,o in historial:
             ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
             ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
@@ -240,11 +242,6 @@ def recomendar():
                     if float(row.precio) > 0:
                         precio_medio = (precio_medio*numero_precios+float(row.precio))/(numero_precios+1)
                         numero_precios+=1
-        print(prod['usuario'])
-        print("home "+str(cat_home))
-        print("tec "+str(cat_tecnologia))
-        print("otros "+str(cat_otros))
-        print("dep "+str(cat_deportes))
         if cat_deportes > cat_otros and cat_deportes > cat_tecnologia and cat_deportes > cat_home:
             prod['categoria'] = 'Deporte'
         elif cat_otros > cat_deportes and cat_otros > cat_tecnologia and cat_otros > cat_home:
@@ -255,6 +252,89 @@ def recomendar():
             prod['categoria'] = 'Hogar'
         prod['preciomedio'] = precio_medio
     print(productos_usuario)
+    grafo_recomendacion = Graph()
+    action_rec = ONTO["RecomendarProductos"]
+    grafo_recomendacion.add((action_rec,RDF.type,ONTO.RecomendarProducto))
+    count = 0
+    for dic_user in productos_usuario:
+        ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
+        ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+        grafo_productos = Graph()
+        grafo_productos_externos = Graph()
+        grafo_productos.parse(ProductosFile,format='xml')
+        grafo_productos_externos.parse(ProductosExternosFile,format='xml')
+        categoria = dic_user['categoria']
+        precio = dic_user['preciomedio']
+        query = """
+                        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+                        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+                        prefix owl:<http://www.w3.org/2002/07/owl#>
+                        SELECT DISTINCT ?producto ?id ?categoria ?precio ?nombre
+                        where {
+                            { ?producto rdf:type default:Producto }.
+                            ?producto default:Identificador ?id . 
+                            ?producto default:Categoria ?categoria .
+                            ?producto default:PrecioProducto ?precio .
+                            ?producto default:Nombre ?nombre .
+                            FILTER( ?categoria = '"""
+        query +=str(categoria)+"""'"""+"""&& ?precio >"""+str(precio*0.8)+"""  && ?precio < """ + str(precio*1.2)+""")}"""
+        grafo_productos=grafo_productos.query(query)
+        grafo_productos_externos=grafo_productos_externos.query(query)
+        for row in grafo_productos:
+            accion = ONTO["Producto_"+str(count)]
+            PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
+            graphfinal = Graph()
+            graphfinal.parse(PedidosFile, format='turtle')
+            found = False
+            subjects = []
+            for s,p,o in graphfinal:
+                if p == ONTO.DNI and str(o) == dic_user['usuario']:
+                    subjects.append(str(s))
+            for s,p,o in graphfinal:
+                if s in subjects and p == ONTO.Nombre and str(o) == row.nombre:
+                    found =True
+                    break
+            if not found:
+                grafo_recomendacion.add((accion,RDF.type,ONTO.Producto))
+                grafo_recomendacion.add((accion,ONTO.Nombre,Literal(row.nombre)))
+                grafo_recomendacion.add((accion,ONTO.DNI,Literal(dic_user['usuario'])))
+                grafo_recomendacion.add((action_rec,ONTO.ProductoRecomendado,URIRef(accion)))
+                count+=1
+        for row in grafo_productos_externos:
+            accion = ONTO["Producto_"+str(count)]
+            PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
+            graphfinal = Graph()
+            graphfinal.parse(PedidosFile, format='turtle')
+            found = False
+            subjects = []
+            for s,p,o in graphfinal:
+                if p == ONTO.DNI and str(o) == dic_user['usuario']:
+                    subjects.append(str(s))
+            for s,p,o in graphfinal:
+                if s in subjects and p == ONTO.Nombre and str(o) == row.nombre:
+                    found =True
+                    break
+            if not found:
+                grafo_recomendacion.add((accion,RDF.type,ONTO.Producto))
+                grafo_recomendacion.add((accion,ONTO.Nombre,Literal(row.nombre)))
+                grafo_recomendacion.add((accion,ONTO.DNI,Literal(dic_user['usuario'])))
+                grafo_recomendacion.add((action_rec,ONTO.ProductoRecomendado,URIRef(accion)))
+                count+=1
+    subjects_user_1 = []
+    for s,p,o in grafo_recomendacion:
+        if p == ONTO.DNI and str(o) == "4154454":
+            subjects_user_1.append(s)
+    for s,p,o in grafo_recomendacion :
+        if s in subjects_user_1 and p == ONTO.Nombre:
+            print("El usuario 4154454 ha recibido la recomendacion de este producto:" + str(o))
+    subjects_user_2= []
+    for s,p,o in grafo_recomendacion:
+        if p == ONTO.DNI and str(o) == "123443423":
+            subjects_user_2.append(s)
+    for s,p,o in grafo_recomendacion:
+        if s in subjects_user_2 and p == ONTO.Nombre:
+            print("El usuario 123443423 ha recibido la recomendacion de este producto:" + str(o))
 
 
 @app.route("/Stop")
