@@ -1,31 +1,4 @@
 @prefix ns2: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ns2:Compra_1 a ns2:Compra ;
-    ns2:Ciudad "Mollet"^^xsd:string ;
-    ns2:FechaEntrega "2020-06-01 18:27:24.610254"^^xsd:string ;
-    ns2:NombreTransportista "NACEX"^^xsd:string ;
-    ns2:PrecioTotal "1283.4244252231986"^^xsd:float ;
-    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_9I45O5"^^xsd:string,
-        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string ;
-    ns2:TarjetaCredito "ESBN1235453"^^xsd:string .
-
-ns2:Compra_2 a ns2:Compra ;
-    ns2:Ciudad "Shangai"^^xsd:string ;
-    ns2:FechaEntrega "2020-05-31 18:28:48.980756"^^xsd:string ;
-    ns2:NombreTransportista "NACEX"^^xsd:string ;
-    ns2:PrecioTotal "2093.9006740882783"^^xsd:float ;
-    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5FC2MI"^^xsd:string,
-        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_9I45O5"^^xsd:string,
-        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_AMOTBI"^^xsd:string ;
-    ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
-
-ns2:Compra_3 a ns2:Compra ;
-    ns2:Ciudad "Barcelona"^^xsd:string ;
-    ns2:FechaEntrega "2020-05-31 18:35:29.499842"^^xsd:string ;
-    ns2:NombreTransportista "NACEX"^^xsd:string ;
-    ns2:PrecioTotal "3586.8698966753864"^^xsd:float ;
-    ns2:ProductosCompra "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_C5J4N7"^^xsd:string,
-        "http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_K9K1QJ"^^xsd:string ;
-    ns2:TarjetaCredito "ESBN1235453"^^xsd:string .
 

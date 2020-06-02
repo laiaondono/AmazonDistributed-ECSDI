@@ -275,13 +275,34 @@ def hacer_pedido():
                 return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False, campos_error = True)
             products_to_buy = []
             count = 0
+            products_not_selected = []
             for p in request.form.getlist("checkbox"):
+                products_not_selected.append(int(p))
                 count+=1
                 prod = products_list[int(p)]
                 products_to_buy.append(prod)
             if count == 0:
                 return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False, campos_error = True)
+            graph_historial = Graph();
+            action = ONTO["ActualizarHistorial_"+ str(mss_cnt)]
+            graph_historial.add((action, RDF.type, ONTO.ActualizarHistorial))
+            usuario = ONTO["Usuario"]
+            graph_historial.add((usuario,RDF.type,ONTO.Usuario))
+            graph_historial.add((usuario,ONTO.DNI,Literal(nombreusuario)))
+            graph_historial.add((action,ONTO.HistorialDe,URIRef(usuario)))
+            count= 0
+            for p in products_list:
+                if not count in products_not_selected:
+                    producto = ONTO["Producto_"+str(count)]
+                    graph_historial.add((producto,RDF.type,ONTO.Producto))
+                    graph_historial.add((producto,ONTO.Identificador,Literal(p["id"])))
+                    graph_historial.add((producto,ONTO.Nombre,Literal(p["name"])))
+                    graph_historial.add((action,ONTO.ProductosHistorial,URIRef(producto)))
+                count+=1
 
+            msg = build_message(graph_historial,ACL.request, AgAsistente.uri, AgProcesadorOpiniones.uri, action, mss_cnt)
+            p = Process(target=send_message,args=(msg,AgProcesadorOpiniones.address))
+            p.start()
             return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard),intento=False, completo =False,campos_error = False)
         elif request.form['submit'] == "Visualizar datos completos":
             global completo
