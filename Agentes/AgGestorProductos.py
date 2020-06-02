@@ -45,20 +45,18 @@ port = 9017
 agn = Namespace("http://www.agentes.org#")
 
 # Contador de mensajes
-mss_cnt = 0
+mss_cnt = 6
+
 # Datos del Agente
+AgVendedorExterno = Agent('AgVendedorExterno',
+                          agn.AgVendedorExterno,
+                          'http://%s:9018/comm' % hostname,
+                          'http://%s:9018/Stop' % hostname)
 
 AgGestorProductos = Agent('AgGestorProductos',
-                         agn.AgGestorProductos,
-                         'http://%s:%d/comm' % (hostname, port),
-                         'http://%s:%d/Stop' % (hostname, port))
-
-
-# Directory agent address
-AgEmpresaExterna = Agent('AgEmpresaExterna',
-                          agn.AgEmpresaExterna,
-                          'http://%s:9016/comm' % hostname,
-                          'http://%s:9016/Stop' % hostname)
+                          agn.AgGestorProductos,
+                          'http://%s:%d/comm' % (hostname, port),
+                          'http://%s:%d/Stop' % (hostname, port))
 
 
 # Global triplestore graph
@@ -90,14 +88,14 @@ def communication():
     gr = None
     if msgdic is None:
         # Si no es, respondemos que no hemos entendido el mensaje
-        gr = build_message(Graph(), ACL['not-understood'], sender=AgEmpresaExterna.uri, msgcnt=get_count())
+        gr = build_message(Graph(), ACL['not-understood'], sender=AgGestorProductos.uri, msgcnt=get_count())
     else:
         # Obtenemos la performativa
         if msgdic['performative'] != ACL.request:
             # Si no es un request, respondemos que no hemos entendido el mensaje
             gr = build_message(Graph(),
                                ACL['not-understood'],
-                               sender=AgEmpresaExterna.uri,
+                               sender=AgGestorProductos.uri,
                                msgcnt=get_count())
         else:
             # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
@@ -106,6 +104,71 @@ def communication():
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
 
-            # Accion de busqueda
-        # if accion == ONTO.HacerPedido:
+            if accion == ONTO.AñadirProductoExterno:
+                ProdExtFile = open('../Data/ProductosExternos')
+                graphfinal = Graph()
+                graphfinal.parse(ProdExtFile, format='xml')
+
+                graphNewProduct = Graph()
+                # Nombre, Marca, Empresa, CantidadValoraciones, Valoracion, Peso, Categoria, PrecioProducto, Identificador
+
+                for s, p, o in graphfinal:
+                    if p == ONTO.Identificador:
+                        print(o)
+
+                identificador = 'ProductoEX_' + str(get_count())
+                print("ID: " + identificador)
+                productSuj = ONTO[identificador]
+                graphNewProduct.add((productSuj, RDF.type, ONTO.Producto))
+                graphNewProduct.add((productSuj, ONTO.Identificador, Literal(identificador)))
+                for s, p, o in gm:
+                    if p == ONTO.Nombre and s == productSuj: #es el nombre del producto
+                        graphNewProduct.add((productSuj, ONTO.Nombre, Literal(o)))
+                    elif p == ONTO.Nombre: #es el nombre de la empresa externa
+                        graphNewProduct.add((productSuj, ONTO.Empresa, Literal(o)))
+                    if p == ONTO.Marca:
+                        graphNewProduct.add((productSuj, ONTO.Marca, Literal(o)))
+                    if p == ONTO.PrecioProducto:
+                        graphNewProduct.add((productSuj, ONTO.PrecioProducto, Literal(o)))
+                    if p == ONTO.Peso:
+                        graphNewProduct.add((productSuj, ONTO.Peso, Literal(o)))
+                    if p == ONTO.Categoria:
+                        graphNewProduct.add((productSuj, ONTO.Categoria, Literal(o)))
+
+                graphNewProduct.add((productSuj, ONTO.Valoracion, Literal(5)))
+                graphNewProduct.add((productSuj, ONTO.CantidadValoraciones, Literal(1)))
+
+                # Añadimos el nuevo producto externo y lo escribimos otra vez.
+                graphfinal += graphNewProduct
+                PedidosFile = open('../Data/ProductosExternos', 'wb')
+                PedidosFile.write(graphfinal.serialize(format='xml'))
+                PedidosFile.close()
+
+                g = Graph()
+                return g.serialize(format='xml'), 200
+
+
     return "Este agente se encargará de añadir productos."
+
+
+
+def agentbehavior1(queue):
+    """
+    Un comportamiento del agente
+    :return:
+    """
+    pass
+
+
+if __name__ == '__main__':
+    # Ponemos en marcha los behaviors
+    ab1 = Process(target=agentbehavior1, args=(cola1,))
+    ab1.start()
+    compra =False
+    # Ponemos en marcha el servidor
+    app.run(host=hostname, port=port)
+
+    # Esperamos a que acaben los behaviors
+    ab1.join()
+
+    ('The End')

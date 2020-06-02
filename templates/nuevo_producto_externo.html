@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon"
+          href="https://lh3.googleusercontent.com/-c9bKgaRfC3Q/AAAAAAAAAAI/AAAAAAAAJUE/Eo2MLCqyiZs/s0-c-k-no-ns/photo.jpg">
+    <title>ECSDI - Añadir producto externo</title>
+</head>
+<style>
+    .content {
+        text-align: center;
+    }
+
+    .active {
+        background-image: linear-gradient(to top, #fffbf9 0%, #97c4ff 100%);
+        height: 900px;
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+<div class="active">
+    <div class="content">
+        <body>
+            <h1>Añadir producto externo</h1>
+                {% if start %}
+                    <form method="post">
+                        {% if errors[0] == "si" %}
+                            <p>No puedes dejar ningún campo vacío. Tienes que rellenarlos todos.</p>
+                        {% endif %}
+                        {% if errors[1] == "si" %}
+                            <p style="color:red;"> Esta tienda sólo acepta productos de Ikea, Nike o Apple.</p>
+                        {% endif %}
+                        <input type="text" name="companyName" placeholder="Nombre del vendedor"/><br>
+                        <br>
+                        <input type="text" name="productName" placeholder="Nombre del producto"/><br>
+                        <br>
+                        <input type="text" name="brand" placeholder="Marca del producto"/><br>
+                        <br>
+                        <input type="text" name="category" placeholder="Categoría del producto"/><br>
+                        <br>
+                        {% if errors[2] == "si" %}
+                            <p style="color:red;"> Introduce un precio válido. Recuerda que son euros.</p>
+                        {% endif %}
+                        <input type="text" name="price" placeholder="Precio del producto en €"/><br>
+                        <br>
+                        {% if errors[3] == "si" %}
+                            <p style="color:red;"> Introduce un peso válido. Recuerda que son kilogramos.</p>
+                        {% endif %}
+                        <input type="text" name="weight" placeholder="Peso del producto en kg"/><br>
+                        <br>
+                        <input type="submit" name="submit" value="Añadir">
+                    </form>
+                {% else %}
+                    <p>Su producto ha sido añadido correctamente al catálogo de la tienda.</p>
+                    <br>
+                    <form method="post">
+                        <input type="submit" name="submit" value="Volver">
+                    </form>
+                {% endif %}
+        </body>
+    </div>
+</div>
+</html>
