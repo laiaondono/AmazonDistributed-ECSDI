@@ -24,7 +24,7 @@ from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
 from Util.OntoNamespaces import ONTO, ACL
 from Util.Logging import config_logger
-
+import time
 __author__ = 'pau-laia-anna'
 logger = config_logger(level=1)
 
@@ -79,7 +79,7 @@ cola1 = Queue()
 resultats = []
 
 # Flask stuff
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__)
 
 @app.route("/comm")
 def comunicacion():
@@ -116,34 +116,127 @@ def comunicacion():
             # Accion de busqueda
             if accion == ONTO.ActualizarHistorial:
                 gr =Graph()
-                PedidosFile = open('../Data/Historial')
+                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial')
                 graphfinal = Graph()
                 graphfinal.parse(PedidosFile, format='turtle')
-                #for s, p, o in graphfinal:
-                #    if p == ONTO.Producto
-                count = 0
-                graph_adicionals = Graph()
                 dni =""
+                total_products = 0
+                for s,p,o in graphfinal:
+                    if p == ONTO.Identificador:
+                        total_products+=1
                 for s,p,o in gm:
-                    count+=1
-                    historial = ONTO["Historial_" + str(count)]
-                    graph_adicionals.add((historial,RDF.type,ONTO.Historial))
                     if (p == ONTO.DNI):
                         dni = str(o)
-
+                        break
+                count = total_products
                 for s,p,o in gm:
-                    count+=1
-                    historial = ONTO["Historial_" + str(count)]
-                    graph_adicionals.add((historial,RDF.type,ONTO.Historial))
-                    if p ==ONTO.Identificador:
-                        graph_adicionals.add((historial,ONTO.Identificador,Literal(str(o))))
-                        graph_adicionals.add((historial,ONTO.DNI,Literal(str(dni))))
-                graphfinal+=graph_adicionals
-                PedidosFile = open('../Data/Historial', 'wb')
+                    if p == ONTO.Identificador:
+                        count+=1
+                        historial = ONTO["Historial_" + str(count)]
+                        graphfinal.add((historial,RDF.type,ONTO.Historial))
+                        graphfinal.add((historial,ONTO.Identificador,Literal(str(o))))
+                        graphfinal.add((historial,ONTO.DNI,Literal(str(dni))))
+                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial', 'wb')
                 PedidosFile.write(graphfinal.serialize(format='turtle'))
                 PedidosFile.close()
                 return gr.serialize(format="xml"),200
 
+
+def recomendar():
+    time.sleep(1)
+    PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial')
+    historial = Graph()
+    historial.parse(PedidosFile, format='turtle')
+    ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
+    ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+    grafo_productos = Graph()
+    grafo_productos.parse(ProductosFile,format='xml')
+    grafo_productos_externos = Graph()
+    grafo_productos_externos.parse(ProductosExternosFile,format='xml')
+    usuarios = []
+    for s,p,o in historial:
+        if p == ONTO.DNI:
+            if str(o) not in usuarios:
+                usuarios.append(str(o))
+    productos_usuario = []
+    for p in usuarios:
+        dic = {'categoria':"",'preciomedio':0.0,'usuario':p}
+        productos_usuario.append(dic)
+    subjects_user = []
+    for prod in productos_usuario:
+        cat_home = 0
+        cat_deportes = 0
+        cat_tecnologia = 0
+        cat_otros = 0
+        precio_medio = 0
+        numero_precios = 0
+        print(p)
+        for s,p,o in historial:
+            if p == ONTO.DNI:
+                if prod['usuario']==str(o):
+                    subjects_user.append(str(s))
+        print(subjects_user)
+        for s,p,o in historial:
+            ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
+            ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+            grafo_productos = Graph()
+            grafo_productos_externos = Graph()
+            grafo_productos.parse(ProductosFile,format='xml')
+            grafo_productos_externos.parse(ProductosExternosFile,format='xml')
+            if str(s) in subjects_user and p == ONTO.Identificador:
+                query = """
+                    prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                    prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+                    prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+                    prefix owl:<http://www.w3.org/2002/07/owl#>
+                    SELECT DISTINCT ?producto ?id ?categoria ?precio
+                    where {
+                        { ?producto rdf:type default:Producto }.
+                        ?producto default:Identificador ?id . 
+                        ?producto default:Categoria ?categoria .
+                        ?producto default:PrecioProducto ?precio .
+                        FILTER( ?id = '"""+str(o)+"""')}"""
+                grafo_productos = grafo_productos.query(query)
+                grafo_productos_externos = grafo_productos_externos.query(query)
+                for row in grafo_productos:
+                    if str(row.categoria) == "Hogar":
+                        cat_home+=1
+                    elif str(row.categoria) == "Tecnologia":
+                        cat_tecnologia+=1
+                    elif str(row.categoria) == "Otros":
+                        cat_otros+=1
+                    elif str(row.categoria)=="Deporte":
+                        cat_deportes+=1
+                    if float(row.precio) > 0:
+                        precio_medio = (precio_medio*numero_precios+float(row.precio))/(numero_precios+1)
+                        numero_precios+=1
+                for row in grafo_productos_externos:
+                    if str(row.categoria) == "Hogar":
+                        cat_home+=1
+                    elif str(row.categoria) == "Tecnologia":
+                        cat_tecnologia+=1
+                    elif str(row.categoria) == "Otros":
+                        cat_otros+=1
+                    elif str(row.categoria)=="Deporte":
+                        cat_deportes+=1
+                    if float(row.precio) > 0:
+                        precio_medio = (precio_medio*numero_precios+float(row.precio))/(numero_precios+1)
+                        numero_precios+=1
+        print(prod['usuario'])
+        print("home "+str(cat_home))
+        print("tec "+str(cat_tecnologia))
+        print("otros "+str(cat_otros))
+        print("dep "+str(cat_deportes))
+        if cat_deportes > cat_otros and cat_deportes > cat_tecnologia and cat_deportes > cat_home:
+            prod['categoria'] = 'Deporte'
+        elif cat_otros > cat_deportes and cat_otros > cat_tecnologia and cat_otros > cat_home:
+            prod['categoria'] = 'Otros'
+        elif cat_tecnologia > cat_deportes and cat_tecnologia > cat_otros and cat_tecnologia > cat_home:
+            prod['categoria'] = 'Tecnologia'
+        else:
+            prod['categoria'] = 'Hogar'
+        prod['preciomedio'] = precio_medio
+    print(productos_usuario)
 
 
 @app.route("/Stop")
@@ -179,6 +272,8 @@ if __name__ == '__main__':
     # Ponemos en marcha los behaviors
     ab1 = Process(target=agentbehavior1, args=(cola1,))
     ab1.start()
+    recomendar_automaticamente = Process(target=recomendar,args=())
+    recomendar_automaticamente.start()
 
     # Ponemos en marcha el servidor
     app.run(host=hostname, port=port)
