@@ -14,14 +14,28 @@ Asume que el agente de registro esta en el puerto 9000
 @author: javier
 """
 
-from multiprocessing import Process, Queue
+import random
 import socket
+import string
+from multiprocessing import Queue, Process
+from flask import Flask, request
+from pyparsing import Literal
+import requests
+from rdflib import Namespace, Graph, RDF, Literal, URIRef, XSD
 
-from rdflib import Namespace, Graph
-from flask import Flask
-
-from Util.FlaskServer import shutdown_server
+from Agentes import AgCentroLogistico
+from Util.ACLMessages import *
 from Util.Agent import Agent
+from Util.Logging import config_logger
+from Util.OntoNamespaces import ONTO, ACL
+from opencage.geocoder import OpenCageGeocode
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic, great_circle
+from geopy import geocoders
+
+from datetime import datetime
+import time
+from Util.FlaskServer import shutdown_server
 
 __author__ = 'javier'
 
@@ -74,7 +88,38 @@ def comunicacion():
     """
     global dsgraph
     global mss_cnt
-    pass
+    message = request.args['content']
+    gm = Graph()
+    gm.parse(data=message)
+
+    msgdic = get_message_properties(gm)
+
+    gr = None
+    if msgdic is None:
+        # Si no es, respondemos que no hemos entendido el mensaje
+        gr = build_message(Graph(), ACL['not-understood'], sender=AgServicioPago.uri, msgcnt=get_count())
+    else:
+        # Obtenemos la performativa
+        if msgdic['performative'] != ACL.request:
+            # Si no es un request, respondemos que no hemos entendido el mensaje
+            gr = build_message(Graph(),
+                               ACL['not-understood'],
+                               sender=AgServicioPago.uri,
+                               msgcnt=get_count())
+        else:
+            # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
+            # de registro
+            content = msgdic['content']
+            # Averiguamos el tipo de la accion
+            accion = gm.value(subject=content, predicate=RDF.type)
+
+            if accion == ONTO.CobrarCompra:
+                dni_usuario = ""
+                importe = 0.0
+                tarjeta = ""
+
+                #for s,p,o in gm:
+                    #if p == ONTO.DNI
 
 
 @app.route("/Stop")

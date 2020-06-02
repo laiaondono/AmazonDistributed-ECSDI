@@ -24,7 +24,7 @@
       <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
       <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
       <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-      <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
+      <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
       <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
       <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">15</OntologiaECSDI:PrecioProducto>
   </rdf:Description>
@@ -36,7 +36,7 @@
         <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
         <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
         <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-        <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
+        <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
         <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
         <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">250</OntologiaECSDI:PrecioProducto>
   </rdf:Description>
