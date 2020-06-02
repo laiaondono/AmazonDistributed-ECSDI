@@ -81,6 +81,11 @@ resultats = []
 # Flask stuff
 app = Flask(__name__, template_folder='../templates')
 
+def get_count():
+    global mss_cnt
+    mss_cnt += 1
+    return mss_cnt
+
 @app.route("/comm")
 def comunicacion():
     """
@@ -144,6 +149,19 @@ def comunicacion():
                 PedidosFile.close()
                 return gr.serialize(format="xml"),200
 
+            if accion == ONTO.ValorarProducto:
+                # Avisamos al AgAsistente de que ya se puede realizar la valoracion de los productos del grafo
+                empezar_proceso = Process(target=Valorar, args=(gm,accion))
+                empezar_proceso.start()
+
+                #Returnem ACK al AgGestorCompra conforme ho hem rebut
+                grr = Graph()
+                return grr.serialize(format="xml"),200
+
+def Valorar(gm, accion):
+    msg = build_message(gm, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri, accion, get_count())
+    send_message(msg, AgAsistente.address)
+    return
 
 
 @app.route("/Stop")
