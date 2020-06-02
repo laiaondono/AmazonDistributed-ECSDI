@@ -87,6 +87,8 @@ resultats = []
 # Flask stuff
 app = Flask(__name__,template_folder='../templates')
 
+productes_a_valorar = {}
+
 
 @app.route("/", methods=['GET', 'POST'])
 def initialize():
@@ -140,15 +142,26 @@ def comunicacion():
         else:
             # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
             # de registro
-            global grafo_respuesta
-            grafo_respuesta = gm
-            global completo
-            completo = True
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
-            gr =Graph()
-            return gr.serialize(format="xml"),200
+
+            #Factura completa
+            if accion == ONTO.ProcesarEnvio:
+                global grafo_respuesta
+                grafo_respuesta = gm
+                global completo
+                completo = True
+                gr =Graph()
+                return gr.serialize(format="xml"),200
+
+            # Accion de valorar
+            if accion == ONTO.ValorarProducto:
+                gr =Graph()
+                return gr.serialize(format="xml"),200
+
+
+
 
 def hacer_redirect():
     return flask.redirect("http://%s:%d/" % (hostname, port))
