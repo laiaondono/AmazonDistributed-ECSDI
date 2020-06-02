@@ -203,8 +203,8 @@ def communication():
                 count_real = get_count()
                 count = str(count_real)
 
-                accion = ONTO["EmpezarValoracion" + count]
-                graph_valoracio.add((accion, RDF.type, ONTO.EmpezarValoracion))
+                accion = ONTO["ValorarProducto" + count]
+                graph_valoracio.add((accion, RDF.type, ONTO.ValorarProducto))
 
                 msgdic = get_message_properties(graph_compra)
                 content = msgdic['content']
