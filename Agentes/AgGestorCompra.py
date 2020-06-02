@@ -305,6 +305,8 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     graphfinal = Graph()
     graphfinal.parse(PedidosFile, format='turtle')
     grafrespuesta=Graph()
+    accion = ONTO["ProcesarEnvio_" + str(count)]
+    grafrespuesta.add((accion, RDF.type, ONTO.ProcesarEnvio))
     grafrespuesta.add((compra, RDF.type, ONTO.Compra))
     grafrespuesta.add((compra, ONTO.PrecioTotal, Literal(preutotal, datatype=XSD.float)))
     grafrespuesta.add((compra, ONTO.TarjetaCredito, Literal(tarjeta, datatype=XSD.string)))
