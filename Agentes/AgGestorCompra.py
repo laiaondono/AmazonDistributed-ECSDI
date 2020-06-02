@@ -141,8 +141,15 @@ def communication():
                 precio_total = 0.0
                 graffactura = Graph()
                 # Llamamos a get_count para generar un numero de factura.
-                count_real = get_count()
-                count = str(count_real)
+                count = 0
+                PedidosFile = open('../Data/RegistroPedidos')
+                graphfinal = Graph()
+                graphfinal.parse(PedidosFile, format='turtle')
+                for s,p,o in graphfinal:
+                    if p == ONTO.Lote:
+                        count+=1
+                count_real = count
+                count = str(count)
                 # Generamos la factura
                 factura = ONTO["Factura_" + count]
                 accion = ONTO["EnviarFactura_" + count]
@@ -151,7 +158,9 @@ def communication():
                 graffactura.add((accion, ONTO.FacturaEnviada, URIRef(factura)))
                 # Añadimos al grafo un objecto factura, en el que añadiremos cosas.
                 graffactura.add((factura, RDF.type, ONTO.Factura))
-
+                for s,p,o in gm:
+                    if p==ONTO.DNI:
+                        dni_usuari = str(o)
                 ciudad = gm.objects(content, ONTO.Ciudad)
                 for c in ciudad:
                     city = gm.value(subject=c, predicate=ONTO.Ciudad)
@@ -187,10 +196,11 @@ def communication():
                 # Añadimos el precio total y el numero de productos en la factura.
                 graffactura.add((factura, ONTO.NumeroProductos, Literal(numero_productos)))
                 graffactura.add((factura, ONTO.PrecioTotal, Literal(precio_total)))
+                graffactura.add((factura,ONTO.DNI,Literal(dni_usuari)))
 
                 # Empezamos a procesar la compra mientras se devuelve la factura
                 empezar_proceso = Process(target=procesar_compra, args=(
-                    count_real, graffactura, gm, precio_total, content, priority, creditCard))
+                    count_real, graffactura, gm, precio_total, content, priority, creditCard,dni_usuari))
                 empezar_proceso.start()
                 return graffactura.serialize(format='xml'), 200
             # TODO si la accio es cobrar compra (et ve del ag transportista)
@@ -232,7 +242,7 @@ def avisar_valoracion():
 
 
 
-def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, content="", prioridad=0, tarjeta=""):
+def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, content="", prioridad=0, tarjeta="",dni=""):
     logger.info("Procesando compra...")
     city = ""
     # Obtenemos la ciudad de destino
@@ -305,18 +315,17 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     graphfinal = Graph()
     graphfinal.parse(PedidosFile, format='turtle')
     grafrespuesta=Graph()
-    accion = ONTO["ProcesarEnvio_" + str(count)]
-    grafrespuesta.add((accion, RDF.type, ONTO.ProcesarEnvio))
     grafrespuesta.add((compra, RDF.type, ONTO.Compra))
     grafrespuesta.add((compra, ONTO.PrecioTotal, Literal(preutotal, datatype=XSD.float)))
     grafrespuesta.add((compra, ONTO.TarjetaCredito, Literal(tarjeta, datatype=XSD.string)))
     grafrespuesta.add((compra, ONTO.Ciudad, Literal(city, datatype=XSD.string)))
+    grafrespuesta.add((compra,ONTO.DNI,Literal(dni)))
     productos = gm.objects(content, ONTO.ProductosPedido)
     for producto in productos:
         nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
         nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
         # Añadimos el producto en la relacion ProductosCompra.
-        grafrespuesta.add((compra, ONTO.ProductosCompra, Literal(nomSuj,datatype=XSD.string)))
+        grafrespuesta.add((compra, ONTO.ProductosCompra, Literal(nombreProd,datatype=XSD.string)))
 
     for s, p, o in gr:
         if p == ONTO.FechaEntrega:
@@ -330,6 +339,7 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     PedidosFile = open('../Data/RegistroPedidos', 'wb')
     PedidosFile.write(graphfinal.serialize(format='turtle'))
     PedidosFile.close()
+    graph.add((accion, RDF.type, ONTO.ProcesarEnvio))
     msg = build_message(grafrespuesta, ACL.request, AgGestorCompra.uri, AgAsistente.uri, accion, count)
     gr = send_message(msg, AgAsistente.address)
     return
