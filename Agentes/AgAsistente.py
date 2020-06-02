@@ -65,6 +65,10 @@ AgGestorCompra = Agent('AgGestorCompra',
                             agn.AgGestorCompra,
                             'http://%s:9012/comm' % hostname,
                             'http://%s:9012/Stop' % hostname)
+AgProcesadorOpiniones = Agent('AgProcesadorOpiniones',
+                       agn.AgProcesadorOpiniones,
+                       'http://%s:9013/comm' % hostname,
+                       'http://%s:9013/Stop' % hostname)
 
 # Directory agent address
 DirectoryAgent = Agent('DirectoryAgent',
@@ -81,7 +85,7 @@ cola1 = Queue()
 resultats = []
 
 # Flask stuff
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__)
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -118,7 +122,7 @@ def comunicacion():
     gm.parse(data=message)
 
     msgdic = get_message_properties(gm)
-    
+
     gr = None
     global mss_cnt
     if msgdic is None:
@@ -294,6 +298,28 @@ def hacer_pedido():
                 return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=False, completo =True)
         elif request.form['submit'] == "Volver al inicio":
             return flask.redirect("http://%s:%d/" % (hostname, port))
+        elif request.form['submit'] == 'Volver a buscar':
+            graph_historial = Graph();
+            action = ONTO["ActualizarHistorial_"+ str(mss_cnt)]
+            graph_historial.add((action, RDF.type, ONTO.ActualizarHistorial))
+            usuario = ONTO["Usuario"]
+            graph_historial.add((usuario,RDF.type,ONTO.Usuario))
+            graph_historial.add((usuario,ONTO.DNI,Literal(nombreusuario)))
+            graph_historial.add((action,ONTO.HistorialDe,URIRef(usuario)))
+            count= 0
+            for p in products_list:
+                count+=1
+                producto = ONTO["Producto_"+str(count)]
+                graph_historial.add((producto,RDF.type,ONTO.Producto))
+                graph_historial.add((producto,ONTO.Identificador,Literal(p["id"])))
+                graph_historial.add((producto,ONTO.Nombre,Literal(p["name"])))
+                graph_historial.add((action,ONTO.ProductosHistorial,URIRef(producto)))
+
+            msg = build_message(graph_historial,ACL.request, AgAsistente.uri, AgProcesadorOpiniones.uri, action, mss_cnt)
+            p = Process(target=send_message,args=(msg,AgProcesadorOpiniones.address))
+            p.start()
+            return flask.redirect("http://%s:%d/search_products" % (hostname, port))
+
 
 
 def comprar_productos(products_to_buy, city, priority, creditCard):

@@ -194,7 +194,6 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     ciudad = gm.objects(content, ONTO.Ciudad)
     for c in ciudad:
         city = gm.value(subject=c, predicate=ONTO.Ciudad)
-    print(city)
     # Calculamos que Centro Logistico asignar a la compra.
     geolocator = Nominatim(user_agent='myapplication')
     location = geolocator.geocode(city)
