@@ -278,9 +278,9 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
 
 @app.route("/misproductos", methods=['GET', 'POST'])
 def mis_productos():
+    global nombreusuario
     if request.method == 'GET':
         global my_products
-        global nombreusuario
         my_products=[]
         PedidosFile = open('../Data/RegistroPedidos')
         graphpedidos = Graph()
@@ -324,7 +324,7 @@ def mis_productos():
         return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False)
     else:
         if request.form['submit'] == 'Valorar':
-            global nombreusuario,productos_valorados
+
             producto = request.form['producto']
             val = float(request.form['valoracion'])
             graphvaloracion = Graph()
