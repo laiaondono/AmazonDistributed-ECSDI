@@ -72,6 +72,10 @@ AgCentroLogistico = Agent('AgCentroLogistico',
                           agn.AgCentroLogistico,
                           'http://%s:9014/comm' % hostname,
                           'http://%s:9014/Stop' % hostname)
+AgProcesadorOpiniones = Agent('AgProcesadorOpiniones',
+                          agn.AgProcesadorOpiniones,
+                          'http://%s:9013/comm' % hostname,
+                          'http://%s:9013/Stop' % hostname)
 
 # Global triplestore graph
 dsgraph = Graph()
@@ -88,6 +92,7 @@ location_bcn = (Nominatim(user_agent='myapplication').geocode("Barcelona").latit
 location_pk = (Nominatim(user_agent='myapplication').geocode("Pekín").latitude,
                Nominatim(user_agent='myapplication').geocode("Pekín").longitude)
 
+graph_final = Graph()
 
 def get_count():
     global mss_cnt
@@ -125,8 +130,12 @@ def communication():
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
 
+            global graph_final
             # Accion de busqueda
             if accion == ONTO.HacerPedido:
+                #guardem el graf de la compra com variable global
+                graph_final = gm
+
                 # Llega una nueva peticion de una compra. Primero generamos la factura.
                 numero_productos = 0
                 precio_total = 0.0
@@ -185,6 +194,34 @@ def communication():
                 empezar_proceso.start()
                 return graffactura.serialize(format='xml'), 200
             # TODO si la accio es cobrar compra (et ve del ag transportista)
+            if accion == ONTO.EmpezarValoracion:
+                graph_compra = graph_final
+
+                # Avisar al AgProcesadorOpiniones que ja pot valorar els productes del graf.
+                graph_valoracio = Graph()
+
+                count_real = get_count()
+                count = str(count_real)
+
+                accion = ONTO["EmpezarValoracion" + count]
+                graph_valoracio.add((accion, RDF.type, ONTO.EmpezarValoracion))
+
+                msgdic = get_message_properties(graph_compra)
+                content = msgdic['content']
+                productos = graph_compra.objects(content, ONTO.ProductosPedido)
+                for producto in productos:
+                    # Generamos un nuevo objeto producto y lo añadimos a la relacion
+                    nombreProd = gm.value(subject=producto, predicate=ONTO.Nombre)
+                    nomSuj = gm.value(predicate=ONTO.Nombre, object=nombreProd)
+                    graph_valoracio.add((nomSuj, RDF.type, ONTO.Producto))
+                    graph_valoracio.add((nomSuj, ONTO.Nombre, nombreProd))
+                    graph_valoracio.add((accion, ONTO.ProductosValoracion, URIRef(nomSuj)))
+
+                msg = build_message(graph_valoracio, ACL.request, AgGestorCompra.uri, AgProcesadorOpiniones.uri, accion, get_count())
+                send_message(msg, AgCentroLogistico.address)
+
+
+
 
 
 def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, content="", prioridad=0, tarjeta=""):
