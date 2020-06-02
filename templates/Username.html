@@ -34,23 +34,13 @@
 <div class="active">
     <div class="content">
         <body>
-        <h1>AGENTE ASISTENTE</h1>
-        <br>
-        <p>Usuario activo : {{ usuario}}</p>
+        <h1>POR FAVOR, PROPORCIONE SU DNI PARA IDENTIFICARSE</h1>
         <br>
         <br>
         <form method="post">
-            <input type="submit" name="submit" value="search_products">
+            <input type="text" name="name" placeholder="Nombre"/><br>
+            <input type="submit" name="submit" value="registro_usuario">
         </form>
-        <p>/search_products --> Indicas las restricciones y le das a Buscar. De entre el resultado de los articulos,
-            selecciona <br>
-            los que quieras, rellena la informacion, y dale a comprar.</p>
-        <br>
-        <br>
-        <form method="post">
-            <input type="submit" name="submit" value="ProductosComprados">
-        </form>
-        <p>/ProductosComprados --> Se pueden visualizar los productos comprados, con la opcion de valorar o devolver el producto.</p>
         <br>
         <br>
         </body>

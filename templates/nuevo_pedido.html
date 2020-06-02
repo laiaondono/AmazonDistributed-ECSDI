@@ -13,7 +13,7 @@
 
     .active {
         background-image: linear-gradient(to top, #fffbf9 0%, #97c4ff 100%);
-        height: 900px;
+        height: 1500px;
 
         /* Center and scale the image nicely */
         background-position: center;
@@ -45,6 +45,7 @@
                     <th><b>NOMBRE</b></th>
                     <th><b>MARCA</b></th>
                     <th><b>PRECIO</b></th>
+                    <th><b>VALORACION</b></th>
                 </tr>
                 {% for p in products %}
                 <tr>
@@ -52,16 +53,29 @@
                     <td>{{ p.name }}</td>
                     <td>{{ p.brand }}</td>
                     <td>{{ p.price }}</td>
+                    <td>{{ p.rating }}</td>
                 </tr>
                 {% endfor %}
             </table>
-            <input type="text" name="city" placeholder="Ciudad"/><br>
             <br>
-            <input type="text" name="priority" placeholder="Prioridad de entrega (1, 2 o 3)"/><br>
+            <p>Por favor introduzca una ciudad válida. Tu pedido se enviará a esa ciudad.</p>
+            <input type="text" name="city" placeholder="Ciudad"/>
             <br>
-            <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
+            <p>Prioridad 1 : 24H_______Prioridad 2: 3 a 5 dias________Prioridad 3: 5 a 10 dias</p>
+            <p>Por favor introduzca 1,2 o 3</p>
+            <input type="text" name="priority" placeholder="Prioridad de entrega (1, 2 o 3)"/>
             <br>
+            <p>Introduzca la tarjeta de crédito con la que quiere efectuar la compra.</p>
+            <input type="text" name="creditCard" placeholder="Targeta de crédito"/>
+            <br>
+            {% if campos_error %}
+            <p style="color:red;"> Ciudad, prioridad y tarjeta de credito no pueden estar vacíos.Escoge al menos un producto. Sigue las indicaciones y rellenalos para efectuar la compra. </p>
+            {% endif %}
             <input type="submit" name="submit" value="Comprar">
+        </form>
+        <br>
+        <form method="post">
+            <input type="submit" name="submit" value="Volver al inicio">
         </form>
         {% else %} <!-- if bill -->
         <br>
@@ -116,9 +130,7 @@
             <input type="submit" name="submit" value="Visualizar datos completos">
         </form>
         {% else %}
-        <form method="post">
-            <input type="submit" name="submit" value="Volver al inicio">
-        </form>
+
         {% endif %}
         {% endif %}
         </body>

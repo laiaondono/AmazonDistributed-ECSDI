@@ -310,7 +310,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         prefix xsd:<http://www.w3.org/2001/XMLSchema#>
         prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
         prefix owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca ?peso
+        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca ?peso ?valoracion
         where {
             { ?producto rdf:type default:Producto }.
             ?producto default:Nombre ?nombre .
@@ -318,13 +318,17 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
             ?producto default:Marca ?marca .
             ?producto default:Identificador ?id . 
             ?producto default:Peso ?peso .
+            ?producto default:Valoracion ?valoracion .
             FILTER("""
 
     if nombre is not None:
         query += """str(?nombre) = '""" + nombre + """'"""
         first = 1
-    #if valoracion is not None:
-        #query += """str(?valoracion) = '""" + str(valoracion) + """'"""
+    if valoracion is not None:
+        if first == 1:
+            query+=""" && """
+        query += """str(?valoracion) >= '""" + str(valoracion) + """'"""
+        first = 1
     if marca is not None:
         if first == 1:
             query += """ && """
@@ -346,14 +350,15 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         peso_prod = row.peso
         id_prod = row.id
         subject_prod = row.producto
+        valoracion_prod = row.valoracion
         product_count += 1
         result.add((subject_prod, RDF.type, ONTO.Producto))
         result.add((subject_prod, ONTO.Marca, Literal(marca_prod, datatype=XSD.string)))
-        result.add((subject_prod, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
         result.add((subject_prod, ONTO.PrecioProducto, Literal(precio_prod, datatype=XSD.float)))
         result.add((subject_prod, ONTO.Identificador, Literal(id_prod, datatype=XSD.string)))
         result.add((subject_prod, ONTO.Nombre, Literal(nom_prod, datatype=XSD.string)))
         result.add((subject_prod, ONTO.Peso, Literal(peso_prod, datatype=XSD.float)))
+        result.add((subject_prod, ONTO.Valoracion, Literal(valoracion_prod, datatype=XSD.float)))
     graphexternos = Graph()
     ontologyFileExtern = open('../Data/ProductosExternos')
     # TODO buscar tambe en productes externos
@@ -364,7 +369,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         prefix xsd:<http://www.w3.org/2001/XMLSchema#>
         prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
         prefix owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca ?peso
+        SELECT DISTINCT ?producto ?nombre ?precio ?id ?marca ?peso ?valoracion
         where {
             { ?producto rdf:type default:Producto }.
             ?producto default:Nombre ?nombre .
@@ -372,13 +377,17 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
             ?producto default:Marca ?marca .
             ?producto default:Identificador ?id . 
             ?producto default:Peso ?peso .
+            ?producto default:Valoracion ?valoracion .
             FILTER("""
 
     if nombre is not None:
         query += """str(?nombre) = '""" + nombre + """'"""
         first = 1
-    #if valoracion is not None:
-    #query += """str(?valoracion) = '""" + str(valoracion) + """'"""
+    if valoracion is not None:
+        if first == 1:
+            query += """ && """
+        query += """str(?valoracion) >= '""" + str(valoracion) + """'"""
+        first = 1
     if marca is not None:
         if first == 1:
             query += """ && """
@@ -398,14 +407,15 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         peso = row.peso
         id = row.id
         subject = row.producto
+        valoracion = row.valoracion
         product_count += 1
         result.add((subject, RDF.type, ONTO.Producto))
         result.add((subject, ONTO.Marca, Literal(marca, datatype=XSD.string)))
-        result.add((subject, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
         result.add((subject, ONTO.PrecioProducto, Literal(precio, datatype=XSD.float)))
         result.add((subject, ONTO.Identificador, Literal(id, datatype=XSD.string)))
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
         result.add((subject, ONTO.Peso, Literal(peso, datatype=XSD.float)))
+        result.add((subject, ONTO.Valoracion, Literal(valoracion, datatype=XSD.float)))
     return result
 
 

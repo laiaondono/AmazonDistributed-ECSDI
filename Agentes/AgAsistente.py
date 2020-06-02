@@ -90,13 +90,22 @@ def initialize():
     Entrypoint de comunicacion
     """
     global nombreusuario
+
     if request.method == 'GET':
-        return render_template('inicio.html', products=None)
+        if nombreusuario != "":
+            return render_template('inicio.html', products=None, usuario= nombreusuario)
+        else:
+            return render_template('Username.html')
+
     else:
+
         if request.form['submit'] == 'search_products':
             return flask.redirect("http://%s:%d/search_products" % (hostname, port))
+        elif request.form['submit'] == 'registro_usuario':
+            nombreusuario = request.form['name']
+            return  render_template('inicio.html', products=None, usuario=nombreusuario)
         else:
-            return  render_template('inicio.html', products=None)
+            return request.form['submit']
 
 
 @app.route("/comm")
@@ -162,8 +171,9 @@ def tidyup():
 
 @app.route("/search_products", methods=['GET', 'POST'])
 def search_products():
+    global nombreusuario
     if request.method == 'GET':
-        return render_template('busqueda_productos.html', products=None)
+        return render_template('busqueda_productos.html', products=None, usuario=nombreusuario, busquedafallida=False)
     else:
         if request.form['submit'] == 'Busca':
             global products_list
@@ -171,12 +181,16 @@ def search_products():
             minPrice = request.form['minPrice']
             maxPrice = request.form['maxPrice']
             brand = request.form['brand']
-            products_list = buscar_productos(name, minPrice, maxPrice, brand)
-            return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
+            valoracion = request.form['valoracionminima']
+            products_list = buscar_productos(name, minPrice, maxPrice, brand,valoracion)
+            if len(products_list) == 0:
+                return render_template('busqueda_productos.html', products=None, usuario=nombreusuario, busquedafallida=True)
+            else:
+                return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
         # TODO modificar html x si no hi ha cap producte que cumpleixi restriccions
 
 
-def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = None):
+def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = None, valoracion=0.0):
     global mss_cnt, products_list
     g = Graph()
 
@@ -206,7 +220,11 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
         g.add((brandRestriction, RDF.type, ONTO.RestriccionMarca))
         g.add((brandRestriction, ONTO.Marca, Literal(brand))) # datatype=XSD.string !??!!?!?!?
         g.add((action, ONTO.RestringidaPor, URIRef(brandRestriction)))
-
+    if valoracion:
+        RatingRestriction = ONTO['RestriccionValoracion_' + str(mss_cnt)]
+        g.add((RatingRestriction, RDF.type, ONTO.RestriccionValoracion))
+        g.add((RatingRestriction, ONTO.Valoracion, Literal(valoracion))) # datatype=XSD.string !??!!?!?!?
+        g.add((action, ONTO.RestringidaPor, URIRef(RatingRestriction)))
     msg = build_message(g, ACL.request, AgAsistente.uri, AgBuscadorProductos.uri, action, mss_cnt)
     mss_cnt += 1
     gproducts = send_message(msg, AgBuscadorProductos.address)
@@ -233,6 +251,8 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
                 product['price'] = o
             if p == ONTO.Peso:
                 product["weight"] = o
+            if p == ONTO.Valoracion:
+                product["rating"] = o
     return products_list
 
 
@@ -241,17 +261,24 @@ def hacer_pedido():
     global products_list
     if request.method == 'GET':
         # TODO ciudad, prioridad  (que nomes pot ser 1, 2 o 3)y tarjeta credit no pot estar buida
-        return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False)
+        return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False,campos_error = False)
     else:
         if request.form['submit'] == 'Comprar':
             city = request.form['city']
             priority = request.form['priority']
             creditCard = request.form['creditCard']
+            if city == "" or priority == "" or creditCard =="" or (priority != "1" and priority != "2" and priority != "3"):
+                return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False, campos_error = True)
             products_to_buy = []
+            count = 0
             for p in request.form.getlist("checkbox"):
+                count+=1
                 prod = products_list[int(p)]
                 products_to_buy.append(prod)
-            return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard),intento=False, completo =False)
+            if count == 0:
+                return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False, campos_error = True)
+
+            return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard),intento=False, completo =False,campos_error = False)
         elif request.form['submit'] == "Visualizar datos completos":
             global completo
             global info_bill

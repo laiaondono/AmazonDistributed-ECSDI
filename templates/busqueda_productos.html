@@ -32,7 +32,10 @@
         <body>
         <h1>Búsqueda de productos</h1>
         <!-- <a href="javascript:history.back()">< Volver</a> -->
-        {% if not products %}
+        <br>
+        <p>Usuario activo: {{usuario}}</p>
+        <br>
+        {% if not products or busquedafallida %}
         <form method="post">
             <input type="text" name="name" placeholder="Nombre"/><br>
             <br>
@@ -42,7 +45,12 @@
             <br>
             <input type="text" name="maxPrice" placeholder="Precio máximo"/><br>
             <br>
+            <input type="text" name="valoracionminima" placeholder="Valoracion minima (max 5)"/><br>
+            <br>
             <input type="submit" name="submit" value="Busca">
+            {% if busquedafallida %}
+            <p style="color:red;"> No se han encontrado productos para esas restricciones.Vuelve a intentarlo</p>
+            {% endif %}
         </form>
         {% else %}
         <form method="post">
@@ -52,6 +60,7 @@
                     <th><b>NOMBRE</b></th>
                     <th><b>MARCA</b></th>
                     <th><b>PRECIO</b></th>
+                    <th><b>VALORACION</b></th>
                 </tr>
                 {% for p in products %}
                 <tr>
@@ -59,6 +68,7 @@
                     <td>{{ p.name }}</td>
                     <td>{{ p.brand }}</td>
                     <td>{{ p.price }}</td>
+                    <td>{{ p.rating }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -69,6 +79,10 @@
             <input type="text" name="creditCard" placeholder="Targeta de crédito"/><br>
             <br>
             <input type="submit" name="submit" value="Comprar">
+        </form>
+        <br>
+        <form method="post">
+            <input type="submit" name="submit" value="Volver al inicio">
         </form>
         {% endif %}
         </body>
