@@ -106,6 +106,27 @@ ns1:RegistroEconomico_21 a ns1:RegistroEconomico ;
     ns1:DNI "Nike"^^xsd:string ;
     ns1:Importe "-15.0"^^xsd:float .
 
+ns1:RegistroEconomico_22 a ns1:RegistroEconomico ;
+    ns1:Concepto "Compra_2" ;
+    ns1:CuentaDestino "ES40 4894 3948 4839" ;
+    ns1:CuentaOrigen "ESBN8377228748" ;
+    ns1:DNI "12345678E" ;
+    ns1:Importe "-65.0"^^xsd:float .
+
+ns1:RegistroEconomico_23 a ns1:RegistroEconomico ;
+    ns1:Concepto "Compra_2" ;
+    ns1:CuentaDestino "ES40 4894 3948 4839" ;
+    ns1:CuentaOrigen "ESBN8377228748" ;
+    ns1:DNI "12345678E" ;
+    ns1:Importe "-890.95"^^xsd:float .
+
+ns1:RegistroEconomico_24 a ns1:RegistroEconomico ;
+    ns1:Concepto "ProductoEX_4" ;
+    ns1:CuentaDestino "ESBN8377228748" ;
+    ns1:CuentaOrigen "ESBN91120302102" ;
+    ns1:DNI "Apple" ;
+    ns1:Importe "890.95"^^xsd:float .
+
 ns1:RegistroEconomico_3 a ns1:RegistroEconomico ;
     ns1:Concepto "ProductoEX_1"^^xsd:string ;
     ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;

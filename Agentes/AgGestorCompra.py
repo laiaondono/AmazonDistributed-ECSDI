@@ -8,32 +8,20 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
-
 @author: pau-laia-anna
 """
-import random
+
 import socket
-import string
 from multiprocessing import Queue, Process
 from flask import Flask, request
 from pyparsing import Literal
-import requests
-from rdflib import Namespace, Graph, RDF, Literal, URIRef, XSD
-
-#from Agentes import AgCentroLogistico
+from rdflib import Namespace, Literal, URIRef, XSD
 from Util.ACLMessages import *
 from Util.Agent import Agent
 from Util.Logging import config_logger
 from Util.OntoNamespaces import ONTO, ACL
-from opencage.geocoder import OpenCageGeocode
 from geopy.geocoders import Nominatim
-from geopy.distance import geodesic, great_circle
-from geopy import geocoders
-
-from datetime import datetime
-import time
-from Util.FlaskServer import shutdown_server
+from geopy.distance import great_circle
 
 __author__ = 'pau-laia-anna'
 logger = config_logger(level=1)
@@ -46,20 +34,14 @@ agn = Namespace("http://www.agentes.org#")
 
 # Contador de mensajes
 mss_cnt = 0
-# Datos del Agente
 
+# Datos del Agente
 AgGestorCompra = Agent('AgGestorCompra',
                        agn.AgGestorCompra,
                        'http://%s:%d/comm' % (hostname, port),
                        'http://%s:%d/Stop' % (hostname, port))
 
-# Directory agent address
-DirectoryAgent = Agent('DirectoryAgent',
-                       agn.Directory,
-                       'http://%s:9000/Register' % hostname,
-                       'http://%s:9000/Stop' % hostname)
-
-# Directory agent address
+# Datos de otros Agentes
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
                     'http://%s:9011/comm' % hostname,
@@ -103,7 +85,6 @@ location_bcn = (Nominatim(user_agent='myapplication').geocode("Barcelona").latit
                 Nominatim(user_agent='myapplication').geocode("Barcelona").longitude)
 location_pk = (Nominatim(user_agent='myapplication').geocode("Pekín").latitude,
                Nominatim(user_agent='myapplication').geocode("Pekín").longitude)
-
 graph_compra = Graph()
 precio_total_compra = 0.0
 ultima_compra = Graph()
@@ -122,14 +103,15 @@ def communication():
     message = request.args['content']
     gm = Graph()
     gm.parse(data=message)
-
     msgdic = get_message_properties(gm)
     global graph_compra
     global precio_total_compra,mss_cnt
     gr = None
+
     if msgdic is None:
         # Si no es, respondemos que no hemos entendido el mensaje
         gr = build_message(Graph(), ACL['not-understood'], sender=AgAsistente.uri, msgcnt=get_count())
+
     else:
         # Obtenemos la performativa
         if msgdic['performative'] != ACL.request:
@@ -138,16 +120,16 @@ def communication():
                                ACL['not-understood'],
                                sender=AgAsistente.uri,
                                msgcnt=get_count())
+
         else:
             # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
             # de registro
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
-            # Accion de busqueda
-            print(accion)
+
+            # Accion de hacer pedido
             if accion == ONTO.HacerPedido:
-                #guardem el graf de la compra com a variable global
                 global graph_compra
                 graph_compra = gm
 
@@ -155,26 +137,30 @@ def communication():
                 numero_productos = 0
                 precio_total = 0.0
                 graffactura = Graph()
+
                 # Llamamos a get_count para generar un numero de factura.
                 count = 0
                 PedidosFile = open('../Data/RegistroPedidos')
                 graphfinal = Graph()
                 graphfinal.parse(PedidosFile, format='turtle')
-                for s,p,o in graphfinal:
+                for s, p, o in graphfinal:
                     if p == ONTO.Lote:
-                        count+=1
+                        count += 1
                 count_real = count
                 count = str(count)
+
                 # Generamos la factura
                 factura = ONTO["Factura_" + count]
                 accion = ONTO["EnviarFactura_" + count]
+
                 # Añadimos al grafo la accion enviar factura, y referenciamos la factura con la URIRef.
                 graffactura.add((accion, RDF.type, ONTO.EnviarFactura))
                 graffactura.add((accion, ONTO.FacturaEnviada, URIRef(factura)))
+
                 # Añadimos al grafo un objecto factura, en el que añadiremos cosas.
                 graffactura.add((factura, RDF.type, ONTO.Factura))
-                for s,p,o in gm:
-                    if p==ONTO.DNI:
+                for s, p, o in gm:
+                    if p == ONTO.DNI:
                         dni_usuari = str(o)
                 ciudad = gm.objects(content, ONTO.Ciudad)
                 for c in ciudad:
@@ -221,27 +207,28 @@ def communication():
 
             #AgServicioPago ens avisa que ja ha realitzat el cobro i aixi podem realitzar la valoracio
             elif accion == ONTO.CobrarCompra:
-                print("Cobrem la compra")
                 for s, p, o in gm:
                     if p == ONTO.LoteEntregado:
                         lote = str(o)
-                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos')
+
+                PedidosFile = open('../Data/RegistroPedidos')
                 graphpedidos = Graph()
                 graphpedidos.parse(PedidosFile, format='turtle')
                 subject = ""
-                for s,p,o in graphpedidos:
+                for s, p, o in graphpedidos:
                     if p == ONTO.Lote :
                         if str(o) == str(lote):
                             subject = s
+
                 g = Graph()
                 g.add((accion, RDF.type, ONTO.CobrarCompra))
                 productos_externos= []
                 productos_a_valorar=[]
-                for s,p,o in graphpedidos:
+                for s, p, o in graphpedidos:
                     if str(s) == str(subject):
                         if p == ONTO.ProductosCompra:
                             productos_a_valorar.append(str(o))
-                            ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+                            ProductosExternosFile = open("../Data/ProductosExternos")
                             grafo_productos_externos = Graph()
                             grafo_productos_externos.parse(ProductosExternosFile,format='xml')
                             query= """
@@ -257,7 +244,9 @@ def communication():
                                 ?producto default:PrecioProducto ?precio .
                                 ?producto default:Nombre ?nombre .
                                 FILTER( ?nombre = '"""+str(o)+"""')}"""
+
                             grafo_productos_externos = grafo_productos_externos.query(query)
+
                             for row in grafo_productos_externos:
                                 prod = {'identificador':row.id,'empresa':row.empresa,'precio':row.precio}
                                 productos_externos.append(prod)
@@ -268,10 +257,12 @@ def communication():
                             g.add((accion, ONTO.DNI, Literal(str(o))))
                         if p == ONTO.PrecioTotal:
                             g.add((accion, ONTO.PrecioTotal, Literal(float(o))))
-                #lote = gm.value(subject=accion, predicate=ONTO.LoteEntregado)
+
                 g.add((accion, ONTO.LoteEntregado, Literal(subject[49:])))
+
                 msg = build_message(g, ACL.request, AgGestorCompra.uri, AgServicioPago.uri, accion, get_count())
                 send_message(msg, AgServicioPago.address)
+
                 for prod in productos_externos:
                     graphpago = Graph()
                     accion = ONTO["PagarVendedorExterno"]
@@ -297,6 +288,7 @@ def communication():
                     mss_cnt += 1
                     print("Solicitamos el pago de "+ str(prod['identificador']) + ' a la empresa ' +str(prod['empresa']) + "con numero de cuenta "+ str(numero_cuenta))
                     send_message(msg, AgServicioPago.address)
+
                 g = Graph()
                 g.add((ONTO["ConfirmarValoracion"],RDF.type,ONTO.ConfirmarValoracion))
                 for prod in productos_a_valorar:
@@ -304,12 +296,11 @@ def communication():
                 g.add((ONTO["ConfirmarValoracion"], ONTO.LoteEntregado, Literal(subject[49:])))
                 msg = build_message(g, ACL.request, AgGestorCompra.uri, AgProcesadorOpiniones.uri, ONTO["ConfirmarValoracion"], get_count())
                 send_message(msg, AgProcesadorOpiniones.address)
-
-
                 #Returnem ACK al AgServicioPago conforme ho hem rebut
                 grr = Graph()
                 return grr.serialize(format="xml"),200
 
+    return gr.serialize(format='xml'), 200
 
 
 def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, content="", prioridad=0, tarjeta="",dni=""):
@@ -373,7 +364,7 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     for s,p,o in gr:
         if p == ONTO.PrecioTotal:
             precio_total_compra = float(o)
-    PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos')
+    PedidosFile = open('../Data/RegistroPedidos')
     graphfinal = Graph()
     graphfinal.parse(PedidosFile, format='turtle')
     grafrespuesta=Graph()
@@ -401,7 +392,7 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     # Añadimos la nueva compra y lo escribimos otra vez.
     global ultimacompra
     ultimacompra = grafrespuesta
-    PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos', 'wb')
+    PedidosFile = open('../Data/RegistroPedidos', 'wb')
     PedidosFile.write(graphfinal.serialize(format='turtle'))
     PedidosFile.close()
     grafrespuesta.add((accion, RDF.type, ONTO.ProcesarEnvio))

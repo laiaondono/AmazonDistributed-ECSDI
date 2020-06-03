@@ -215,7 +215,7 @@ def comunicacion():
                 g.parse(ProductosFile, format='xml')
                 es_ext = True
                 for s, p, o in g:
-                    if p == ONTO.Nombre and str(o) == str(producto): #TODO format
+                    if p == ONTO.Nombre and str(o) == str(producto):
                         precio = g.value(subject=s, predicate=ONTO.PrecioProducto)
                         es_ext = False
                         break
@@ -223,7 +223,7 @@ def comunicacion():
                 if es_ext:
                     ProductosFile = open('../Data/ProductosExternos')
                     g = Graph()
-                    g.parse(ProductosFile, format='xml') #TODO ojo format
+                    g.parse(ProductosFile, format='xml')
                     for s, p, o in g:
                         if p == ONTO.Nombre and str(o) == str(producto):
                             precio = g.value(subject=s, predicate=ONTO.PrecioProducto)
@@ -241,7 +241,8 @@ def comunicacion():
                         nombreusuario = str(o)
                 gDevolucion.add((accion, ONTO.Usuario, Literal(nombreusuario)))
                 gDevolucion.add((accion, ONTO.Importe, Literal(precio)))
-                gDevolucion.add((accion, ONTO.Compra, Literal(idcompra)))
+                compra = idcompra[49:]
+                gDevolucion.add((accion, ONTO.Compra, Literal(compra)))
 
                 msg = build_message(gDevolucion, ACL.request, AgGestorDevoluciones.uri, AgServicioPago.uri, accion, mss_cnt)
                 send_message(msg, AgServicioPago.address)

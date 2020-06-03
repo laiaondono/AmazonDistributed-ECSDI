@@ -8,8 +8,6 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
-
 @author: pau-laia-anna
 """
 
@@ -39,17 +37,10 @@ agn = Namespace("http://www.agentes.org#")
 mss_cnt = 0
 
 # Datos del Agente
-
 AgBuscadorProductos = Agent('AgBuscadorProductos',
                             agn.AgenteSimple,
                             'http://%s:%d/comm' % (hostname, port),
                             'http://%s:%d/Stop' % (hostname, port))
-
-# Directory agent address
-DirectoryAgent = Agent('DirectoryAgent',
-                       agn.Directory,
-                       'http://%s:9000/Register' % hostname,
-                       'http://%s:9000/Stop' % hostname)
 
 # Global triplestore graph
 dsgraph = Graph()
@@ -66,27 +57,6 @@ def get_count():
     return mss_cnt
 
 
-def test_suma():
-    peticion = {"numero1": random.randint(0, 400), "numero2": random.randint(0, 400)}
-    port_agprova = 9011
-    uri = 'http://desktop-lrtmd2a:9011/sum'
-    headers = {'content-type': 'application/json'}
-    r = requests.get(uri, params=peticion, headers=headers)
-    return r.text
-
-
-def busca():
-    peticion = {"numero1": random.randint(0, 400), "numero2": random.randint(0, 400)}
-    port_agprova = 9011
-    uri = 'http://desktop-lrtmd2a:9011/sum'
-
-    headers = {'content-type': 'application/json'}
-    r = requests.get(uri, params=peticion, headers=headers)
-    return r.text
-
-
-
-
 @app.route("/comm")
 def communication():
     """
@@ -95,18 +65,16 @@ def communication():
 
     logger.info('Peticion de informacion recibida')
     global dsGraph
-
     message = request.args['content']
     gm = Graph()
     gm.parse(data=message)
-
     msgdic = get_message_properties(gm)
-
     gr = None
 
     if msgdic is None:
         # Si no es, respondemos que no hemos entendido el mensaje
         gr = build_message(Graph(), ACL['not-understood'], sender=AgBuscadorProductos.uri, msgcnt=get_count())
+
     else:
         # Obtenemos la performativa
         if msgdic['performative'] != ACL.request:
@@ -115,6 +83,7 @@ def communication():
                                ACL['not-understood'],
                                sender=AgBuscadorProductos.uri,
                                msgcnt=get_count())
+
         else:
             # Extraemos el objeto del contenido que ha de ser una accion de la ontologia
             # de registro
@@ -122,7 +91,7 @@ def communication():
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
 
-            # Accion de busqueda
+            # Accion de buscar productos
             if accion == ONTO.BuscarProductos:
                 restriccions = gm.objects(content, ONTO.RestringidaPor)
                 restriccions_dict = {}
@@ -141,10 +110,12 @@ def communication():
                         if preciomax:
                             logger.info('BÚSQUEDA->Restriccion de precio maximo:' + preciomax)
                             restriccions_dict['preciomax'] = preciomax.toPython()
+
                     elif gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionNombre:
                         nombre = gm.value(subject=restriccio, predicate=ONTO.Nombre)
                         logger.info('BÚSQUEDA->Restriccion de Nombre: ' + nombre)
                         restriccions_dict['nombre'] = nombre
+
                     elif gm.value(subject=restriccio, predicate=RDF.type) == ONTO.RestriccionValoracion:
                         valoracion = gm.value(subject=restriccio, predicate=ONTO.Valoracion)
                         logger.info('BÚSQUEDA->Restriccion de Valoracion: ' + valoracion)
@@ -152,57 +123,7 @@ def communication():
 
                 gr = buscar_productos(**restriccions_dict)
 
-            # Accion de comprar
-            """
-            elif accion == ECSDI.Peticion_compra:
-                logger.info("He rebut la peticio de compra")
-
-                sell = None
-                for item in gm.subjects(RDF.type, ECSDI.Compra):
-                    sell = item
-
-                gm.remove((content, None, None))
-                for item in gm.subjects(RDF.type, ACL.FipaAclMessage):
-                    gm.remove((item, None, None))
-
-                content = ECSDI['Vull_comprar_' + str(get_count())]
-                gm.add((content, RDF.type, ECSDI.Vull_comprar))
-                gm.add((content, ECSDI.compra, URIRef(sell)))
-                gr = gm
-
-                financial = get_agent_info(agn.FinancialAgent, DirectoryAgent, SellerAgent, get_count())
-
-                gr = send_message(
-                    build_message(gr, perf=ACL.request, sender=SellerAgent.uri, receiver=financial.uri,
-                                  msgcnt=get_count(),
-                                  content=content), financial.address)
-
-            elif accion == ECSDI.Peticion_retorno:
-                logger.info("He rebut la peticio de retorn")
-
-                for item in gm.subjects(RDF.type, ACL.FipaAclMessage):
-                    gm.remove((item, None, None))
-
-                gr = gm
-
-
-                financial = get_agent_info(agn.FinancialAgent, DirectoryAgent, SellerAgent, get_count())
-
-                gr = send_message(
-                    build_message(gr, perf=ACL.request, sender=SellerAgent.uri, receiver=financial.uri,
-                                  msgcnt=get_count(),
-                                  content=content), financial.address)
-
-            # No habia ninguna accion en el mensaje
-            else:
-                gr = build_message(Graph(),
-                                   ACL['not-understood'],
-                                   sender=DirectoryAgent.uri,
-                                   msgcnt=get_count())
-            """
-    logger.info('Respondemos a la peticion')
-    serialize = gr.serialize(format='xml')
-    return serialize, 200
+    return gr.serialize(format='xml'), 200
 
 
 @app.route("/searchtest")
@@ -301,7 +222,6 @@ def añadir_productos():
 def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.float_info.max, nombre=None):
     graph = Graph()
     ontologyFile = open('../Data/Productos')
-    # TODO buscar tambe en productes externos
     graph.parse(ontologyFile, format='xml')
 
     first = second = 0
@@ -324,24 +244,28 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
     if nombre is not None:
         query += """str(?nombre) = '""" + nombre + """'"""
         first = 1
+
     if valoracion is not None:
         if first == 1:
             query+=""" && """
         query += """str(?valoracion) >= '""" + str(valoracion) + """'"""
         first = 1
+
     if marca is not None:
         if first == 1:
             query += """ && """
         query += """str(?marca) = '""" + marca + """'"""
         second = 1
+
     if first == 1 or second == 1:
         query += """ && """
+
     query += """?precio >= """ + str(preciomin) + """ &&
                 ?precio <= """ + str(preciomax) + """  )}
                 order by asc(UCASE(str(?nombre)))"""
+
     graph_query = graph.query(query)
     result = Graph()
-    # Aqui hi havia un bind
     product_count = 0
     for row in graph_query:
         nom_prod = row.nombre
@@ -359,9 +283,9 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         result.add((subject_prod, ONTO.Nombre, Literal(nom_prod, datatype=XSD.string)))
         result.add((subject_prod, ONTO.Peso, Literal(peso_prod, datatype=XSD.float)))
         result.add((subject_prod, ONTO.Valoracion, Literal(valoracion_prod, datatype=XSD.float)))
+
     graphexternos = Graph()
     ontologyFileExtern = open('../Data/ProductosExternos')
-    # TODO buscar tambe en productes externos
     graphexternos.parse(ontologyFileExtern, format='xml')
     first = second = 0
     query = """
@@ -383,21 +307,26 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
     if nombre is not None:
         query += """str(?nombre) = '""" + nombre + """'"""
         first = 1
+
     if valoracion is not None:
         if first == 1:
             query += """ && """
         query += """str(?valoracion) >= '""" + str(valoracion) + """'"""
         first = 1
+
     if marca is not None:
         if first == 1:
             query += """ && """
         query += """str(?marca) = '""" + marca + """'"""
         second = 1
+
     if first == 1 or second == 1:
         query += """ && """
+
     query += """?precio >= """ + str(preciomin) + """ &&
                 ?precio <= """ + str(preciomax) + """  )}
                 order by asc(UCASE(str(?nombre)))"""
+
     graph_query_externos = graphexternos.query(query)
     product_count = 0
     for row in graph_query_externos:
@@ -416,6 +345,7 @@ def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.fl
         result.add((subject, ONTO.Nombre, Literal(nom, datatype=XSD.string)))
         result.add((subject, ONTO.Peso, Literal(peso, datatype=XSD.float)))
         result.add((subject, ONTO.Valoracion, Literal(valoracion, datatype=XSD.float)))
+
     return result
 
 

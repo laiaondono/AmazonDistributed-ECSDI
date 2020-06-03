@@ -151,7 +151,7 @@ def communication():
             city=""
             priority=0.0
             centro=""
-            print(accion)
+
             if accion == ONTO.PedirPreciosEnvio:
                 for s, p, o in gm:
                     if p == ONTO.Peso:
@@ -223,7 +223,6 @@ def communication():
                 for s, p, o in gm:
                     if p == ONTO.LoteFinal:
                         obj = str(o)
-                print("Lote entregado: "+ str(obj))
                 proceso = Process(target=entregar_producto, args=())
                 proceso.start()
                 obj = str(obj)
@@ -231,13 +230,9 @@ def communication():
                 logger.info("Pedido entregado")
                 g = Graph()
                 action = ONTO["CobrarCompra_" + str(get_count())]
-                print("El lote es" + str(obj))
+
                 g.add((action, RDF.type, ONTO.CobrarCompra))
                 g.add((action, ONTO.LoteEntregado, Literal(obj)))
-                for s, p, o in g:
-                    print(s)
-                    print(p)
-                    print(o)
                 p = Process(target=avisar_entrega,args=(g,action))
                 p.start()
                 return g.serialize(format='xml'),200

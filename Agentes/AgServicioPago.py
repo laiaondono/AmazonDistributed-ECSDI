@@ -131,7 +131,7 @@ def comunicacion():
                         dni_usuario = str(o)
                     elif p == ONTO.LoteEntregado:
                         nombre_compra = str(o)
-                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico")
+                RegistroEconomicoFile = open("../Data/RegistroEconomico")
                 grafo_economico = Graph()
                 grafo_economico.parse(RegistroEconomicoFile,format='turtle')
                 total_registros = 0
@@ -147,24 +147,18 @@ def comunicacion():
                 grafo_economico.add((action,ONTO.Concepto,Literal(nombre_compra,datatype=XSD.string)))
                 total_registros+=1
 
-                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico",'wb')
+                RegistroEconomicoFile = open("../Data/RegistroEconomico",'wb')
                 RegistroEconomicoFile.write(grafo_economico.serialize(format='turtle'))
                 RegistroEconomicoFile.close()
                 logger.info("Compra registrada")
                 graff = Graph()
                 return graff.serialize(format='xml'),200
 
-            elif accion == ONTO.PagarVendedorExterno:
-
+            if accion == ONTO.PagarVendedorExterno:
                 dni_usuario = ""
                 importe = 0.0
-                cuenta_destino = ""
-                productos = []
-                empresa = ""
                 nombre_compra = ""
                 for s,p,o in gm:
-                    #if p == ONTO.ProductosCompra:
-                    #productos.append(str(o))
                     if p == ONTO.PrecioTotal:
                         importe = float(o)*-1
                     elif p == ONTO.CuentaDestino:
@@ -173,7 +167,7 @@ def comunicacion():
                         dni_usuario = str(o)
                     elif p == ONTO.NombreProducto:
                         nombre_compra = str(o)
-                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico")
+                RegistroEconomicoFile = open("../Data/RegistroEconomico")
                 grafo_economico = Graph()
                 grafo_economico.parse(RegistroEconomicoFile,format='turtle')
                 total_registros = 0
@@ -188,7 +182,7 @@ def comunicacion():
                 grafo_economico.add((action,ONTO.DNI,Literal(dni_usuario,datatype=XSD.string)))
                 grafo_economico.add((action,ONTO.Concepto,Literal(nombre_compra,datatype=XSD.string)))
                 total_registros+=1
-                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico",'wb')
+                RegistroEconomicoFile = open("../Data/RegistroEconomico",'wb')
                 RegistroEconomicoFile.write(grafo_economico.serialize(format='turtle'))
                 RegistroEconomicoFile.close()
                 logger.info("Producto pagado a empresa externa")
@@ -233,6 +227,7 @@ def comunicacion():
 
                 graff = Graph()
                 return graff.serialize(format='xml'),200
+
             if accion == ONTO.CobrarVendedorExterno:
                 RegistroEconomicoFile = open('../Data/RegistroEconomico')
                 g = Graph()

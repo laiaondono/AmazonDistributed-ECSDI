@@ -105,7 +105,7 @@ def communication():
             accion = gm.value(subject=content, predicate=RDF.type)
 
             if accion == ONTO.AñadirProductoExterno:
-                ProdExtFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos')
+                ProdExtFile = open('../Data/ProductosExternos')
                 graphfinal = Graph()
                 graphfinal.parse(ProdExtFile, format='xml')
 
@@ -117,9 +117,7 @@ def communication():
                         nombre+=1
 
                 identificador = 'ProductoEX_' + str(nombre)
-                print("ID: " + identificador)
                 productSuj = ONTO[identificador]
-                print(productSuj)
                 graphNewProduct.add((productSuj, RDF.type, ONTO.Producto))
                 graphNewProduct.add((productSuj, ONTO.Identificador, Literal(identificador)))
                 for s, p, o in gm:
@@ -141,7 +139,7 @@ def communication():
 
                 # Añadimos el nuevo producto externo y lo escribimos otra vez.
                 graphfinal += graphNewProduct
-                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos', 'wb')
+                PedidosFile = open('../Data/ProductosExternos', 'wb')
                 PedidosFile.write(graphfinal.serialize(format='xml'))
                 PedidosFile.close()
 

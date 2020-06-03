@@ -166,10 +166,6 @@ def communication():
                         transportista.append(o)
                 precio_min = sys.maxsize
                 for t in transportista:
-                    print("ID: " + t)
-                    print("NOMBRE: " + gr.value(subject=t, predicate=ONTO.Nombre))
-                    print("FECHA: " + gr.value(subject=t, predicate=ONTO.Fecha))
-                    print("PRERCIO: " + str(gr.value(subject=t, predicate=ONTO.PrecioTransporte)))
                     precio = gr.value(subject=t, predicate=ONTO.PrecioTransporte)
                     if precio_min > precio.toPython(): #TODO mirar si precio és float o literal
                         precio_min = precio.toPython()
@@ -204,7 +200,7 @@ def communication():
                             fechaFinal = gFinal.value(subject=t, predicate=ONTO.Fecha)
 
                 precioFinal += precioCompra
-                print( "El preu final es "+ str(precioFinal))
+
                 transportista = ONTO[idTransportistaFinal]
                 gm.add((transportista,RDF.type,ONTO.Transportista))
                 gm.add((transportista,ONTO.NombreTransportista,Literal(transportistaFinal)))
@@ -239,7 +235,6 @@ def communication():
                         idLote = str(o)
                         break
                 g = Graph()
-                print("El lote es " +str(idLote))
                 action = ONTO["CobrarCompra_" + str(get_count())]
                 g.add((action, RDF.type, ONTO.CobrarCompra))
                 g.add((action, ONTO.LoteEntregado, Literal(idLote)))

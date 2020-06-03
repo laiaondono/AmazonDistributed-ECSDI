@@ -123,11 +123,10 @@ def comunicacion():
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
 
-            # Accion de busqueda
-            print(accion)
+            # Accion de actualizar historial
             if accion == ONTO.ActualizarHistorial:
                 gr =Graph()
-                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial')
+                PedidosFile = open('../Data/Historial')
                 graphfinal = Graph()
                 graphfinal.parse(PedidosFile, format='turtle')
                 dni =""
@@ -147,7 +146,7 @@ def comunicacion():
                         graphfinal.add((historial,RDF.type,ONTO.Historial))
                         graphfinal.add((historial,ONTO.Identificador,Literal(str(o))))
                         graphfinal.add((historial,ONTO.DNI,Literal(str(dni))))
-                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial', 'wb')
+                PedidosFile = open('../Data/Historial', 'wb')
                 PedidosFile.write(graphfinal.serialize(format='turtle'))
                 PedidosFile.close()
                 return gr.serialize(format="xml"),200
@@ -162,10 +161,6 @@ def comunicacion():
                 for s,p,o in gm:
                     if p == ONTO.Nombre:
                         grr.add((action,ONTO.Nombre,Literal(str(o))))
-                for s,p,o in grr:
-                    print(s)
-                    print(p)
-                    print(o)
                 msg = build_message(grr, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri,action, get_count())
                 send_message(msg, AgAsistente.address)
                 return grr.serialize(format="xml"),200
@@ -177,7 +172,7 @@ def comunicacion():
                         nombre_producto = str(o)
                     elif p == ONTO.Valoracion:
                         valoracion = float(o)
-                ValoracionesFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Valoraciones')
+                ValoracionesFile = open('../Data/Valoraciones')
                 graphvaloraciones = Graph()
                 graphvaloraciones.parse(ValoracionesFile, format='turtle')
                 count = 0
@@ -189,9 +184,9 @@ def comunicacion():
                 graphvaloraciones.add((accion, ONTO.DNI, Literal(dni_user,datatype=XSD.string)))
                 graphvaloraciones.add((accion,ONTO.Nombre,Literal(nombre_producto,datatype=XSD.string)))
                 graphvaloraciones.add((accion,ONTO.Valoracion,Literal(valoracion,datatype=XSD.float)))
-                ValoracionesFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Valoraciones','wb')
+                ValoracionesFile = open('../Data/Valoraciones','wb')
                 ValoracionesFile.write(graphvaloraciones.serialize(format='turtle'))
-                ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos')
+                ProductosFile = open('../Data/Productos')
                 graphproductos = Graph()
                 graphproductos.parse(ProductosFile, format='xml')
                 subject = ""
@@ -213,10 +208,10 @@ def comunicacion():
                             graphproductos.set((s,p,Literal(float(nueva_valoracion))))
                         elif str(s) == subject and p == ONTO.CantidadValoraciones:
                             graphproductos.set((s,p,Literal(int(cantidad_prod))))
-                    ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos','wb')
+                    ProductosFile = open('../Data/Productos','wb')
                     ProductosFile.write(graphproductos.serialize(format='xml'))
                 else:
-                    ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos')
+                    ProductosFile = open('../Data/ProductosExternos')
                     graphproductos = Graph()
                     graphproductos.parse(ProductosFile, format='xml')
                     ProductosFile.close()
@@ -240,7 +235,7 @@ def comunicacion():
                             graphproductos.set((s,p,Literal(float(nueva_valoracion),datatype=XSD.float)))
                         elif str(s) == subject and p == ONTO.CantidadValoraciones:
                             graphproductos.set((s,p,Literal(int(cantidad_prod),datatype=XSD.float)))
-                    ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos','wb')
+                    ProductosFile = open('../Data/ProductosExternos','wb')
                     ProductosFile.write(graphproductos.serialize(format='xml'))
                 return graphproductos.serialize(format='xml'),200
 
@@ -266,11 +261,11 @@ def confirmar_valoracion(gm, accion):
 def recomendar():
     while True:
         time.sleep(60)
-        PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial')
+        PedidosFile = open('../Data/Historial')
         historial = Graph()
         historial.parse(PedidosFile, format='turtle')
-        ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
-        ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+        ProductosFile = open("../Data/Productos")
+        ProductosExternosFile = open("../Data/ProductosExternos")
         grafo_productos = Graph()
         grafo_productos.parse(ProductosFile,format='xml')
         grafo_productos_externos = Graph()
@@ -292,17 +287,14 @@ def recomendar():
             cat_otros = 0
             precio_medio = 0
             numero_precios = 0
-            #print(prod)
             subjects_user=[]
             for s,p,o in historial:
                 if p == ONTO.DNI:
                     if prod['usuario']==str(o):
                         subjects_user.append(str(s))
-            #print(subjects_user)
-            #print(len(subjects_user))
             for s,p,o in historial:
-                ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
-                ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+                ProductosFile = open("../Data/Productos")
+                ProductosExternosFile = open("../Data/ProductosExternos")
                 grafo_productos = Graph()
                 grafo_productos_externos = Graph()
                 grafo_productos.parse(ProductosFile,format='xml')
@@ -355,14 +347,14 @@ def recomendar():
             else:
                 prod['categoria'] = 'Hogar'
             prod['preciomedio'] = precio_medio
-        #print(productos_usuario)
+
         grafo_recomendacion = Graph()
         action_rec = ONTO["RecomendarProductos"]
         grafo_recomendacion.add((action_rec,RDF.type,ONTO.RecomendarProducto))
         count = 0
         for dic_user in productos_usuario:
-            ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
-            ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+            ProductosFile = open("../Data/Productos")
+            ProductosExternosFile = open("../Data/ProductosExternos")
             grafo_productos = Graph()
             grafo_productos_externos = Graph()
             grafo_productos.parse(ProductosFile,format='xml')
@@ -386,9 +378,9 @@ def recomendar():
             grafo_productos=grafo_productos.query(query)
             grafo_productos_externos=grafo_productos_externos.query(query)
             for row in grafo_productos:
-                print(row.nombre)
+
                 accion = ONTO["Producto_"+str(count)]
-                PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
+                PedidosFile = open("../Data/RegistroPedidos")
                 graphfinal = Graph()
                 graphfinal.parse(PedidosFile, format='turtle')
                 found = False
@@ -410,7 +402,7 @@ def recomendar():
                     count+=1
             for row in grafo_productos_externos:
                 accion = ONTO["Producto_"+str(count)]
-                PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
+                PedidosFile = open("../Data/RegistroPedidos")
                 graphfinal = Graph()
                 graphfinal.parse(PedidosFile, format='turtle')
                 found = False
@@ -430,27 +422,9 @@ def recomendar():
                     grafo_recomendacion.add((accion,ONTO.DNI,Literal(dic_user['usuario'])))
                     grafo_recomendacion.add((action_rec,ONTO.ProductoRecomendado,URIRef(accion)))
                     count+=1
-        for s, p, o  in grafo_recomendacion:
-            if p == ONTO.Nombre:
-                print("Elegidooooo " + str(o))
+
         msg = build_message(grafo_recomendacion, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri,action_rec, get_count())
         send_message(msg, AgAsistente.address)
-        """
-        subjects_user_1 = []
-        for s,p,o in grafo_recomendacion:
-            if p == ONTO.DNI and str(o) == "4154454":
-                subjects_user_1.append(s)
-        for s,p,o in grafo_recomendacion :
-            if s in subjects_user_1 and p == ONTO.Nombre:
-                print("El usuario 4154454 ha recibido la recomendacion de este producto:" + str(o))
-        subjects_user_2= []
-        for s,p,o in grafo_recomendacion:
-            if p == ONTO.DNI and str(o) == "123443423":
-                subjects_user_2.append(s)
-        for s,p,o in grafo_recomendacion:
-            if s in subjects_user_2 and p == ONTO.Nombre:
-                print("El usuario 123443423 ha recibido la recomendacion de este producto:" + str(o))
-        """
 
 
 @app.route("/Stop")
