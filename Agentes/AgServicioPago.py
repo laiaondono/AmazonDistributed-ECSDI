@@ -198,43 +198,79 @@ def comunicacion():
             if accion == ONTO.DevolverDinero:
                 RegistroEconomicoFile = open('../Data/RegistroEconomico')
                 g = Graph()
-                g.parse(RegistroEconomicoFile, format='xml') #TODO ojo format
+                g.parse(RegistroEconomicoFile, format='turtle') #TODO ojo format
                 total_registros = 0
                 for s, p, o in g:
                     if p == ONTO.Concepto:
                         total_registros+=1
 
+                for s, p, o in gm:
+                    if p == ONTO.Importe:
+                        precio = o.toPython()
+                    if p == ONTO.Origen:
+                        origen = str(o)
+                    if p == ONTO.Destino:
+                        destino = str(o)
+                    if p == ONTO.Usuario:
+                        dni = str(o)
+                    if p == ONTO.Compra:
+                        concepto = str(o)
+
                 gNuevaTransferencia = Graph()
                 action = ONTO["RegistroEconomico_" + str(total_registros)]
                 gNuevaTransferencia.add((action, RDF.type, ONTO.RegistroEconomico))
-                origen = gm.value(subject=accion, predicate=ONTO.Origen)
                 gNuevaTransferencia.add((action,ONTO.CuentaOrigen, Literal(origen)))
-                destino = gm.value(subject=accion, predicate=ONTO.Destino)
                 gNuevaTransferencia.add((action,ONTO.CuentaDestino,Literal(destino)))
-                precio = gm.value(subject=accion, predicate=ONTO.Importe) * -1 #TODO comprovar que funciona
-                gNuevaTransferencia.add((action,ONTO.Importe,Literal(precio)))
-                dni = gm.value(subject=accion, predicate=ONTO.Usuario)
+                precio = precio * -1
+                gNuevaTransferencia.add((action,ONTO.Importe,Literal(precio, datatype=XSD.float)))
                 gNuevaTransferencia.add((action,ONTO.DNI,Literal(dni)))
-                concepto = gm.value(subject=accion, predicate=ONTO.Compra)
                 gNuevaTransferencia.add((action,ONTO.Concepto,Literal(concepto)))
                 g += gNuevaTransferencia
                 total_registros += 1
 
                 RegistroEconomicoFile = open('../Data/RegistroEconomico', 'wb')
                 RegistroEconomicoFile.write(g.serialize(format='turtle'))
+
                 graff = Graph()
                 return graff.serialize(format='xml'),200
+            if accion == ONTO.CobrarVendedorExterno:
+                RegistroEconomicoFile = open('../Data/RegistroEconomico')
+                g = Graph()
+                g.parse(RegistroEconomicoFile, format='turtle') #TODO ojo format
+                total_registros = 0
+                for s, p, o in g:
+                    if p == ONTO.Concepto:
+                        total_registros+=1
 
+                for s, p, o in gm:
+                    if p == ONTO.Importe:
+                        precio = o.toPython()
+                    if p == ONTO.Origen:
+                        origen = str(o)
+                    if p == ONTO.Destino:
+                        destino = str(o)
+                    if p == ONTO.Usuario:
+                        empresa = str(o)
+                    if p == ONTO.Concepto:
+                        concepto = str(o)
 
+                gNuevaTransferencia = Graph()
+                action = ONTO["RegistroEconomico_" + str(total_registros)]
+                gNuevaTransferencia.add((action, RDF.type, ONTO.RegistroEconomico))
+                gNuevaTransferencia.add((action,ONTO.CuentaOrigen, Literal(origen)))
+                gNuevaTransferencia.add((action,ONTO.CuentaDestino,Literal(destino)))
+                gNuevaTransferencia.add((action,ONTO.Importe,Literal(precio, datatype=XSD.float)))
+                gNuevaTransferencia.add((action,ONTO.DNI,Literal(empresa)))
+                gNuevaTransferencia.add((action,ONTO.Concepto,Literal(concepto)))
+                g += gNuevaTransferencia
+                total_registros += 1
 
-"""
-ns1:RegistroEconomico_0 a ns1:RegistroEconomico ;
-    ns1:Concepto "Compra_2"^^xsd:string ;
-    ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
-    ns1:CuentaOrigen "ESBN1235453"^^xsd:string ;
-    ns1:DNI "423121121E"^^xsd:string ;
-    ns1:Importe "250.0"^^xsd:float .
-    """
+                RegistroEconomicoFile = open('../Data/RegistroEconomico', 'wb')
+                RegistroEconomicoFile.write(g.serialize(format='turtle'))
+
+                grr = Graph()
+                return grr.serialize(format="xml"), 200
+
 
 
 
