@@ -49,7 +49,10 @@
             <br>
             <input type="submit" name="submit" value="Busca">
             {% if busquedafallida %}
-            <p style="color:red;"> No se han encontrado productos para esas restricciones.Vuelve a intentarlo</p>
+            <p style="color:red;"> No se han encontrado productos para esas restricciones. Vuelve a intentarlo</p>
+            {% endif %}
+            {% if errorvaloracio %}
+            <p style="color:red;"> La valoración debe estar dentro del rango 0-5. Vuelve a intentarlo</p>
             {% endif %}
         </form>
         {% else %}
