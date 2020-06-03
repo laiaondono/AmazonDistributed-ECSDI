@@ -394,15 +394,15 @@ def mis_productos():
         elif request.form['submit'] == 'Devolver':
             producto = request.form['producto']
             motivo = request.form['motivo']
-            #compra = request.form['compra']
+            compra = request.form['compra']
             gDevolucion = Graph()
             accion = ONTO["DevolverProducto_" + str(get_count())]
             gDevolucion.add((accion, RDF.type, ONTO.DevolverProducto))
             productoSuj = ONTO[producto]
-            #compraSuj = ONTO[compra]
+            compraSuj = ONTO[compra]
             gDevolucion.add((accion, ONTO.ProductoADevolver, productoSuj))
             gDevolucion.add((accion, ONTO.MotivoDevolucion, Literal(motivo)))
-            #gDevolucion.add((accion, ONTO.CompraDevolucion, compraSuj))
+            gDevolucion.add((accion, ONTO.CompraDevolucion, compraSuj))
             msg = build_message(gDevolucion,ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             g = send_message(msg,AgGestorDevoluciones.address)
 
@@ -416,13 +416,13 @@ def mis_productos():
 
         elif request.form['submit'] == 'Producto devuelto':
             producto = request.form['producto']
-            #compra = request.form['compra']
+            compra = request.form['compra']
             accion = ONTO["FinalizarDevolucion_" + str(get_count())]
             g = Graph()
             g.add((accion, RDF.type, ONTO.FinalizarDevolucion))
             g.add((accion, ONTO.ProductoADevolver, Literal(producto)))
             g.add((accion, ONTO.DevueltoPor, Literal(nombreusuario)))
-            #g.add((accion, RDF.CompraDevolucion, compra))
+            g.add((accion, RDF.CompraDevolucion, compra))
             msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             send_message(msg, AgGestorDevoluciones.address)
             # TODO ya se ha procesado tu devolucion
