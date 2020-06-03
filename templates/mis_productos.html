@@ -33,7 +33,7 @@
         <h1>Mis productos</h1>
         <!-- <a href="javascript:history.back()">< Volver</a> -->
         <br>
-        <p>Usuario activo: {{usuario}}</p>
+        <p>Usuario activo: {{ usuario }}</p>
         <br>
         {% if not products  %}}
         <p style="color:red;"> Aún no has comprado ningún producto</p>
@@ -53,22 +53,22 @@
                 {% endfor %}
             </table>
             <br>
-            <br>
-            <input type="text" name="producto" placeholder="Nombre Producto"/><br>
             <p>Introduce el nombre del producto y indica si quieres valorar o devolver.</p>
-            <p>En caso de valorar, introduce tu nota del 1 al 5 en el siguiente espacio</p>
-            <input type="text" name="valoracion" placeholder="Valoracion(1-5)"/>
+            <input type="text" name="producto" placeholder="Nombre Producto"/><br>
             <br>
+            <p>Si desea devolver el producto, por favor introduce el motivo.</p>
+            <input type="text" name="motivo" placeholder="Motivo de la devolución"/>
+            <input type="submit" name="submit" value="Devolver">
+            <p>Si desea valorar el producto, introduce la nota del 1 al 5 en el siguiente espacio.</p>
+            <input type="text" name="valoracion" placeholder="Valoración (1-5)"/>
+            <input type="submit" name="submit" value="Valorar">
             {% if intento %}
             <p style="color:red;"> Por favor, pon un nombre válido y una valoracion entre 1 y 5.</p>
             {% endif %}
             {% if valorado %}
             <p style="color:red;"> Ya has valorado este producto.</p>
             {% endif %}
-            <table>
-                <input type="submit" name="submit" value="Valorar">
-                <input type="submit" name="submit" value="Devolver">
-            </table>
+
         </form>
         <br>
         <br>
