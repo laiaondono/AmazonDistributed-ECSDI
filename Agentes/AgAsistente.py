@@ -227,7 +227,7 @@ def tidyup():
 def search_products():
     global nombreusuario
     if request.method == 'GET':
-        return render_template('busqueda_productos.html', products=None, usuario=nombreusuario, busquedafallida=False)
+        return render_template('busqueda_productos.html', products=None, usuario=nombreusuario, busquedafallida=False,errorvaloracio=False)
     else:
         if request.form['submit'] == 'Busca':
             global products_list
@@ -238,7 +238,12 @@ def search_products():
             valoracion = request.form['valoracionminima']
             products_list = buscar_productos(name, minPrice, maxPrice, brand,valoracion)
             if len(products_list) == 0:
-                return render_template('busqueda_productos.html', products=None, usuario=nombreusuario, busquedafallida=True)
+                return render_template('busqueda_productos.html', products=None, usuario=nombreusuario, busquedafallida=True,errorvaloracio=False)
+            elif valoracion != "":
+                if str(valoracion) < str(0) or str(valoracion) > str(5):
+                    return render_template('busqueda_productos.html', products=None, usuario=nombreusuario, busquedafallida=False, errorvaloracio=True)
+                else:
+                    return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
             else:
                 return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
         # TODO modificar html x si no hi ha cap producte que cumpleixi restriccions

@@ -27,7 +27,7 @@
                 {% if start %}
                     <form method="post">
                         {% if errors[0] == "si" %}
-                            <p>No puedes dejar ningún campo vacío. Tienes que rellenarlos todos.</p>
+                            <p style="color:red;">No puedes dejar ningún campo vacío. Tienes que rellenarlos todos.</p>
                         {% endif %}
                         {% if errors[1] == "si" %}
                             <p style="color:red;"> Esta tienda sólo acepta productos de Ikea, Nike o Apple.</p>
