@@ -215,10 +215,9 @@ def communication():
                 accion = ONTO["EnviarPaquete_" + str(count)]
                 grafo_confirmacion.add((accion, RDF.type, ONTO.EnviarPaquete))
                 grafo_confirmacion.add((accion, ONTO.Identificador, Literal(idTransportistaFinal)))
-                grafo_confirmacion.add((transportista,ONTO.NombreTransportista,Literal(transportistaFinal)))
-                grafo_confirmacion.add((accion, ONTO.LoteFinal, lote))
-                print("idcompraaaa: "+ idLote)
-                grafo_confirmacion.add((action, ONTO.Compra, idLote))
+                grafo_confirmacion.add((transportista, ONTO.NombreTransportista, Literal(transportistaFinal)))
+                grafo_confirmacion.add((accion, ONTO.LoteFinal, idLote))
+                #grafo_confirmacion.add((action, ONTO.Compra, idLote))
 
                 hay_prod_ext = False
                 for p in productos:
@@ -228,15 +227,22 @@ def communication():
                 if hay_prod_ext:
                     empezar_proceso = Process(target=avisar_vendedores_externos, args=())
                     empezar_proceso.start()
+
                 send_message(
                     build_message(grafo_confirmacion, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, accion, count), AgTransportista.address)
                 return gm.serialize(format="xml"), 200
 
             elif accion == ONTO.CobrarCompra:
+                print("rebut cl :)")
+                for s, p, o in gm:
+                    print(s)
+                    print(p)
+                    print(o)
+
                 send_message(
                     build_message(gm, ACL.request, AgCentroLogistico.uri, AgGestorCompra.uri, accion, get_count()), AgGestorCompra.address)
-                resposta= Graph()
-                return resposta.serialize(format="xml"), 200
+                grr = Graph()
+                return grr.serialize(format="xml"),200
             else:
                 # TODO respuesta pedirpreciosenvio y predir contraofertas
                 resposta= Graph()

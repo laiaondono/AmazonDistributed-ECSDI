@@ -56,12 +56,6 @@ AgServicioPago = Agent('AgServicioPago',
                        'http://%s:%d/comm' % (hostname, port),
                        'http://%s:%d/Stop' % (hostname, port))
 
-# Directory agent address
-AgAsistente = Agent('AgAsistente',
-                    agn.AgAsistente,
-                    'http://%s:9011/comm' % hostname,
-                    'http://%s:9011/Stop' % hostname)
-
 AgGestorCompra = Agent('AgGestorCompra',
                        agn.AgGestorCompra,
                        'http://%s:9012/comm' % hostname,
@@ -134,9 +128,9 @@ def comunicacion():
                         tarjeta = str(o)
                     elif p == ONTO.DNI:
                         dni_usuario = str(o)
-                    elif p == ONTO.Lote:
+                    elif p == ONTO.LoteEntregado:
                         nombre_compra = str(o)
-                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico")
+                RegistroEconomicoFile = open("../Data/RegistroEconomico")
                 grafo_economico = Graph()
                 grafo_economico.parse(RegistroEconomicoFile,format='xml')
                 total_registros = 0
@@ -152,11 +146,11 @@ def comunicacion():
                 grafo_economico.add((action,ONTO.DNI,Literal(dni_usuario)))
                 grafo_economico.add((action,ONTO.Concepto,Literal(nombre_compra)))
                 total_registros+=1
-                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico",'wb')
+                RegistroEconomicoFile = open("../Data/RegistroEconomico",'wb')
                 RegistroEconomicoFile.write(grafo_economico.serialize(format='turtle'))
                 for product in productos:
                     if product[8] == "E":
-                        ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+                        ProductosExternosFile = open("../Data/ProductosExternos")
                         grafo_productos_externos = Graph()
                         grafo_productos_externos.parse(ProductosExternosFile,format='xml')
                         query= """
@@ -191,7 +185,7 @@ def comunicacion():
                             if p == ONTO.NumeroCuenta:
                                 numero_cuenta = str(numero_cuenta)
                                 break
-                        RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico")
+                        RegistroEconomicoFile = open("../Data/RegistroEconomico")
                         grafo_economico = Graph()
                         grafo_economico.parse(RegistroEconomicoFile,format='xml')
                         action = ONTO["RegistroEconomico_"+str(total_registros)]

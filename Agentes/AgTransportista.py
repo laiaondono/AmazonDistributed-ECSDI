@@ -116,6 +116,8 @@ def calcular_distancia(centro, city):
         return great_circle(location_pk, location).km
 
 
+obj = ""
+
 @app.route("/comm")
 def communication():
     """
@@ -216,9 +218,13 @@ def communication():
                 return gFinal.serialize(format="xml"),200
 
             elif accion == ONTO.EnviarPaquete:
+                global obj
+                for s, p, o in gm:
+                    if p == ONTO.LoteFinal:
+                        obj = str(o)
+                proceso = Process(target=entregar_producto, args=())
+                proceso.start()
                 grr = Graph()
-                empezar_proceso = Process(target=producto_entregado, args=(gm.value(subject=accion, predicate=ONTO.Compra)))
-                empezar_proceso.start()
                 return grr.serialize(format="xml"),200
 
             else: # CAL??
@@ -226,12 +232,17 @@ def communication():
                 return grr.serialize(format="xml"),200
 
 
-def producto_entregado(idLote):
+def entregar_producto(idLote=""):
     time.sleep(5)
+    print("entrergat :)")
     g = Graph()
     action = ONTO["CobrarCompra_" + str(get_count())]
     g.add((action, RDF.type, ONTO.CobrarCompra))
     g.add((action, ONTO.LoteEntregado, Literal(idLote)))
+    for s, p, o in g:
+        print(s)
+        print(p)
+        print(o)
     send_message(
         build_message(g, ACL.request, AgTransportista.uri, AgCentroLogistico.uri, action, get_count()), AgCentroLogistico.address)
 

@@ -64,18 +64,26 @@ AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
                     'http://%s:9011/comm' % hostname,
                     'http://%s:9011/Stop' % hostname)
+
 AgProcesadorPedidos = Agent('AgAsistente',
                             agn.AgAsistente,
                             'http://%s:9013/Register' % hostname,
                             'http://%s:9013/Stop' % hostname)
+
 AgCentroLogistico = Agent('AgCentroLogistico',
                           agn.AgCentroLogistico,
                           'http://%s:9014/comm' % hostname,
                           'http://%s:9014/Stop' % hostname)
+
 AgProcesadorOpiniones = Agent('AgProcesadorOpiniones',
                           agn.AgProcesadorOpiniones,
                           'http://%s:9013/comm' % hostname,
                           'http://%s:9013/Stop' % hostname)
+
+AgServicioPago = Agent('AgServicioPago',
+                       agn.AgServicioPago,
+                       'http://%s:9019/comm' % hostname,
+                       'http://%s:9019/Stop' % hostname)
 
 # Global triplestore graph
 dsgraph = Graph()
@@ -93,6 +101,8 @@ location_pk = (Nominatim(user_agent='myapplication').geocode("Pekín").latitude,
                Nominatim(user_agent='myapplication').geocode("Pekín").longitude)
 
 graph_compra = Graph()
+precio_total_compra = 0.0
+
 
 def get_count():
     global mss_cnt
@@ -110,7 +120,8 @@ def communication():
     gm.parse(data=message)
 
     msgdic = get_message_properties(gm)
-
+    global graph_compra
+    global precio_total_compra
     gr = None
     if msgdic is None:
         # Si no es, respondemos que no hemos entendido el mensaje
@@ -129,7 +140,6 @@ def communication():
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
-
             # Accion de busqueda
             if accion == ONTO.HacerPedido:
                 #guardem el graf de la compra com a variable global
@@ -203,10 +213,33 @@ def communication():
                     count_real, graffactura, gm, precio_total, content, priority, creditCard,dni_usuari))
                 empezar_proceso.start()
                 return graffactura.serialize(format='xml'), 200
-            # TODO si la accio es cobrar compra (et ve del ag transportista)
 
             #AgServicioPago ens avisa que ja ha realitzat el cobro i aixi podem realitzar la valoracio
             if accion == ONTO.CobrarCompra:
+                g = Graph()
+                g.add((accion, RDF.type, ONTO.CobrarCompra))
+                for s, p, o in graph_compra:
+                    if p == ONTO.ProductosCompra:
+                        g.add((accion, ONTO.ProductosCompra, o))
+                    if p == ONTO.TarjetaCredito:
+                        g.add((accion, ONTO.TarjetaCredito, o))
+                    if p == ONTO.DNI:
+                        g.add((accion, ONTO.DNI, o))
+                g.add((accion, ONTO.PrecioTotal, Literal(precio_total_compra)))
+                lote = gm.value(subject=accion, predicate=ONTO.LoteEntregado)
+                for s, p, o in gm:
+                    if p == ONTO.LoteEntregado:
+                        lote = str(o)
+                        print("lote torbat")
+                g.add((accion, ONTO.LoteEntregado, Literal(lote)))
+                print("cobar compra gc")
+                for s, p, o in g:
+                    print(s)
+                    print(p)
+                    print(o)
+
+                msg = build_message(g, ACL.request, AgGestorCompra.uri, AgServicioPago.uri, accion, get_count())
+                send_message(msg, AgServicioPago.address)
                 # Avisamos al AgProcessadorOpiniones de que ya se puede realizar la valoracion
                 empezar_proceso = Process(target=avisar_valoracion, args=())
                 empezar_proceso.start()
@@ -299,18 +332,9 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     graph.add((accion, ONTO.Envia, URIRef(compra)))
     msg = build_message(graph, ACL.request, AgGestorCompra.uri, AgCentroLogistico.uri, accion, count)
     gr = send_message(msg, AgCentroLogistico.address)
-    # El centro logístico nos devuelve el mismo grafo pero añadiendo el transportista que envia la compra, y la fecha de llegada.
-    # informacion_entrega = {}
-    # for s, p, o in gr:
-    #    if p == ONTO.PrecioTransporte:
-    #        informacion_entrega["PrecioTransporte"] = o
-    #    elif p == ONTO.Fecha:
-    #        informacion_entrega["Fecha"] = o
-    #   elif p == ONTO.Nombre:
-    #        informacion_entrega["Nombre"] = o
-    # logger.info("El transportista " + str(informacion_entrega["Nombre"]) + " se entregará la compra en la fecha: " +
-    #           informacion_entrega["Fecha"])
-    # Leemos el contenido que hay en el registro de pedidos.
+
+    global precio_total_compra
+    precio_total_compra = preutotal
     PedidosFile = open('../Data/RegistroPedidos')
     graphfinal = Graph()
     graphfinal.parse(PedidosFile, format='turtle')
@@ -339,10 +363,14 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     PedidosFile = open('../Data/RegistroPedidos', 'wb')
     PedidosFile.write(graphfinal.serialize(format='turtle'))
     PedidosFile.close()
-    graph.add((accion, RDF.type, ONTO.ProcesarEnvio))
+    grafrespuesta.add((accion, RDF.type, ONTO.ProcesarEnvio))
+    print("rebut gc :)")
+    for s, p, o in grafrespuesta:
+        print(s)
+        print(p)
+        print(o)
     msg = build_message(grafrespuesta, ACL.request, AgGestorCompra.uri, AgAsistente.uri, accion, count)
-    gr = send_message(msg, AgAsistente.address)
-    return
+    send_message(msg, AgAsistente.address)
 
 
 def agentbehavior1(cola):

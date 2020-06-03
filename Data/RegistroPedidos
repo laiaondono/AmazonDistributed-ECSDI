@@ -1,26 +1,221 @@
 @prefix ns2: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ns2:Compra_2 a ns2:Compra ;
-    ns2:Ciudad "Madrid"^^xsd:string ;
-    ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-05 23:18:32.847093"^^xsd:string ;
-    ns2:Lote ns2:Compra_11 ;
-    ns2:NombreTransportista "NACEX"^^xsd:string ;
+ns2:ProcesarEnvio_2 a ns2:ProcesarEnvio .
+
+ns2:Compra_10 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-12 10:52:39.267037"^^xsd:string ;
+    ns2:Lote ns2:Compra_10 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "65.0"^^xsd:float ;
+    ns2:ProductosCompra "Pack Bombillas Bajo consumo"^^xsd:string ;
+    ns2:TarjetaCredito "adsfmkfaisdunf"^^xsd:string .
+
+ns2:Compra_13 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-09 10:55:27.540379"^^xsd:string ;
+    ns2:Lote ns2:Compra_13 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "69.99"^^xsd:float ;
+    ns2:ProductosCompra "Auriculares K430"^^xsd:string ;
+    ns2:TarjetaCredito "akdsffa"^^xsd:string .
+
+ns2:Compra_14 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-08 10:56:44.213247"^^xsd:string ;
+    ns2:Lote ns2:Compra_14 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "15.0"^^xsd:float ;
+    ns2:ProductosCompra "Gorra Flow"^^xsd:string ;
+    ns2:TarjetaCredito "ajfoknmlk"^^xsd:string .
+
+ns2:Compra_15 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-12 10:59:43.017543"^^xsd:string ;
+    ns2:Lote ns2:Compra_15 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "150.0"^^xsd:float ;
+    ns2:ProductosCompra "Gafas Running X549"^^xsd:string ;
+    ns2:TarjetaCredito "jidnfk"^^xsd:string .
+
+ns2:Compra_16 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-11 11:00:47.432199"^^xsd:string ;
+    ns2:Lote ns2:Compra_16 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "150.0"^^xsd:float ;
+    ns2:ProductosCompra "Gafas Running X549"^^xsd:string ;
+    ns2:TarjetaCredito "jidnfk"^^xsd:string .
+
+ns2:Compra_17 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-09 11:01:59.496225"^^xsd:string ;
+    ns2:Lote ns2:Compra_17 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "1999.99"^^xsd:float ;
+    ns2:ProductosCompra "Mesa restaurante"^^xsd:string ;
+    ns2:TarjetaCredito "adsfmkfaisdunf"^^xsd:string .
+
+ns2:Compra_18 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-12 11:03:33.767363"^^xsd:string ;
+    ns2:Lote ns2:Compra_18 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "1999.99"^^xsd:float ;
+    ns2:ProductosCompra "Mesa restaurante"^^xsd:string ;
+    ns2:TarjetaCredito "adsff"^^xsd:string .
+
+ns2:Compra_19 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-12 11:04:28.074138"^^xsd:string ;
+    ns2:Lote ns2:Compra_19 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
     ns2:PrecioTotal "149.99"^^xsd:float ;
-    ns2:ProductosCompra "Zapatillas Nike Pegasus"^^xsd:string ;
-    ns2:TarjetaCredito "ESBN1235453"^^xsd:string .
+    ns2:ProductosCompra "Zapatillas V3"^^xsd:string ;
+    ns2:TarjetaCredito "anjdfof"^^xsd:string .
+
+ns2:Compra_2 a ns2:Compra ;
+    ns2:Ciudad "Madrid"^^xsd:string,
+        "mollet"^^xsd:string ;
+    ns2:DNI "12345678E",
+        "4154454" ;
+    ns2:FechaEntrega "2020-06-05 23:18:32.847093"^^xsd:string,
+        "2020-06-13 01:43:20.473859"^^xsd:string ;
+    ns2:Lote ns2:Compra_11,
+        ns2:Compra_2 ;
+    ns2:NombreTransportista "DHL"^^xsd:string,
+        "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "15.0"^^xsd:float,
+        "149.99"^^xsd:float ;
+    ns2:ProductosCompra "Gorra Flow"^^xsd:string,
+        "Zapatillas Nike Pegasus"^^xsd:string ;
+    ns2:TarjetaCredito "ESBN1235453"^^xsd:string,
+        "jnihpdsokmjni"^^xsd:string .
+
+ns2:Compra_20 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-11 11:05:56.099252"^^xsd:string ;
+    ns2:Lote ns2:Compra_20 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "15.0"^^xsd:float ;
+    ns2:ProductosCompra "Gorra Flow"^^xsd:string ;
+    ns2:TarjetaCredito "adsojfkmalksdf"^^xsd:string .
+
+ns2:Compra_21 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-12 11:06:47.663979"^^xsd:string ;
+    ns2:Lote ns2:Compra_21 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "15.0"^^xsd:float ;
+    ns2:ProductosCompra "Gorra Flow"^^xsd:string ;
+    ns2:TarjetaCredito "23ffd"^^xsd:string .
 
 ns2:Compra_3 a ns2:Compra ;
-    ns2:Ciudad "Barcelona"^^xsd:string ;
-    ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-07 23:37:20.694464"^^xsd:string ;
-    ns2:Lote ns2:Compra_12 ;
-    ns2:NombreTransportista "NACEX"^^xsd:string ;
-    ns2:PrecioTotal "3890.9300000000003"^^xsd:float ;
+    ns2:Ciudad "Barcelona"^^xsd:string,
+        "mollet"^^xsd:string ;
+    ns2:DNI "12345678E",
+        "4154454" ;
+    ns2:FechaEntrega "2020-06-07 23:37:20.694464"^^xsd:string,
+        "2020-06-09 01:44:28.122364"^^xsd:string ;
+    ns2:Lote ns2:Compra_12,
+        ns2:Compra_3 ;
+    ns2:NombreTransportista "DHL"^^xsd:string,
+        "NACEX"^^xsd:string ;
+    ns2:PrecioTotal "15.0"^^xsd:float,
+        "3890.9300000000003"^^xsd:float ;
     ns2:ProductosCompra "Gorra Flow"^^xsd:string,
-        "Gorra Nike"^^xsd:string;
-    ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
+        "Gorra Nike"^^xsd:string ;
+    ns2:TarjetaCredito "ESNB1233321"^^xsd:string,
+        "jnihpdsokmjni"^^xsd:string .
 
-ns2:ProcesarEnvio_2 a ns2:ProcesarEnvio .
+ns2:Compra_4 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-10 10:30:59.690657"^^xsd:string ;
+    ns2:Lote ns2:Compra_4 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "420.0"^^xsd:float ;
+    ns2:ProductosCompra "Snowboard Flying V"^^xsd:string ;
+    ns2:TarjetaCredito "eaifndsloñf"^^xsd:string .
+
+ns2:Compra_5 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-11 10:38:06.025043"^^xsd:string ;
+    ns2:Lote ns2:Compra_5 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "65.0"^^xsd:float ;
+    ns2:ProductosCompra "Pack Bombillas Bajo consumo"^^xsd:string ;
+    ns2:TarjetaCredito "ierf"^^xsd:string .
+
+ns2:Compra_6 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "" ;
+    ns2:FechaEntrega "2020-06-08 10:40:42.428456"^^xsd:string ;
+    ns2:Lote ns2:Compra_6 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "180.2"^^xsd:float ;
+    ns2:ProductosCompra "Raqueta tennis XPro"^^xsd:string ;
+    ns2:TarjetaCredito "3jin"^^xsd:string .
+
+ns2:Compra_7 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-13 10:44:27.972877"^^xsd:string ;
+    ns2:Lote ns2:Compra_7 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "65.0"^^xsd:float ;
+    ns2:ProductosCompra "Pack Bombillas Bajo consumo"^^xsd:string ;
+    ns2:TarjetaCredito "adsfmkfaisdunf"^^xsd:string .
+
+ns2:Compra_8 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-10 10:49:28.741404"^^xsd:string ;
+    ns2:Lote ns2:Compra_8 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "65.0"^^xsd:float ;
+    ns2:ProductosCompra "Pack Bombillas Bajo consumo"^^xsd:string ;
+    ns2:TarjetaCredito "adsfmkfaisdunf"^^xsd:string .
+
+ns2:Compra_9 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-11 10:51:09.289431"^^xsd:string ;
+    ns2:Lote ns2:Compra_9 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "65.0"^^xsd:float ;
+    ns2:ProductosCompra "Pack Bombillas Bajo consumo"^^xsd:string ;
+    ns2:TarjetaCredito "adsfmkfaisdunf"^^xsd:string .
+
+ns2:Compra_11 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-11 10:53:23.463193"^^xsd:string ;
+    ns2:Lote ns2:Compra_11 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "69.99"^^xsd:float ;
+    ns2:ProductosCompra "Auriculares K430"^^xsd:string ;
+    ns2:TarjetaCredito "akdsffa"^^xsd:string .
+
+ns2:Compra_12 a ns2:Compra ;
+    ns2:Ciudad "mollet"^^xsd:string ;
+    ns2:DNI "12345678E" ;
+    ns2:FechaEntrega "2020-06-10 10:54:04.055403"^^xsd:string ;
+    ns2:Lote ns2:Compra_12 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "69.99"^^xsd:float ;
+    ns2:ProductosCompra "Auriculares K430"^^xsd:string ;
+    ns2:TarjetaCredito "akdsffa"^^xsd:string .
 
