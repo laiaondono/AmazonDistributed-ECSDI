@@ -1,74 +1,18 @@
-@prefix ns2: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
+@prefix ns1: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
 
-ns2:Historial_1 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_14" .
+ns1:Historial_1 a ns1:Historial ;
+    ns1:DNI "4154454" ;
+    ns1:Identificador "ProductoEX_1" .
 
-ns2:Historial_10 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "ProductoEX_3" .
+ns1:Historial_2 a ns1:Historial ;
+    ns1:DNI "4154454" ;
+    ns1:Identificador "ProductoEX_2" .
 
-ns2:Historial_11 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "ProductoEX_3" .
+ns1:Historial_3 a ns1:Historial ;
+    ns1:DNI "4154454" ;
+    ns1:Identificador "ProductoEX_1" .
 
-ns2:Historial_12 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_11" .
-
-ns2:Historial_13 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_5" .
-
-ns2:Historial_14 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "ProductoEX_6" .
-
-ns2:Historial_15 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "ProductoEX_6" .
-
-ns2:Historial_16 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "ProductoEX_1" .
-
-ns2:Historial_17 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_15" .
-
-ns2:Historial_18 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_13" .
-
-ns2:Historial_2 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "ProductoEX_3" .
-
-ns2:Historial_3 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_2" .
-
-ns2:Historial_4 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_4" .
-
-ns2:Historial_5 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_1" .
-
-ns2:Historial_6 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_5" .
-
-ns2:Historial_7 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_12" .
-
-ns2:Historial_8 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "ProductoEX_5" .
-
-ns2:Historial_9 a ns2:Historial ;
-    ns2:DNI "4154454" ;
-    ns2:Identificador "Producto_11" .
+ns1:Historial_4 a ns1:Historial ;
+    ns1:DNI "4154454" ;
+    ns1:Identificador "ProductoEX_3" .
 

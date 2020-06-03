@@ -204,6 +204,7 @@ def communication():
                             fechaFinal = gFinal.value(subject=t, predicate=ONTO.Fecha)
 
                 precioFinal += precioCompra
+                print( "El preu final es "+ str(precioFinal))
                 transportista = ONTO[idTransportistaFinal]
                 gm.add((transportista,RDF.type,ONTO.Transportista))
                 gm.add((transportista,ONTO.NombreTransportista,Literal(transportistaFinal)))

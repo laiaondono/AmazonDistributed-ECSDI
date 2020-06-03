@@ -72,7 +72,7 @@ AgGestorCompra = Agent('AgGestorCompra',
 
 AgAsistente = Agent('AgAsistente',
                        agn.AgAsistente,
-                       'http://%s:9011/Register' % hostname,
+                       'http://%s:9011/comm' % hostname,
                        'http://%s:9011/Stop' % hostname)
 
 
@@ -153,13 +153,21 @@ def comunicacion():
                 return gr.serialize(format="xml"),200
 
             elif accion == ONTO.ConfirmarValoracion:
-                logger.info("Compra entregada. Ya se pueden valorar productos.")
-                # Avisamos al AgAsistente de que ya se puede realizar la valoracion de los productos del grafo
-                #empezar_proceso = Process(target=confirmar_valoracion, args=(gm,accion))
-                #empezar_proceso.start()
-
-                #Returnem ACK al AgGestorCompra conforme ho hem rebut
+                logger.info("Compra entregada. Esperando para valorar.")
+                time.sleep(3)
+                logger.info("Ya se pueden valorar.")
                 grr = Graph()
+                action = ONTO["ConfirmarValoracion"]
+                grr.add((action,RDF.type,ONTO.ConfirmarValoracion))
+                for s,p,o in gm:
+                    if p == ONTO.Nombre:
+                        grr.add((action,ONTO.Nombre,Literal(str(o))))
+                for s,p,o in grr:
+                    print(s)
+                    print(p)
+                    print(o)
+                msg = build_message(grr, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri,action, get_count())
+                send_message(msg, AgAsistente.address)
                 return grr.serialize(format="xml"),200
             elif accion == ONTO.ValorarProducto:
                 for s,p,o in gm:
@@ -178,10 +186,9 @@ def comunicacion():
                         count+=1
                 accion = ONTO["Valoracion_"+str(count)]
                 graphvaloraciones.add((accion, RDF.type, ONTO.Valoracion))
-                graphvaloraciones.add((accion, ONTO.DNI, Literal(dni_user)))
-                graphvaloraciones.add((accion,ONTO.Nombre,Literal(nombre_producto)))
-                graphvaloraciones.add((accion,ONTO.Valoracion,Literal(valoracion)))
-                print(float(valoracion))
+                graphvaloraciones.add((accion, ONTO.DNI, Literal(dni_user,datatype=XSD.string)))
+                graphvaloraciones.add((accion,ONTO.Nombre,Literal(nombre_producto,datatype=XSD.string)))
+                graphvaloraciones.add((accion,ONTO.Valoracion,Literal(valoracion,datatype=XSD.float)))
                 ValoracionesFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Valoraciones','wb')
                 ValoracionesFile.write(graphvaloraciones.serialize(format='turtle'))
                 ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos')
@@ -257,180 +264,193 @@ def confirmar_valoracion(gm, accion):
     return
 
 def recomendar():
-    time.sleep(1)
-    PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial')
-    historial = Graph()
-    historial.parse(PedidosFile, format='turtle')
-    ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
-    ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
-    grafo_productos = Graph()
-    grafo_productos.parse(ProductosFile,format='xml')
-    grafo_productos_externos = Graph()
-    grafo_productos_externos.parse(ProductosExternosFile,format='xml')
-    usuarios = []
-    for s,p,o in historial:
-        if p == ONTO.DNI:
-            if str(o) not in usuarios:
-                usuarios.append(str(o))
-    productos_usuario = []
-    for p in usuarios:
-        dic = {'categoria':"",'preciomedio':0.0,'usuario':p}
-        productos_usuario.append(dic)
-    subjects_user = []
-    for prod in productos_usuario:
-        cat_home = 0
-        cat_deportes = 0
-        cat_tecnologia = 0
-        cat_otros = 0
-        precio_medio = 0
-        numero_precios = 0
-        print(prod)
-        subjects_user=[]
+    while True:
+        time.sleep(60)
+        PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Historial')
+        historial = Graph()
+        historial.parse(PedidosFile, format='turtle')
+        ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
+        ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+        grafo_productos = Graph()
+        grafo_productos.parse(ProductosFile,format='xml')
+        grafo_productos_externos = Graph()
+        grafo_productos_externos.parse(ProductosExternosFile,format='xml')
+        usuarios = []
         for s,p,o in historial:
             if p == ONTO.DNI:
-                if prod['usuario']==str(o):
-                    subjects_user.append(str(s))
-        print(subjects_user)
-        print(len(subjects_user))
-        for s,p,o in historial:
+                if str(o) not in usuarios:
+                    usuarios.append(str(o))
+        productos_usuario = []
+        for p in usuarios:
+            dic = {'categoria':"",'preciomedio':0.0,'usuario':p}
+            productos_usuario.append(dic)
+        subjects_user = []
+        for prod in productos_usuario:
+            cat_home = 0
+            cat_deportes = 0
+            cat_tecnologia = 0
+            cat_otros = 0
+            precio_medio = 0
+            numero_precios = 0
+            #print(prod)
+            subjects_user=[]
+            for s,p,o in historial:
+                if p == ONTO.DNI:
+                    if prod['usuario']==str(o):
+                        subjects_user.append(str(s))
+            #print(subjects_user)
+            #print(len(subjects_user))
+            for s,p,o in historial:
+                ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
+                ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+                grafo_productos = Graph()
+                grafo_productos_externos = Graph()
+                grafo_productos.parse(ProductosFile,format='xml')
+                grafo_productos_externos.parse(ProductosExternosFile,format='xml')
+                if str(s) in subjects_user and p == ONTO.Identificador:
+                    query = """
+                        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+                        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+                        prefix owl:<http://www.w3.org/2002/07/owl#>
+                        SELECT DISTINCT ?producto ?id ?categoria ?precio
+                        where {
+                            { ?producto rdf:type default:Producto }.
+                            ?producto default:Identificador ?id . 
+                            ?producto default:Categoria ?categoria .
+                            ?producto default:PrecioProducto ?precio .
+                            FILTER( ?id = '"""+str(o)+"""')}"""
+                    grafo_productos = grafo_productos.query(query)
+                    grafo_productos_externos = grafo_productos_externos.query(query)
+                    for row in grafo_productos:
+                        if str(row.categoria) == "Hogar":
+                            cat_home+=1
+                        elif str(row.categoria) == "Tecnologia":
+                            cat_tecnologia+=1
+                        elif str(row.categoria) == "Otros":
+                            cat_otros+=1
+                        elif str(row.categoria)=="Deporte":
+                            cat_deportes+=1
+                        if float(row.precio) > 0:
+                            precio_medio = (precio_medio*numero_precios+float(row.precio))/(numero_precios+1)
+                            numero_precios+=1
+                    for row in grafo_productos_externos:
+                        if str(row.categoria) == "Hogar":
+                            cat_home+=1
+                        elif str(row.categoria) == "Tecnologia":
+                            cat_tecnologia+=1
+                        elif str(row.categoria) == "Otros":
+                            cat_otros+=1
+                        elif str(row.categoria)=="Deporte":
+                            cat_deportes+=1
+                        if float(row.precio) > 0:
+                            precio_medio = (precio_medio*numero_precios+float(row.precio))/(numero_precios+1)
+                            numero_precios+=1
+            if cat_deportes > cat_otros and cat_deportes > cat_tecnologia and cat_deportes > cat_home:
+                prod['categoria'] = 'Deporte'
+            elif cat_otros > cat_deportes and cat_otros > cat_tecnologia and cat_otros > cat_home:
+                prod['categoria'] = 'Otros'
+            elif cat_tecnologia > cat_deportes and cat_tecnologia > cat_otros and cat_tecnologia > cat_home:
+                prod['categoria'] = 'Tecnologia'
+            else:
+                prod['categoria'] = 'Hogar'
+            prod['preciomedio'] = precio_medio
+        #print(productos_usuario)
+        grafo_recomendacion = Graph()
+        action_rec = ONTO["RecomendarProductos"]
+        grafo_recomendacion.add((action_rec,RDF.type,ONTO.RecomendarProducto))
+        count = 0
+        for dic_user in productos_usuario:
             ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
             ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
             grafo_productos = Graph()
             grafo_productos_externos = Graph()
             grafo_productos.parse(ProductosFile,format='xml')
             grafo_productos_externos.parse(ProductosExternosFile,format='xml')
-            if str(s) in subjects_user and p == ONTO.Identificador:
-                query = """
-                    prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                    prefix xsd:<http://www.w3.org/2001/XMLSchema#>
-                    prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
-                    prefix owl:<http://www.w3.org/2002/07/owl#>
-                    SELECT DISTINCT ?producto ?id ?categoria ?precio
-                    where {
-                        { ?producto rdf:type default:Producto }.
-                        ?producto default:Identificador ?id . 
-                        ?producto default:Categoria ?categoria .
-                        ?producto default:PrecioProducto ?precio .
-                        FILTER( ?id = '"""+str(o)+"""')}"""
-                grafo_productos = grafo_productos.query(query)
-                grafo_productos_externos = grafo_productos_externos.query(query)
-                for row in grafo_productos:
-                    if str(row.categoria) == "Hogar":
-                        cat_home+=1
-                    elif str(row.categoria) == "Tecnologia":
-                        cat_tecnologia+=1
-                    elif str(row.categoria) == "Otros":
-                        cat_otros+=1
-                    elif str(row.categoria)=="Deporte":
-                        cat_deportes+=1
-                    if float(row.precio) > 0:
-                        precio_medio = (precio_medio*numero_precios+float(row.precio))/(numero_precios+1)
-                        numero_precios+=1
-                for row in grafo_productos_externos:
-                    if str(row.categoria) == "Hogar":
-                        cat_home+=1
-                    elif str(row.categoria) == "Tecnologia":
-                        cat_tecnologia+=1
-                    elif str(row.categoria) == "Otros":
-                        cat_otros+=1
-                    elif str(row.categoria)=="Deporte":
-                        cat_deportes+=1
-                    if float(row.precio) > 0:
-                        precio_medio = (precio_medio*numero_precios+float(row.precio))/(numero_precios+1)
-                        numero_precios+=1
-        if cat_deportes > cat_otros and cat_deportes > cat_tecnologia and cat_deportes > cat_home:
-            prod['categoria'] = 'Deporte'
-        elif cat_otros > cat_deportes and cat_otros > cat_tecnologia and cat_otros > cat_home:
-            prod['categoria'] = 'Otros'
-        elif cat_tecnologia > cat_deportes and cat_tecnologia > cat_otros and cat_tecnologia > cat_home:
-            prod['categoria'] = 'Tecnologia'
-        else:
-            prod['categoria'] = 'Hogar'
-        prod['preciomedio'] = precio_medio
-    print(productos_usuario)
-    grafo_recomendacion = Graph()
-    action_rec = ONTO["RecomendarProductos"]
-    grafo_recomendacion.add((action_rec,RDF.type,ONTO.RecomendarProducto))
-    count = 0
-    for dic_user in productos_usuario:
-        ProductosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos")
-        ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
-        grafo_productos = Graph()
-        grafo_productos_externos = Graph()
-        grafo_productos.parse(ProductosFile,format='xml')
-        grafo_productos_externos.parse(ProductosExternosFile,format='xml')
-        categoria = dic_user['categoria']
-        precio = dic_user['preciomedio']
-        query = """
-                        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
-                        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
-                        prefix owl:<http://www.w3.org/2002/07/owl#>
-                        SELECT DISTINCT ?producto ?id ?categoria ?precio ?nombre
-                        where {
-                            { ?producto rdf:type default:Producto }.
-                            ?producto default:Identificador ?id . 
-                            ?producto default:Categoria ?categoria .
-                            ?producto default:PrecioProducto ?precio .
-                            ?producto default:Nombre ?nombre .
-                            FILTER( ?categoria = '"""
-        query +=str(categoria)+"""'"""+"""&& ?precio >"""+str(precio*0.8)+"""  && ?precio < """ + str(precio*1.2)+""")}"""
-        grafo_productos=grafo_productos.query(query)
-        grafo_productos_externos=grafo_productos_externos.query(query)
-        for row in grafo_productos:
-            accion = ONTO["Producto_"+str(count)]
-            PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
-            graphfinal = Graph()
-            graphfinal.parse(PedidosFile, format='turtle')
-            found = False
-            subjects = []
-            for s,p,o in graphfinal:
-                if p == ONTO.DNI and str(o) == dic_user['usuario']:
-                    subjects.append(str(s))
-            for s,p,o in graphfinal:
-                if s in subjects and p == ONTO.Nombre and str(o) == row.nombre:
-                    found =True
-                    break
-            if not found:
-                grafo_recomendacion.add((accion,RDF.type,ONTO.Producto))
-                grafo_recomendacion.add((accion,ONTO.Nombre,Literal(row.nombre)))
-                grafo_recomendacion.add((accion,ONTO.DNI,Literal(dic_user['usuario'])))
-                grafo_recomendacion.add((action_rec,ONTO.ProductoRecomendado,URIRef(accion)))
-                count+=1
-        for row in grafo_productos_externos:
-            accion = ONTO["Producto_"+str(count)]
-            PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
-            graphfinal = Graph()
-            graphfinal.parse(PedidosFile, format='turtle')
-            found = False
-            subjects = []
-            for s,p,o in graphfinal:
-                if p == ONTO.DNI and str(o) == dic_user['usuario']:
-                    subjects.append(str(s))
-            for s,p,o in graphfinal:
-                if s in subjects and p == ONTO.Nombre and str(o) == row.nombre:
-                    found =True
-                    break
-            if not found:
-                grafo_recomendacion.add((accion,RDF.type,ONTO.Producto))
-                grafo_recomendacion.add((accion,ONTO.Nombre,Literal(row.nombre)))
-                grafo_recomendacion.add((accion,ONTO.DNI,Literal(dic_user['usuario'])))
-                grafo_recomendacion.add((action_rec,ONTO.ProductoRecomendado,URIRef(accion)))
-                count+=1
-    subjects_user_1 = []
-    for s,p,o in grafo_recomendacion:
-        if p == ONTO.DNI and str(o) == "4154454":
-            subjects_user_1.append(s)
-    for s,p,o in grafo_recomendacion :
-        if s in subjects_user_1 and p == ONTO.Nombre:
-            print("El usuario 4154454 ha recibido la recomendacion de este producto:" + str(o))
-    subjects_user_2= []
-    for s,p,o in grafo_recomendacion:
-        if p == ONTO.DNI and str(o) == "123443423":
-            subjects_user_2.append(s)
-    for s,p,o in grafo_recomendacion:
-        if s in subjects_user_2 and p == ONTO.Nombre:
-            print("El usuario 123443423 ha recibido la recomendacion de este producto:" + str(o))
+            categoria = dic_user['categoria']
+            precio = dic_user['preciomedio']
+            query = """
+                            prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                            prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+                            prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+                            prefix owl:<http://www.w3.org/2002/07/owl#>
+                            SELECT DISTINCT ?producto ?id ?categoria ?precio ?nombre
+                            where {
+                                { ?producto rdf:type default:Producto }.
+                                ?producto default:Identificador ?id . 
+                                ?producto default:Categoria ?categoria .
+                                ?producto default:PrecioProducto ?precio .
+                                ?producto default:Nombre ?nombre .
+                                FILTER( ?categoria = '"""
+            query +=str(categoria)+"""'"""+""" && ?precio < """ + str(precio*1.2)+""")}"""
+            grafo_productos=grafo_productos.query(query)
+            grafo_productos_externos=grafo_productos_externos.query(query)
+            for row in grafo_productos:
+                print(row.nombre)
+                accion = ONTO["Producto_"+str(count)]
+                PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
+                graphfinal = Graph()
+                graphfinal.parse(PedidosFile, format='turtle')
+                found = False
+                subjects = []
+                for s,p,o in graphfinal:
+                    if p == ONTO.DNI and str(o) == dic_user['usuario']:
+                        subjects.append(str(s))
+                for s,p,o in graphfinal:
+                    if str(s) in subjects:
+                        if p == ONTO.ProductosCompra:
+                            if str(o) == str(row.nombre):
+                                found =True
+                                break
+                if not found:
+                    grafo_recomendacion.add((accion,RDF.type,ONTO.Producto))
+                    grafo_recomendacion.add((accion,ONTO.Nombre,Literal(row.nombre)))
+                    grafo_recomendacion.add((accion,ONTO.DNI,Literal(dic_user['usuario'])))
+                    grafo_recomendacion.add((action_rec,ONTO.ProductoRecomendado,URIRef(accion)))
+                    count+=1
+            for row in grafo_productos_externos:
+                accion = ONTO["Producto_"+str(count)]
+                PedidosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos")
+                graphfinal = Graph()
+                graphfinal.parse(PedidosFile, format='turtle')
+                found = False
+                subjects = []
+                for s,p,o in graphfinal:
+                    if p == ONTO.DNI and str(o) == dic_user['usuario']:
+                        subjects.append(str(s))
+                for s,p,o in graphfinal:
+                    if str(s) in subjects:
+                        if p == ONTO.ProductosCompra:
+                            if str(o) == str(row.nombre):
+                                found =True
+                                break
+                if not found:
+                    grafo_recomendacion.add((accion,RDF.type,ONTO.Producto))
+                    grafo_recomendacion.add((accion,ONTO.Nombre,Literal(row.nombre)))
+                    grafo_recomendacion.add((accion,ONTO.DNI,Literal(dic_user['usuario'])))
+                    grafo_recomendacion.add((action_rec,ONTO.ProductoRecomendado,URIRef(accion)))
+                    count+=1
+        for s, p, o  in grafo_recomendacion:
+            if p == ONTO.Nombre:
+                print("Elegidooooo " + str(o))
+        msg = build_message(grafo_recomendacion, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri,action_rec, get_count())
+        send_message(msg, AgAsistente.address)
+        """
+        subjects_user_1 = []
+        for s,p,o in grafo_recomendacion:
+            if p == ONTO.DNI and str(o) == "4154454":
+                subjects_user_1.append(s)
+        for s,p,o in grafo_recomendacion :
+            if s in subjects_user_1 and p == ONTO.Nombre:
+                print("El usuario 4154454 ha recibido la recomendacion de este producto:" + str(o))
+        subjects_user_2= []
+        for s,p,o in grafo_recomendacion:
+            if p == ONTO.DNI and str(o) == "123443423":
+                subjects_user_2.append(s)
+        for s,p,o in grafo_recomendacion:
+            if s in subjects_user_2 and p == ONTO.Nombre:
+                print("El usuario 123443423 ha recibido la recomendacion de este producto:" + str(o))
+        """
 
 
 @app.route("/Stop")
@@ -466,8 +486,8 @@ if __name__ == '__main__':
     # Ponemos en marcha los behaviors
     ab1 = Process(target=agentbehavior1, args=(cola1,))
     ab1.start()
-    #recomendar_automaticamente = Process(target=recomendar,args=())
-    #recomendar_automaticamente.start()
+    recomendar_automaticamente = Process(target=recomendar,args=())
+    recomendar_automaticamente.start()
 
     # Ponemos en marcha el servidor
     app.run(host=hostname, port=port)

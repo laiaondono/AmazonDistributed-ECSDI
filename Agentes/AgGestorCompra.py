@@ -229,19 +229,18 @@ def communication():
                 graphpedidos = Graph()
                 graphpedidos.parse(PedidosFile, format='turtle')
                 subject = ""
-                print("El lote es "+ str(lote))
                 for s,p,o in graphpedidos:
                     if p == ONTO.Lote :
                         if str(o) == str(lote):
-                            print("found")
                             subject = s
                 g = Graph()
                 g.add((accion, RDF.type, ONTO.CobrarCompra))
                 productos_externos= []
+                productos_a_valorar=[]
                 for s,p,o in graphpedidos:
                     if str(s) == str(subject):
                         if p == ONTO.ProductosCompra:
-                            print(str(o))
+                            productos_a_valorar.append(str(o))
                             ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
                             grafo_productos_externos = Graph()
                             grafo_productos_externos.parse(ProductosExternosFile,format='xml')
@@ -264,21 +263,16 @@ def communication():
                                 productos_externos.append(prod)
                                 break
                         if p == ONTO.TarjetaCredito:
-                            print(str(o))
                             g.add((accion, ONTO.TarjetaCredito, Literal(str(o))))
                         if p == ONTO.DNI:
-                            print(str(o))
                             g.add((accion, ONTO.DNI, Literal(str(o))))
                         if p == ONTO.PrecioTotal:
-                            print(str(o))
                             g.add((accion, ONTO.PrecioTotal, Literal(float(o))))
                 #lote = gm.value(subject=accion, predicate=ONTO.LoteEntregado)
                 g.add((accion, ONTO.LoteEntregado, Literal(subject[49:])))
                 msg = build_message(g, ACL.request, AgGestorCompra.uri, AgServicioPago.uri, accion, get_count())
                 send_message(msg, AgServicioPago.address)
-                print(productos_externos)
                 for prod in productos_externos:
-                    print(prod['precio'])
                     graphpago = Graph()
                     accion = ONTO["PagarVendedorExterno"]
                     graphpago.add((accion,RDF.type,ONTO.PagarVendedorExterno))
@@ -305,6 +299,8 @@ def communication():
                     send_message(msg, AgServicioPago.address)
                 g = Graph()
                 g.add((ONTO["ConfirmarValoracion"],RDF.type,ONTO.ConfirmarValoracion))
+                for prod in productos_a_valorar:
+                    g.add((ONTO["ConfirmarValoracion"],ONTO.Nombre,Literal(str(prod))))
                 g.add((ONTO["ConfirmarValoracion"], ONTO.LoteEntregado, Literal(subject[49:])))
                 msg = build_message(g, ACL.request, AgGestorCompra.uri, AgProcesadorOpiniones.uri, ONTO["ConfirmarValoracion"], get_count())
                 send_message(msg, AgProcesadorOpiniones.address)
@@ -373,15 +369,16 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     graph.add((accion, ONTO.Envia, URIRef(compra)))
     msg = build_message(graph, ACL.request, AgGestorCompra.uri, AgCentroLogistico.uri, accion, count)
     gr = send_message(msg, AgCentroLogistico.address)
-
     global precio_total_compra
-    precio_total_compra = preutotal
+    for s,p,o in gr:
+        if p == ONTO.PrecioTotal:
+            precio_total_compra = float(o)
     PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos')
     graphfinal = Graph()
     graphfinal.parse(PedidosFile, format='turtle')
     grafrespuesta=Graph()
     grafrespuesta.add((compra, RDF.type, ONTO.Compra))
-    grafrespuesta.add((compra, ONTO.PrecioTotal, Literal(preutotal, datatype=XSD.float)))
+    grafrespuesta.add((compra, ONTO.PrecioTotal, Literal(precio_total_compra, datatype=XSD.float)))
     grafrespuesta.add((compra, ONTO.TarjetaCredito, Literal(tarjeta, datatype=XSD.string)))
     grafrespuesta.add((compra, ONTO.Ciudad, Literal(city, datatype=XSD.string)))
     grafrespuesta.add((compra,ONTO.DNI,Literal(dni)))
@@ -399,6 +396,7 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
             grafrespuesta.add((compra,ONTO.NombreTransportista,Literal(o,datatype=XSD.string)))
         elif p == ONTO.Lote:
             grafrespuesta.add((compra,ONTO.Lote,s)) # TODO pot estar malament
+    grafrespuesta.add((compra,ONTO.PrecioTotal,Literal(precio_total_compra, datatype=XSD.float)))
     graphfinal += grafrespuesta
     # Añadimos la nueva compra y lo escribimos otra vez.
     global ultimacompra

@@ -90,10 +90,17 @@
                 <td>{{ p }}</td>
             </tr>
             {% endfor %}
+            {% if  not completo %}
             <tr>
-                <th><b><i>PRECIO TOTAL</i></b></th>
+                <th><b><i>PRECIO SIN ENVIO</i></b></th>
                 <th><b>{{ bill.price }}</b></th>
             </tr>
+            {% else %}
+            <tr>
+                <th><b><i>PRECIO TOTAL</i></b></th>
+                <th><b>{{ bill.PrecioCompleto}}</b></th>
+            </tr>
+            {% endif %}
             <tr>
                 <th><b><i>DATOS USUARIO</i></b></th>
                 <th><b></b>-</th>
@@ -130,7 +137,9 @@
             <input type="submit" name="submit" value="Visualizar datos completos">
         </form>
         {% else %}
-
+        <form method="post">
+            <input type="submit" name="submit" value="Volver al inicio">
+        </form>
         {% endif %}
         {% endif %}
         </body>

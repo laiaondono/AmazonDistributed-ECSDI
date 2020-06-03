@@ -53,6 +53,20 @@
         <p>/ProductosComprados --> Se pueden visualizar los productos comprados, con la opcion de valorar o devolver el producto.</p>
         <br>
         <br>
+        {% if recomendacion %}
+        <p>Los ultimos productos que te recomendamos son estos!Aprovecha!</p>
+        <br>
+        <table cellpadding="5px" id="table1">
+            <tr>
+                <th><b>NOMBRE</b></th>
+            </tr>
+            {% for p in products %}
+            <tr>
+                <td>{{ p }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
         </body>
     </div>
 </div>

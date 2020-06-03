@@ -38,12 +38,12 @@ agn = Namespace("http://www.agentes.org#")
 
 # Variables globales
 mss_cnt = 0
-
 def get_count():
     global mss_cnt
     mss_cnt += 1
     return mss_cnt
 
+productos_recomendados = []
 
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
@@ -109,11 +109,14 @@ def initialize():
     """
     Entrypoint de comunicacion
     """
-    global nombreusuario
+    global nombreusuario,productos_recomendados
 
     if request.method == 'GET':
         if nombreusuario != "":
-            return render_template('inicio.html', products=None, usuario= nombreusuario)
+            if len(productos_recomendados) == 0:
+                return render_template('inicio.html', products=None, usuario= nombreusuario,recomendacion=False)
+            else:
+                return render_template('inicio.html', products=productos_recomendados, usuario= nombreusuario,recomendacion=True)
         else:
             return render_template('Username.html')
 
@@ -159,8 +162,8 @@ def comunicacion():
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
-
             #Factura completa
+            print(accion)
             if accion == ONTO.ProcesarEnvio:
                 global grafo_respuesta
                 grafo_respuesta = gm
@@ -170,9 +173,34 @@ def comunicacion():
                 return gr.serialize(format="xml"),200
 
             # Accion de valorar
-            if accion == ONTO.ValorarProducto:
+            elif accion == ONTO.ValorarProducto:
                 gr =Graph()
                 return gr.serialize(format="xml"),200
+
+            elif accion == ONTO.ConfirmarValoracion:
+                global productos_valorar_no_permitido
+                for s,p,o in gm:
+                    if p == ONTO.Nombre:
+                        if str(o) in productos_valorar_no_permitido:
+                            productos_valorar_no_permitido.remove(str(o))
+                gr = Graph()
+                return gr.serialize(format="xml"),200
+            elif accion == ONTO.RecomendarProducto:
+                subjects_productos_usuari = []
+                for s,p,o in gm:
+                    if p == ONTO.DNI and str(o) == nombreusuario:
+                        subjects_productos_usuari.append(str(s))
+                global productos_recomendados
+                productos_recomendados = []
+                for s,p,o in gm:
+                    if str(s) in subjects_productos_usuari:
+                        if p == ONTO.Nombre:
+                            productos_recomendados.append(str(o))
+                gr = Graph()
+                return gr.serialize(format="xml"),200
+
+
+
 
 
 def hacer_redirect():
@@ -294,6 +322,16 @@ def mis_productos():
     global devolucion
     #TODO html misp roductos 1 equivocado 2 defectuoso 3 no lo quiero
     if request.method == 'GET':
+        ValoracionFile = open('../Data/Valoraciones')
+        graphvaloracion = Graph()
+        graphvaloracion.parse(ValoracionFile, format='turtle')
+        subjects_productos_val = []
+        for s,p,o in graphvaloracion:
+            if p == ONTO.DNI and str(o) == nombreusuario:
+                subjects_productos_val.append(str(s))
+        for s,p,o in graphvaloracion:
+            if str(s) in subjects_productos_val and p == ONTO.Nombre:
+                productos_valorar_no_permitido.append(str(o))
         PedidosFile = open('../Data/RegistroPedidos')
         graphpedidos = Graph()
         graphpedidos.parse(PedidosFile, format='turtle')
@@ -346,7 +384,7 @@ def mis_productos():
             graphvaloracion.add((accion,ONTO.Valoracion,Literal(float(val))))
             msg = build_message(graphvaloracion,ACL.request, AgAsistente.uri, AgProcesadorOpiniones.uri, accion, mss_cnt)
             send_message(msg,AgProcesadorOpiniones.address)
-            productos_valorados.append(producto)
+            productos_valorar_no_permitido.append(producto)
             return flask.redirect("http://%s:%d/" % (hostname, port))
 
         elif request.form['submit'] == 'Devolver':
@@ -443,6 +481,8 @@ def hacer_pedido():
                         info_bill["FechaEntrega"]=str(o)[:16]
                     if p==ONTO.NombreTransportista:
                         info_bill["NombreTransportista"]=o
+                    if p==ONTO.PrecioTotal:
+                        info_bill["PrecioCompleto"]=o
                 return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=False, completo =True)
         elif request.form['submit'] == "Volver al inicio":
             return flask.redirect("http://%s:%d/" % (hostname, port))
@@ -471,6 +511,7 @@ def hacer_pedido():
 
 def comprar_productos(products_to_buy, city, priority, creditCard):
     global mss_cnt
+    global productos_valorar_no_permitido
     g = Graph()
     action = ONTO['HacerPedido_' + str(mss_cnt)]
     g.add((action, RDF.type, ONTO.HacerPedido))
@@ -525,6 +566,7 @@ def comprar_productos(products_to_buy, city, priority, creditCard):
         if p == ONTO.PrecioTotal:
             info_bill['price'] = o
         if p == ONTO.Nombre:
+            productos_valorar_no_permitido.append(str(o))
             products_name.append(o)
     info_bill['products'] = products_name
 
