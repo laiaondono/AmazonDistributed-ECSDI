@@ -21,14 +21,23 @@ ns2:Compra_1 a ns2:Compra ;
     ns2:ProductosCompra "Gorra Nike"^^xsd:string ;
     ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
 
-ns2:Compra_5 a ns2:Compra ;
+ns2:Compra_2 a ns2:Compra ;
     ns2:Ciudad "Barcelona"^^xsd:string ;
-    ns2:DNI "21776732X" ;
-    ns2:FechaEntrega "2020-06-04 16:57:23.427817"^^xsd:string ;
-    ns2:Lote ns2:Compra_5 ;
+    ns2:DNI "4154454" ;
+    ns2:FechaEntrega "2020-06-04 22:17:09.117194"^^xsd:string ;
+    ns2:Lote ns2:Compra_2 ;
     ns2:NombreTransportista "DHL"^^xsd:string ;
-    ns2:PrecioTotal "330.2"^^xsd:float ;
-    ns2:ProductosCompra "Gafas Running X549"^^xsd:string,
-        "Raqueta tennis XPro"^^xsd:string ;
-    ns2:TarjetaCredito "234567ujmnh"^^xsd:string .
+    ns2:PrecioTotal "150.22877677154602"^^xsd:float ;
+    ns2:ProductosCompra "Zapatillas Nike Pegasus"^^xsd:string ;
+    ns2:TarjetaCredito "5313218624428727"^^xsd:string .
+
+ns2:Compra_3 a ns2:Compra ;
+    ns2:Ciudad "Barcelona"^^xsd:string ;
+    ns2:DNI "4154454" ;
+    ns2:FechaEntrega "2020-06-04 22:20:15.706487"^^xsd:string ;
+    ns2:Lote ns2:Compra_3 ;
+    ns2:NombreTransportista "DHL"^^xsd:string ;
+    ns2:PrecioTotal "150.24125384225349"^^xsd:float ;
+    ns2:ProductosCompra "Zapatillas Nike Pegasus"^^xsd:string ;
+    ns2:TarjetaCredito "5313218624428727"^^xsd:string .
 

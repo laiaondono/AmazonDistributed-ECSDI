@@ -15,6 +15,20 @@ ns1:RegistroEconomico_1 a ns1:RegistroEconomico ;
     ns1:DNI "IKEA"^^xsd:string ;
     ns1:Importe "-199.99"^^xsd:float .
 
+ns1:RegistroEconomico_10 a ns1:RegistroEconomico ;
+    ns1:Concepto "Compra_3"^^xsd:string ;
+    ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
+    ns1:CuentaOrigen "5313218624428727"^^xsd:string ;
+    ns1:DNI "4154454"^^xsd:string ;
+    ns1:Importe "150.24125384225349"^^xsd:float .
+
+ns1:RegistroEconomico_11 a ns1:RegistroEconomico ;
+    ns1:Concepto "ProductoEX_1"^^xsd:string ;
+    ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
+    ns1:CuentaOrigen ""^^xsd:string ;
+    ns1:DNI "Nike"^^xsd:string ;
+    ns1:Importe "-149.99"^^xsd:float .
+
 ns1:RegistroEconomico_2 a ns1:RegistroEconomico ;
     ns1:Concepto "Compra_2"^^xsd:string ;
     ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
@@ -56,4 +70,18 @@ ns1:RegistroEconomico_7 a ns1:RegistroEconomico ;
     ns1:CuentaOrigen ""^^xsd:string ;
     ns1:DNI "Nike"^^xsd:string ;
     ns1:Importe "-15.0"^^xsd:float .
+
+ns1:RegistroEconomico_8 a ns1:RegistroEconomico ;
+    ns1:Concepto "Compra_2"^^xsd:string ;
+    ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
+    ns1:CuentaOrigen "5313218624428727"^^xsd:string ;
+    ns1:DNI "4154454"^^xsd:string ;
+    ns1:Importe "150.22877677154602"^^xsd:float .
+
+ns1:RegistroEconomico_9 a ns1:RegistroEconomico ;
+    ns1:Concepto "ProductoEX_1"^^xsd:string ;
+    ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
+    ns1:CuentaOrigen ""^^xsd:string ;
+    ns1:DNI "Nike"^^xsd:string ;
+    ns1:Importe "-149.99"^^xsd:float .
 

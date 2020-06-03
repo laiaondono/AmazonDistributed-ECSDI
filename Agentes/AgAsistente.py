@@ -482,7 +482,7 @@ def hacer_pedido():
                     if p==ONTO.NombreTransportista:
                         info_bill["NombreTransportista"]=o
                     if p==ONTO.PrecioTotal:
-                        info_bill["PrecioCompleto"]=o
+                        info_bill["PrecioCompleto"]=round(float(o),2)
                 return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=False, completo =True)
         elif request.form['submit'] == "Volver al inicio":
             return flask.redirect("http://%s:%d/" % (hostname, port))

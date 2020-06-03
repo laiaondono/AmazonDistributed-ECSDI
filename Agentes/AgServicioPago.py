@@ -182,8 +182,8 @@ def comunicacion():
                         total_registros+=1
                 action = ONTO["RegistroEconomico_"+str(total_registros)]
                 grafo_economico.add((action,RDF.type,ONTO.RegistroEconomico))
-                grafo_economico.add((action,ONTO.CuentaOrigen,Literal(cuenta_destino,datatype=XSD.string)))
-                grafo_economico.add((action,ONTO.CuentaDestino,Literal(cuenta_sistema,datatype=XSD.string)))
+                grafo_economico.add((action,ONTO.CuentaOrigen,Literal(cuenta_sistema,datatype=XSD.string)))
+                grafo_economico.add((action,ONTO.CuentaDestino,Literal(tarjeta,datatype=XSD.string)))
                 grafo_economico.add((action,ONTO.Importe,Literal(importe,datatype=XSD.float)))
                 grafo_economico.add((action,ONTO.DNI,Literal(dni_usuario,datatype=XSD.string)))
                 grafo_economico.add((action,ONTO.Concepto,Literal(nombre_compra,datatype=XSD.string)))
