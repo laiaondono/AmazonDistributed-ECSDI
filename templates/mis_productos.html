@@ -43,12 +43,12 @@
             <table cellpadding="5px" id="table1">
                 <tr>
                     <th><b>NOMBRE</b></th>
-                    <th><b>MARCA</b></th>
+                    <th><b>COMPRA</b></th>
                 </tr>
                 {% for p in products %}
                 <tr>
                     <td>{{ p.producto }}</td>
-                    <td>{{ p.marca }}</td>
+                    <td>{{ p.compra }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -56,9 +56,21 @@
             <p>Introduce el nombre del producto y indica si quieres valorar o devolver.</p>
             <input type="text" name="producto" placeholder="Nombre Producto"/><br>
             <br>
-            <p>Si desea devolver el producto, por favor introduce el motivo.</p>
+            <p>Si desea devolver el producto, por favor introduce el numero del motivo al que pertenece.</p>
+            <p>1. Producto equivocado.</p>
+            <p>2. Producto defectuoso.</p>
+            <p>3. No satisface las expectativas.</p>
             <input type="text" name="motivo" placeholder="Motivo de la devolución"/>
             <input type="submit" name="submit" value="Devolver">
+            {% if intentomotivo %}
+                <p style="color:red;"> Por favor, pon un motivo válido entre 1 y 3.</p>
+            {% endif %}
+            {% if not datosDevolucion %}
+                <p>Tu solicitud de devolución no ha sido aceptada.</p>
+            {% else %}
+                <p>Tu solicitud de devolución ha sido aceptada.</p>
+                <p>Para realizar la devolución, envia el producto a la empresa de mensajeria {{ datosDevolucion[0] }} y a la dirección de envio {{ datosDevolucion[1] }}</p>
+            {% endif %}
             <p>Si desea valorar el producto, introduce la nota del 1 al 5 en el siguiente espacio.</p>
             <input type="text" name="valoracion" placeholder="Valoración (1-5)"/>
             <input type="submit" name="submit" value="Valorar">
