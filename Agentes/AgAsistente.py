@@ -38,27 +38,13 @@ agn = Namespace("http://www.agentes.org#")
 
 # Variables globales
 mss_cnt = 0
-products_list = []
-global my_products
-my_products = [{}]
-# Datos del Agente
-global nombreusuario
-nombreusuario = ""
-global compra
-compra = False
-global grafo_respuesta
-grafo_respuesta = Graph()
-global info_bill
-info_bill = {}
-global completo
-completo = False
-global productos_valorados
-productos_valorados = []
 
-global productos_valorar_ok
-productos_valorar_ok = []
-global productos_valorar_no_permitido
-productos_valorar_no_permitido = []
+def get_count():
+    global mss_cnt
+    mss_cnt += 1
+    return mss_cnt
+
+
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
                     'http://%s:%d/comm' % (hostname, port),
@@ -73,10 +59,16 @@ AgGestorCompra = Agent('AgGestorCompra',
                             agn.AgGestorCompra,
                             'http://%s:9012/comm' % hostname,
                             'http://%s:9012/Stop' % hostname)
+
 AgProcesadorOpiniones = Agent('AgProcesadorOpiniones',
                        agn.AgProcesadorOpiniones,
                        'http://%s:9013/comm' % hostname,
                        'http://%s:9013/Stop' % hostname)
+
+AgGestorDevoluciones = Agent('AgGestorDevoluciones',
+                              agn.AgGestorDevoluciones,
+                              'http://%s:9020/comm' % hostname,
+                              'http://%s:9020/Stop' % hostname)
 
 # Directory agent address
 DirectoryAgent = Agent('DirectoryAgent',
@@ -95,7 +87,21 @@ resultats = []
 # Flask stuff
 app = Flask(__name__,template_folder='../templates')
 
-productes_a_valorar = {}
+products_list = []
+my_products = [{}]
+nombreusuario = ""
+compra = False
+grafo_respuesta = Graph()
+info_bill = {}
+completo = False
+productos_valorados = []
+productos_valorar_ok = []
+productos_valorar_no_permitido = []
+compraADevolver = ""
+devolucion = [2]
+producte_a_valorar = []
+producte_a_devolver = []
+esDevolucion = False
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -167,8 +173,6 @@ def comunicacion():
             if accion == ONTO.ValorarProducto:
                 gr =Graph()
                 return gr.serialize(format="xml"),200
-
-
 
 
 def hacer_redirect():
@@ -283,10 +287,14 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
 
 @app.route("/misproductos", methods=['GET', 'POST'])
 def mis_productos():
-    global nombreusuario
+    global nombreusuario, esDevolucion
+    global productos_valorar_no_permitido
+    global my_products
+
+    global devolucion
+    #TODO html misp roductos 1 equivocado 2 defectuoso 3 no lo quiero
     if request.method == 'GET':
-        global productos_valorar_no_permitido
-        PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Valoraciones')
+        PedidosFile = open('../Data/Valoraciones')
         graphpedidos = Graph()
         graphpedidos.parse(PedidosFile, format='turtle')
         subjects_products=[]
@@ -297,25 +305,28 @@ def mis_productos():
             if str(s) in subjects_products and p == ONTO.Nombre:
                 productos_valorar_no_permitido.append(str(o))
         PedidosFile.close()
-        global my_products
         my_products=[]
-        PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos')
+        PedidosFile = open('../Data/RegistroPedidos')
         graphpedidos = Graph()
         graphpedidos.parse(PedidosFile, format='turtle')
-        subjects_user = []
+        subjects_compra = []
         productos_user = []
         for s,p,o in graphpedidos:
             if p == ONTO.DNI and str(o) == nombreusuario:
-                subjects_user.append(s)
+                subjects_compra.append(s)
         for s,p,o in graphpedidos:
-            if s in subjects_user and p == ONTO.ProductosCompra:
-                productos_user.append(str(o))
+            if s in subjects_compra and p == ONTO.ProductosCompra:
+                productos_user.append([str(o), str(s)])
+
         print(productos_user)
+        print()
+        print()
+        print()
         for producto in productos_user:
-            PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos')
+            PedidosFile = open('../Data/Productos')
             graphproductos = Graph()
             graphproductos.parse(PedidosFile, format='xml')
-            PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos')
+            PedidosFile = open('../Data/ProductosExternos')
             graphproductosexternos = Graph()
             graphproductosexternos.parse(PedidosFile, format='xml')
             query ="""prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -330,17 +341,36 @@ def mis_productos():
             ?producto default:Marca ?marca .
             ?producto default:Identificador ?id .
             ?producto default:Valoracion ?valoracion .
-            FILTER( str(?nombre) = '""" + str(producto)+"""')}"""
+            FILTER( str(?nombre) = '""" + str(producto[0])+"""')}"""
             graphproductos = graphproductos.query(query)
             graphproductosexternos = graphproductosexternos.query(query)
             for row in graphproductos:
                 info = {'producto': row.nombre, 'identificador': row.id, 'marca': row.marca}
+                for i, p in enumerate(productos_user):
+                    if str(p[0]) == str(row.nombre):
+                        print(p[0])
+                        print(row.nombre)
+                        print("it " + str(i))
+                        info['compra'] = p[1]
+                        print(info)
+                        productos_user.pop(i)
+                        if i > 0:
+                            i -= 1
+                        break
+                        #10, 13 2 4 18 20 16 9 15 7 21 3 17 3 2 14 19 12 5 11 8
+
+                #TODO relacionar cada producte amb la compra a la que pertany
+
                 my_products.append(info)
             for row in graphproductosexternos:
                 info = {'producto': row.nombre, 'identificador': row.id, 'marca': row.marca}
                 my_products.append(info)
-            print(my_products)
-        return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False)
+            #print(my_products)
+            if not esDevolucion:
+                devolucion = [2]
+            else:
+                esDevolucion = False
+        return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False, datosDevolucion = devolucion)
     else:
         if request.form['submit'] == 'Valorar':
 
@@ -348,7 +378,7 @@ def mis_productos():
             val = float(request.form['valoracion'])
             graphvaloracion = Graph()
             accion = ONTO["ValorarProducto"]
-            if (producto == "" or val < 1 or val > 5):
+            if producto == "" or val < 1 or val > 5:
                 return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True)
             if (producto in productos_valorar_no_permitido):
                 return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = False,valorado = True)
@@ -360,6 +390,43 @@ def mis_productos():
             send_message(msg,AgProcesadorOpiniones.address)
             productos_valorados.append(producto)
             return flask.redirect("http://%s:%d/" % (hostname, port))
+
+        elif request.form['submit'] == 'Devolver':
+            producto = request.form['producto']
+            motivo = request.form['motivo']
+            #compra = request.form['compra']
+            gDevolucion = Graph()
+            accion = ONTO["DevolverProducto_" + str(get_count())]
+            gDevolucion.add((accion, RDF.type, ONTO.DevolverProducto))
+            productoSuj = ONTO[producto]
+            #compraSuj = ONTO[compra]
+            gDevolucion.add((accion, ONTO.ProductoADevolver, productoSuj))
+            gDevolucion.add((accion, ONTO.MotivoDevolucion, Literal(motivo)))
+            #gDevolucion.add((accion, ONTO.CompraDevolucion, compraSuj))
+            msg = build_message(gDevolucion,ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
+            g = send_message(msg,AgGestorDevoluciones.address)
+
+            for s, p, o in g:
+                if p == ONTO.DireccionEnvio:
+                    devolucion[0] = str(o)
+                if p == ONTO.EmpresaMensajeria:
+                    devolucion[1] = str(o)
+            esDevolucion = True
+            return flask.redirect("http://%s:%d/mis_productos" % (hostname, port))
+
+        elif request.form['submit'] == 'Producto devuelto':
+            producto = request.form['producto']
+            #compra = request.form['compra']
+            accion = ONTO["FinalizarDevolucion_" + str(get_count())]
+            g = Graph()
+            g.add((accion, RDF.type, ONTO.FinalizarDevolucion))
+            g.add((accion, ONTO.ProductoADevolver, Literal(producto)))
+            g.add((accion, ONTO.DevueltoPor, Literal(nombreusuario)))
+            #g.add((accion, RDF.CompraDevolucion, compra))
+            msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
+            send_message(msg, AgGestorDevoluciones.address)
+            # TODO ya se ha procesado tu devolucion
+
 
 
 @app.route("/hacer_pedido", methods=['GET', 'POST'])
@@ -442,7 +509,6 @@ def hacer_pedido():
             p = Process(target=send_message,args=(msg,AgProcesadorOpiniones.address))
             p.start()
             return flask.redirect("http://%s:%d/search_products" % (hostname, port))
-
 
 
 def comprar_productos(products_to_buy, city, priority, creditCard):
