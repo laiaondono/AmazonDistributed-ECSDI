@@ -35,7 +35,7 @@
         <br>
         <p>Usuario activo: {{ usuario }}</p>
         <br>
-        {% if not products  %}}
+        {% if not products  %}
         <p style="color:red;"> Aún no has comprado ningún producto</p>
         </form>
         {% else %}
@@ -54,7 +54,8 @@
             </table>
             <br>
             <p>Introduce el nombre del producto y indica si quieres valorar o devolver.</p>
-            <input type="text" name="producto" placeholder="Nombre Producto"/><br>
+            <input type="text" name="producto" placeholder="Nombre Producto"/>
+            <br><input type="text" name="compra" placeholder="Compra"/><br>
             <br>
             <p>Si desea devolver el producto, por favor introduce el numero del motivo al que pertenece.</p>
             <p>1. Producto equivocado.</p>
