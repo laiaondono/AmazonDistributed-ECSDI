@@ -175,6 +175,7 @@ def comunicacion():
                 graphvaloraciones.add((accion, ONTO.DNI, Literal(dni_user)))
                 graphvaloraciones.add((accion,ONTO.Nombre,Literal(nombre_producto)))
                 graphvaloraciones.add((accion,ONTO.Valoracion,Literal(valoracion)))
+                print(float(valoracion))
                 ValoracionesFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Valoraciones','wb')
                 ValoracionesFile.write(graphvaloraciones.serialize(format='turtle'))
                 ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos')
@@ -196,9 +197,9 @@ def comunicacion():
                     cantidad_prod+=1
                     for s, p, o in graphproductos:
                         if str(s) == subject and p == ONTO.Valoracion:
-                            o = float(nueva_valoracion)
+                            graphproductos.set((s,p,Literal(float(nueva_valoracion))))
                         elif str(s) == subject and p == ONTO.CantidadValoraciones:
-                            o = int(cantidad_prod)
+                            graphproductos.set((s,p,Literal(int(cantidad_prod))))
                     ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos','wb')
                     ProductosFile.write(graphproductos.serialize(format='xml'))
                 else:
@@ -207,25 +208,25 @@ def comunicacion():
                     graphproductos.parse(ProductosFile, format='xml')
                     ProductosFile.close()
                     subject = ""
+                    newgraph = graphproductos
                     for s,p,o in graphproductos:
                         if p == ONTO.Nombre and str(o) == nombre_producto:
                             subject = str(s)
                             break
-                    for s,p,o in graphproductos:
+                    for s,p,o in newgraph:
                         if str(s) ==subject and p == ONTO.Valoracion:
                             valoracion_prod = float(o)
                         if str(s) == subject  and p == ONTO.CantidadValoraciones:
-                            cantidad_prod = int(o)
+                            cantidad_prod = float(o)
                     nueva_valoracion = valoracion_prod*cantidad_prod+valoracion
                     nueva_valoracion = nueva_valoracion/(cantidad_prod+1)
                     cantidad_prod+=1
+                    newgraph = Graph()
                     for s, p, o in graphproductos:
                         if str(s) == subject and p == ONTO.Valoracion:
-                            print(nueva_valoracion)
-                            o = float(nueva_valoracion)
+                            graphproductos.set((s,p,Literal(float(nueva_valoracion))))
                         elif str(s) == subject and p == ONTO.CantidadValoraciones:
-                            o = int(cantidad_prod)
-                            print(cantidad_prod)
+                            graphproductos.set((s,p,Literal(int(cantidad_prod))))
                     ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos','wb')
                     ProductosFile.write(graphproductos.serialize(format='xml'))
                 return graphproductos.serialize(format='xml'),200

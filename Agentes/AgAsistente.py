@@ -54,6 +54,11 @@ global completo
 completo = False
 global productos_valorados
 productos_valorados = []
+
+global productos_valorar_ok
+productos_valorar_ok = []
+global productos_valorar_no_permitido
+productos_valorar_no_permitido = []
 AgAsistente = Agent('AgAsistente',
                     agn.AgAsistente,
                     'http://%s:%d/comm' % (hostname, port),
@@ -280,9 +285,21 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
 def mis_productos():
     global nombreusuario
     if request.method == 'GET':
+        global productos_valorar_no_permitido
+        PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Valoraciones')
+        graphpedidos = Graph()
+        graphpedidos.parse(PedidosFile, format='turtle')
+        subjects_products=[]
+        for s,p,o in graphpedidos:
+            if p == ONTO.DNI and str(o)==nombreusuario:
+                subjects_products.append(str(s))
+        for s,p,o in graphpedidos:
+            if str(s) in subjects_products and p == ONTO.Nombre:
+                productos_valorar_no_permitido.append(str(o))
+        PedidosFile.close()
         global my_products
         my_products=[]
-        PedidosFile = open('../Data/RegistroPedidos')
+        PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos')
         graphpedidos = Graph()
         graphpedidos.parse(PedidosFile, format='turtle')
         subjects_user = []
@@ -293,11 +310,12 @@ def mis_productos():
         for s,p,o in graphpedidos:
             if s in subjects_user and p == ONTO.ProductosCompra:
                 productos_user.append(str(o))
+        print(productos_user)
         for producto in productos_user:
-            PedidosFile = open('../Data/Productos')
+            PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/Productos')
             graphproductos = Graph()
             graphproductos.parse(PedidosFile, format='xml')
-            PedidosFile = open('../Data/ProductosExternos')
+            PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos')
             graphproductosexternos = Graph()
             graphproductosexternos.parse(PedidosFile, format='xml')
             query ="""prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -321,6 +339,7 @@ def mis_productos():
             for row in graphproductosexternos:
                 info = {'producto': row.nombre, 'identificador': row.id, 'marca': row.marca}
                 my_products.append(info)
+            print(my_products)
         return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False)
     else:
         if request.form['submit'] == 'Valorar':
@@ -331,12 +350,12 @@ def mis_productos():
             accion = ONTO["ValorarProducto"]
             if (producto == "" or val < 1 or val > 5):
                 return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True)
-            if (producto in productos_valorados):
+            if (producto in productos_valorar_no_permitido):
                 return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = False,valorado = True)
             graphvaloracion.add((accion,RDF.type,ONTO.ValorarProducto))
             graphvaloracion.add((accion,ONTO.DNI,Literal(nombreusuario)))
             graphvaloracion.add((accion,ONTO.Nombre,Literal(producto)))
-            graphvaloracion.add((accion,ONTO.Valoracion,Literal(val)))
+            graphvaloracion.add((accion,ONTO.Valoracion,Literal(float(val))))
             msg = build_message(graphvaloracion,ACL.request, AgAsistente.uri, AgProcesadorOpiniones.uri, accion, mss_cnt)
             send_message(msg,AgProcesadorOpiniones.address)
             productos_valorados.append(producto)

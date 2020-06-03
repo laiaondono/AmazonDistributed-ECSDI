@@ -1,180 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF
    xmlns:OntologiaECSDI="http://www.owl-ontologies.com/OntologiaECSDI.owl#"
-   xmlns:atributo="http://www.semanticweb.org/pauca/ontologies/2020/3/untitled-ontology-4/properties/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_1">
+>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_14">
+    <OntologiaECSDI:Valoracion>1.9</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.5</OntologiaECSDI:Peso>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Nombre>Zapatillas V3</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Valoracion>4</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Identificador>Producto_1</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">149.99</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">65.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.290</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Nombre>Pack Bombillas Bajo consumo</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Identificador>Producto_14</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_12">
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">6.4</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Identificador>Producto_12</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Valoracion>4.3</OntologiaECSDI:Valoracion>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">850.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Nombre>Televisor PST 50'</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_13">
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">18.2</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Valoracion>4.7</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Categoria>Hogar</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">100.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Identificador>Producto_13</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Nombre>Silla estudio K21</OntologiaECSDI:Nombre>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_2">
     <OntologiaECSDI:Identificador>Producto_2</OntologiaECSDI:Identificador>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
     <OntologiaECSDI:Nombre>Movil S7 Plus</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">890.95</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.350</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
     <OntologiaECSDI:Valoracion>3</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.35</OntologiaECSDI:Peso>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">890.95</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
     <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_3">
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1250</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Identificador>Producto_3</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:Nombre>Portatil XSD21</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.650</OntologiaECSDI:Peso>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4">
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.2</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Nombre>Snowboard Flying V</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Valoracion>3.8</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">420</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Identificador>Producto_4</OntologiaECSDI:Identificador>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5">
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.05</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Nombre>Gorra Flow</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Identificador>Producto_5</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Valoracion>2.7</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">15</OntologiaECSDI:PrecioProducto>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_6">
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">25</OntologiaECSDI:Peso>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1999.99</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Identificador>Producto_6</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:Categoria>Hogar</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Nombre>Mesa restaurante</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Valoracion>4.1</OntologiaECSDI:Valoracion>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_7">
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">40</OntologiaECSDI:Peso>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">700</OntologiaECSDI:PrecioProducto>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Nombre>Barbacoa </OntologiaECSDI:Nombre>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
     <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">40.0</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Nombre>Barbacoa </OntologiaECSDI:Nombre>
     <OntologiaECSDI:Categoria>Hogar</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Valoracion>4.9</OntologiaECSDI:Valoracion>
     <OntologiaECSDI:Identificador>Producto_7</OntologiaECSDI:Identificador>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">700.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Valoracion>4.9</OntologiaECSDI:Valoracion>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_15">
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.1</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Identificador>Producto_15</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Nombre>Gafas Running X549</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">150.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Valoracion>2.3</OntologiaECSDI:Valoracion>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_11">
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Valoracion>2.7</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Nombre>Raqueta tennis XPro</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">180.2</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.14</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Identificador>Producto_11</OntologiaECSDI:Identificador>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_3">
+    <OntologiaECSDI:Nombre>Portatil XSD21</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.65</OntologiaECSDI:Peso>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1250.0</OntologiaECSDI:PrecioProducto>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Identificador>Producto_3</OntologiaECSDI:Identificador>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_4">
+    <OntologiaECSDI:Valoracion>3.8</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Nombre>Snowboard Flying V</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Identificador>Producto_4</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.2</OntologiaECSDI:Peso>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">420.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_1">
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Identificador>Producto_1</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.29</OntologiaECSDI:Peso>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">149.99</OntologiaECSDI:PrecioProducto>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <OntologiaECSDI:Nombre>Zapatillas V3</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Valoracion>4</OntologiaECSDI:Valoracion>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_6">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Identificador>Producto_6</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1999.99</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Categoria>Hogar</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">25.0</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Nombre>Mesa restaurante</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Valoracion>4.1</OntologiaECSDI:Valoracion>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_10">
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1100.0</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Valoracion>3.9</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">19000.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Nombre>Coche AmazEC</OntologiaECSDI:Nombre>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Identificador>Producto_10</OntologiaECSDI:Identificador>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5">
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.05</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Identificador>Producto_5</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Nombre>Gorra Flow</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">15.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Valoracion>2.7</OntologiaECSDI:Valoracion>
     <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_8">
     <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.300</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Valoracion>1.9</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.3</OntologiaECSDI:Peso>
     <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
     <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">69.99</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Nombre>Auriculares K430</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
     <OntologiaECSDI:Identificador>Producto_8</OntologiaECSDI:Identificador>
     <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Valoracion>1.9</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Nombre>Auriculares K430</OntologiaECSDI:Nombre>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_9">
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
     <OntologiaECSDI:Nombre>Portatil VB12</OntologiaECSDI:Nombre>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1600.45</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Identificador>Producto_9</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
     <OntologiaECSDI:Valoracion>3.6</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Identificador>Producto_9</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1600.45</OntologiaECSDI:PrecioProducto>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.9</OntologiaECSDI:Peso>
     <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1.900</OntologiaECSDI:Peso>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_10">
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">19000</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Nombre>Coche AmazEC</OntologiaECSDI:Nombre>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1100</OntologiaECSDI:Peso>
     <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Valoracion>3.9</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Identificador>Producto_10</OntologiaECSDI:Identificador>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_11">
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Nombre>Raqueta tennis XPro</OntologiaECSDI:Nombre>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:Identificador>Producto_11</OntologiaECSDI:Identificador>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">180.20</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.140</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Valoracion>2.7</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_12">
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">850</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">6.4</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Identificador>Producto_12</OntologiaECSDI:Identificador>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Nombre>Televisor PST 50'</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Valoracion>4.3</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_13">
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">100</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Nombre>Silla estudio K21</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Identificador>Producto_13</OntologiaECSDI:Identificador>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Valoracion>4.7</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">18.200</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Categoria>Hogar</OntologiaECSDI:Categoria>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_14">
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Nombre>Pack Bombillas Bajo consumo</OntologiaECSDI:Nombre>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.5</OntologiaECSDI:Peso>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">65</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Identificador>Producto_14</OntologiaECSDI:Identificador>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Categoria>Otros</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Valoracion>1.9</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_15">
-    <OntologiaECSDI:Identificador>Producto_15</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Valoracion>2.3</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.1</OntologiaECSDI:Peso>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">150</OntologiaECSDI:PrecioProducto>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Nombre>Gafas Running X549</OntologiaECSDI:Nombre>
   </rdf:Description>
 </rdf:RDF>

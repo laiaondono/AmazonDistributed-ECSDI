@@ -4,10 +4,6 @@
 ns1:Valoracion_0 a ns1:Valoracion ;
     ns1:DNI "4154454" ;
     ns1:Nombre "Gorra Nike" ;
-    ns1:Valoracion 1e+00 .
+    ns1:Valoracion 3e+00 .
 
-ns1:Valoracion_1 a ns1:Valoracion ;
-    ns1:DNI "4154454" ;
-    ns1:Nombre "Gorra Nike" ;
-    ns1:Valoracion 1e+00 .
 

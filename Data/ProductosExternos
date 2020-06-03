@@ -3,79 +3,79 @@
    xmlns:OntologiaECSDI="http://www.owl-ontologies.com/OntologiaECSDI.owl#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 >
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_2">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Nombre>Gorra Nike</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_4">
+    <OntologiaECSDI:Identificador>ProductoEX_4</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.35</OntologiaECSDI:Peso>
     <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">15.0</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Marca>Nike</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Identificador>ProductoEX_2</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.05</OntologiaECSDI:Peso>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_3">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
     <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Nombre>Sudadera Nike AirJordan</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.4</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
-    <OntologiaECSDI:Marca>Nike</OntologiaECSDI:Marca>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Identificador>ProductoEX_3</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">250.0</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">890.95</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Empresa>Apple</OntologiaECSDI:Empresa>
+    <OntologiaECSDI:Marca>Apple</OntologiaECSDI:Marca>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <OntologiaECSDI:Nombre>Iphone XS</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_1">
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:CantidadValoraciones rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Nombre>Zapatillas Nike Pegasus</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Valoracion rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.5</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">149.99</OntologiaECSDI:PrecioProducto>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.29</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Identificador>ProductoEX_1</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
     <OntologiaECSDI:Marca>Nike</OntologiaECSDI:Marca>
     <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Nombre>Zapatillas Nike Pegasus</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.29</OntologiaECSDI:Peso>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">149.99</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Identificador>ProductoEX_1</OntologiaECSDI:Identificador>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_6">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:Empresa>IKEA</OntologiaECSDI:Empresa>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">25.0</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Marca>IKEA</OntologiaECSDI:Marca>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:Categoria>Hogar</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">199.99</OntologiaECSDI:PrecioProducto>
     <OntologiaECSDI:Nombre>Mesa estudio IKEA</OntologiaECSDI:Nombre>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
     <OntologiaECSDI:Identificador>ProductoEX_6</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Marca>IKEA</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">25.0</OntologiaECSDI:Peso>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">199.99</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Empresa>IKEA</OntologiaECSDI:Empresa>
+    <OntologiaECSDI:Categoria>Hogar</OntologiaECSDI:Categoria>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_2">
+    <OntologiaECSDI:CantidadValoraciones rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.05</OntologiaECSDI:Peso>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Valoracion rdf:datatype="http://www.w3.org/2001/XMLSchema#double">2.8125</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">15.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Identificador>ProductoEX_2</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
+    <OntologiaECSDI:Marca>Nike</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Nombre>Gorra Nike</OntologiaECSDI:Nombre>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_3">
+    <OntologiaECSDI:Marca>Nike</OntologiaECSDI:Marca>
+    <OntologiaECSDI:Empresa>Nike</OntologiaECSDI:Empresa>
+    <OntologiaECSDI:Identificador>ProductoEX_3</OntologiaECSDI:Identificador>
+    <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">250.0</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.4</OntologiaECSDI:Peso>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
+    <OntologiaECSDI:Nombre>Sudadera Nike AirJordan</OntologiaECSDI:Nombre>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_5">
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.2</OntologiaECSDI:Peso>
-    <OntologiaECSDI:Empresa>Apple</OntologiaECSDI:Empresa>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">349.45</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Nombre>SmartWatch 3</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Identificador>ProductoEX_5</OntologiaECSDI:Identificador>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
     <OntologiaECSDI:Marca>Apple</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:Empresa>Apple</OntologiaECSDI:Empresa>
     <OntologiaECSDI:Categoria>Deporte</OntologiaECSDI:Categoria>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://www.owl-ontologies.com/OntologiaECSDI.owl#ProductoEX_4">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-    <OntologiaECSDI:Marca>Apple</OntologiaECSDI:Marca>
-    <OntologiaECSDI:Identificador>ProductoEX_4</OntologiaECSDI:Identificador>
-    <OntologiaECSDI:Nombre>Iphone XS</OntologiaECSDI:Nombre>
-    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
-    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
-    <OntologiaECSDI:Empresa>Apple</OntologiaECSDI:Empresa>
-    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.35</OntologiaECSDI:Peso>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
-    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">890.95</OntologiaECSDI:PrecioProducto>
-    <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
+    <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
+    <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">349.45</OntologiaECSDI:PrecioProducto>
+    <OntologiaECSDI:Valoracion>5</OntologiaECSDI:Valoracion>
+    <OntologiaECSDI:Nombre>SmartWatch 3</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Peso rdf:datatype="http://www.w3.org/2001/XMLSchema#double">4.2</OntologiaECSDI:Peso>
+    <OntologiaECSDI:Identificador>ProductoEX_5</OntologiaECSDI:Identificador>
   </rdf:Description>
 </rdf:RDF>
