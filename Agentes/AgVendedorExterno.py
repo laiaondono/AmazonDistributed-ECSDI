@@ -119,7 +119,7 @@ def add_new_product(companyName, productName, price, brand, category, weight):
     g.add((productNameSubject, RDF.type, ONTO.Producto))
     g.add((action, ONTO.Añade, productNameSubject))
 
-    g.add((action, ONTO.Nombre, Literal(companyName)))
+    g.add((action, ONTO.NombreEmpresa, Literal(companyName)))
     g.add((productNameSubject, ONTO.Nombre, Literal(productName)))
     g.add((productNameSubject, ONTO.PrecioProducto, Literal(price)))
     g.add((productNameSubject, ONTO.Marca, Literal(brand)))

@@ -2,42 +2,22 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ns2:Compra_0 a ns2:Compra ;
-    ns2:Ciudad "Madrid"^^xsd:string ;
+    ns2:Ciudad "Shangai"^^xsd:string ;
     ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-07 19:49:49.618519"^^xsd:string ;
+    ns2:FechaEntrega "2020-06-04 23:58:20.437391"^^xsd:string ;
     ns2:Lote ns2:Compra_0 ;
-    ns2:NombreTransportista "DHL"^^xsd:string ;
-    ns2:PrecioTotal "250.0"^^xsd:float ;
-    ns2:ProductosCompra "Sudadera Nike AirJordan"^^xsd:string ;
-    ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
-
-ns2:Compra_1 a ns2:Compra ;
-    ns2:Ciudad "Madrid"^^xsd:string ;
-    ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-08 19:58:09.034345"^^xsd:string ;
-    ns2:Lote ns2:Compra_1 ;
-    ns2:NombreTransportista "DHL"^^xsd:string ;
-    ns2:PrecioTotal "18.63421282155729"^^xsd:float ;
+    ns2:NombreTransportista "FedEx"^^xsd:string ;
+    ns2:PrecioTotal "15.0"^^xsd:float ;
     ns2:ProductosCompra "Gorra Nike"^^xsd:string ;
     ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
 
-ns2:Compra_2 a ns2:Compra ;
-    ns2:Ciudad "Barcelona"^^xsd:string ;
+ns2:Compra_1 a ns2:Compra ;
+    ns2:Ciudad "Shangai"^^xsd:string ;
     ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-04 22:17:09.117194"^^xsd:string ;
-    ns2:Lote ns2:Compra_2 ;
-    ns2:NombreTransportista "DHL"^^xsd:string ;
-    ns2:PrecioTotal "150.22877677154602"^^xsd:float ;
-    ns2:ProductosCompra "Zapatillas Nike Pegasus"^^xsd:string ;
-    ns2:TarjetaCredito "5313218624428727"^^xsd:string .
-
-ns2:Compra_3 a ns2:Compra ;
-    ns2:Ciudad "Barcelona"^^xsd:string ;
-    ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-04 22:20:15.706487"^^xsd:string ;
-    ns2:Lote ns2:Compra_3 ;
-    ns2:NombreTransportista "DHL"^^xsd:string ;
-    ns2:PrecioTotal "150.24125384225349"^^xsd:float ;
-    ns2:ProductosCompra "Zapatillas Nike Pegasus"^^xsd:string ;
-    ns2:TarjetaCredito "5313218624428727"^^xsd:string .
+    ns2:FechaEntrega "2020-06-09 00:03:25.120401"^^xsd:string ;
+    ns2:Lote ns2:Compra_1 ;
+    ns2:NombreTransportista "FedEx"^^xsd:string ;
+    ns2:PrecioTotal "22.233119382663645"^^xsd:float ;
+    ns2:ProductosCompra "Gorra Nike"^^xsd:string ;
+    ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
 

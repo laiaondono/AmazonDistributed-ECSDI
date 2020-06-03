@@ -105,26 +105,27 @@ def communication():
             accion = gm.value(subject=content, predicate=RDF.type)
 
             if accion == ONTO.AñadirProductoExterno:
-                ProdExtFile = open('../Data/ProductosExternos')
+                ProdExtFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos')
                 graphfinal = Graph()
                 graphfinal.parse(ProdExtFile, format='xml')
 
                 graphNewProduct = Graph()
                 # Nombre, Marca, Empresa, CantidadValoraciones, Valoracion, Peso, Categoria, PrecioProducto, Identificador
-
+                nombre = 1
                 for s, p, o in graphfinal:
                     if p == ONTO.Identificador:
-                        print(o)
+                        nombre+=1
 
-                identificador = 'ProductoEX_' + str(get_count())
+                identificador = 'ProductoEX_' + str(nombre)
                 print("ID: " + identificador)
                 productSuj = ONTO[identificador]
+                print(productSuj)
                 graphNewProduct.add((productSuj, RDF.type, ONTO.Producto))
                 graphNewProduct.add((productSuj, ONTO.Identificador, Literal(identificador)))
                 for s, p, o in gm:
-                    if p == ONTO.Nombre and s == productSuj: #es el nombre del producto
+                    if p == ONTO.Nombre:
                         graphNewProduct.add((productSuj, ONTO.Nombre, Literal(o)))
-                    elif p == ONTO.Nombre: #es el nombre de la empresa externa
+                    elif p == ONTO.NombreEmpresa:
                         graphNewProduct.add((productSuj, ONTO.Empresa, Literal(o)))
                     if p == ONTO.Marca:
                         graphNewProduct.add((productSuj, ONTO.Marca, Literal(o)))
@@ -140,7 +141,7 @@ def communication():
 
                 # Añadimos el nuevo producto externo y lo escribimos otra vez.
                 graphfinal += graphNewProduct
-                PedidosFile = open('../Data/ProductosExternos', 'wb')
+                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos', 'wb')
                 PedidosFile.write(graphfinal.serialize(format='xml'))
                 PedidosFile.close()
 

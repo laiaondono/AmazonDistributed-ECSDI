@@ -1,18 +1,1 @@
-@prefix ns1: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
-
-ns1:Historial_1 a ns1:Historial ;
-    ns1:DNI "4154454" ;
-    ns1:Identificador "ProductoEX_1" .
-
-ns1:Historial_2 a ns1:Historial ;
-    ns1:DNI "4154454" ;
-    ns1:Identificador "ProductoEX_2" .
-
-ns1:Historial_3 a ns1:Historial ;
-    ns1:DNI "4154454" ;
-    ns1:Identificador "ProductoEX_1" .
-
-ns1:Historial_4 a ns1:Historial ;
-    ns1:DNI "4154454" ;
-    ns1:Identificador "ProductoEX_3" .
 
