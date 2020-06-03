@@ -130,9 +130,14 @@ def comunicacion():
                         dni_usuario = str(o)
                     elif p == ONTO.LoteEntregado:
                         nombre_compra = str(o)
-                RegistroEconomicoFile = open("../Data/RegistroEconomico")
+                print(productos)
+                print(importe)
+                print(tarjeta)
+                print(dni_usuario)
+                print(nombre_compra)
+                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico")
                 grafo_economico = Graph()
-                grafo_economico.parse(RegistroEconomicoFile,format='xml')
+                grafo_economico.parse(RegistroEconomicoFile,format='turtle')
                 total_registros = 0
                 global cuenta_sistema
                 for s,p,o in grafo_economico:
@@ -140,17 +145,18 @@ def comunicacion():
                         total_registros+=1
                 action = ONTO["RegistroEconomico_"+str(total_registros)]
                 grafo_economico.add((action,RDF.type,ONTO.RegistroEconomico))
-                grafo_economico.add((action,ONTO.CuentaOrigen,Literal(tarjeta)))
-                grafo_economico.add((action,ONTO.CuentaDestino,Literal(cuenta_sistema)))
-                grafo_economico.add((action,ONTO.Importe,Literal(importe)))
-                grafo_economico.add((action,ONTO.DNI,Literal(dni_usuario)))
-                grafo_economico.add((action,ONTO.Concepto,Literal(nombre_compra)))
+                grafo_economico.add((action,ONTO.CuentaOrigen,Literal(tarjeta,datatype=XSD.string)))
+                grafo_economico.add((action,ONTO.CuentaDestino,Literal(cuenta_sistema,datatype=XSD.string)))
+                grafo_economico.add((action,ONTO.Importe,Literal(importe,datatype=XSD.float)))
+                grafo_economico.add((action,ONTO.DNI,Literal(dni_usuario,datatype=XSD.string)))
+                grafo_economico.add((action,ONTO.Concepto,Literal(nombre_compra,datatype=XSD.string)))
                 total_registros+=1
-                RegistroEconomicoFile = open("../Data/RegistroEconomico",'wb')
+                RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico",'wb')
                 RegistroEconomicoFile.write(grafo_economico.serialize(format='turtle'))
+                RegistroEconomicoFile.close()
+                print("Compra registrada")
                 for product in productos:
-                    if product[8] == "E":
-                        ProductosExternosFile = open("../Data/ProductosExternos")
+                        ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
                         grafo_productos_externos = Graph()
                         grafo_productos_externos.parse(ProductosExternosFile,format='xml')
                         query= """
@@ -163,38 +169,49 @@ def comunicacion():
                             { ?producto rdf:type default:Producto }.
                             ?producto default:Identificador ?id . 
                             ?producto default:Empresa ?empresa .
-                            ?producto default:PrecioProducto ?precio
-                            FILTER( ?id = '"""+str(product)+"""')}"""
+                            ?producto default:PrecioProducto ?precio .
+                            ?producto default:Nombre ?nombre .
+                            FILTER( ?nombre = '"""+str(product)+"""')}"""
                         grafo_productos_externos = grafo_productos_externos.query(query)
                         precio_producto = ""
                         identificador = ""
+                        es_externo = False
                         for row in grafo_productos_externos:
+                            es_externo = True
                             empresa = row.empresa
-                            precio_producto = (row.precio)*-1
+                            precio_producto = float(row.precio)*-1
                             identificador = row.id
                             break
-                        g = Graph()
-                        action = ONTO["PagarVendedorExterno"]
-                        g.add((action, RDF.type,ONTO.PagarVendedorExterno))
-                        g.add((action,ONTO.Nombre, Literal(empresa)))
-                        msg = build_message(g, ACL.request, AgServicioPago.uri, AgVendedorExterno.uri, action, mss_cnt)
-                        mss_cnt += 1
-                        gnumerocuenta= send_message(msg, AgGestorCompra.address)
-                        numero_cuenta = ""
-                        for s,p,o in gnumerocuenta:
-                            if p == ONTO.NumeroCuenta:
-                                numero_cuenta = str(numero_cuenta)
-                                break
-                        RegistroEconomicoFile = open("../Data/RegistroEconomico")
-                        grafo_economico = Graph()
-                        grafo_economico.parse(RegistroEconomicoFile,format='xml')
-                        action = ONTO["RegistroEconomico_"+str(total_registros)]
-                        grafo_economico.add((action,RDF.type,ONTO.RegistroEconomico))
-                        grafo_economico.add((action,ONTO.CuentaOrigen,Literal(cuenta_sistema)))
-                        grafo_economico.add((action,ONTO.CuentaDestino,Literal(numero_cuenta)))
-                        grafo_economico.add((action,ONTO.Importe,Literal(precio_producto)))
-                        grafo_economico.add((action,ONTO.DNI,Literal(empresa)))
-                        grafo_economico.add((action,ONTO.Concepto,Literal(str(identificador))))
+                        if es_externo:
+                            print("El import del producto que tenemos que pagar a la empresa externa es " + str(precio_producto))
+                            g = Graph()
+                            action = ONTO["PagarVendedorExterno"]
+                            print("Pedimos a la empresa "+ str(empresa) + " el numero de cuenta.")
+                            g.add((action, RDF.type,ONTO.PagarVendedorExterno))
+                            g.add((action,ONTO.Nombre, Literal(empresa)))
+                            msg = build_message(g, ACL.request, AgServicioPago.uri, AgVendedorExterno.uri, action, mss_cnt)
+                            mss_cnt += 1
+                            gnumerocuenta= send_message(msg, AgVendedorExterno.address)
+                            numero_cuenta = ""
+                            for s,p,o in gnumerocuenta:
+                                if p == ONTO.NumeroCuenta:
+                                    numero_cuenta = str(o)
+                                    break
+                            print("El numero de cuenta es " +numero_cuenta)
+                            RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico")
+                            grafo_economico = Graph()
+                            grafo_economico.parse(RegistroEconomicoFile,format='turtle')
+                            action = ONTO["RegistroEconomico_"+str(total_registros)]
+                            grafo_economico.add((action,RDF.type,ONTO.RegistroEconomico))
+                            grafo_economico.add((action,ONTO.CuentaOrigen,Literal(cuenta_sistema,datatype=XSD.string)))
+                            grafo_economico.add((action,ONTO.CuentaDestino,Literal(numero_cuenta,datatype=XSD.string)))
+                            grafo_economico.add((action,ONTO.Importe,Literal(precio_producto,datatype=XSD.float)))
+                            grafo_economico.add((action,ONTO.DNI,Literal(empresa,datatype=XSD.string)))
+                            grafo_economico.add((action,ONTO.Concepto,Literal(str(identificador),datatype=XSD.string)))
+                            print("Devolvemos el dinero a la empresa")
+                            RegistroEconomicoFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroEconomico",'wb')
+                            RegistroEconomicoFile.write(grafo_economico.serialize(format='turtle'))
+                            RegistroEconomicoFile.close()
                 graff = Graph()
                 return graff.serialize(format='xml'),200
 

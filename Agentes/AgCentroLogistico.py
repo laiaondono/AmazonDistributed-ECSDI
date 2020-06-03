@@ -227,20 +227,23 @@ def communication():
                 if hay_prod_ext:
                     empezar_proceso = Process(target=avisar_vendedores_externos, args=())
                     empezar_proceso.start()
-
-                send_message(
-                    build_message(grafo_confirmacion, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, accion, count), AgTransportista.address)
+                p = Process(target=confirmacion,args=(grafo_confirmacion,accion))
+                p.start()
                 return gm.serialize(format="xml"), 200
 
             elif accion == ONTO.CobrarCompra:
-                print("rebut cl :)")
-                for s, p, o in gm:
-                    print(s)
-                    print(p)
-                    print(o)
-
-                send_message(
-                    build_message(gm, ACL.request, AgCentroLogistico.uri, AgGestorCompra.uri, accion, get_count()), AgGestorCompra.address)
+                print("Ya se ha entregado el envio, avisamos del cobro.")
+                for s,p,o in gm:
+                    if p == ONTO.LoteEntregado:
+                        idLote = str(o)
+                        break
+                g = Graph()
+                print("El lote es " +str(idLote))
+                action = ONTO["CobrarCompra_" + str(get_count())]
+                g.add((action, RDF.type, ONTO.CobrarCompra))
+                g.add((action, ONTO.LoteEntregado, Literal(idLote)))
+                p = Process(target=confirmacion_entregado_gestor,args=(g,action))
+                p.start()
                 grr = Graph()
                 return grr.serialize(format="xml"),200
             else:
@@ -275,8 +278,12 @@ def tidyup():
 
     """
     pass
-
-
+def confirmacion_entregado_gestor(g=Graph(),action=""):
+    send_message(
+        build_message(g, ACL.request, AgCentroLogistico.uri, AgGestorCompra.uri, action, get_count()), AgGestorCompra.address)
+def confirmacion(g=Graph(),action=""):
+    send_message(
+        build_message(g, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, action, get_count()), AgTransportista.address)
 def agentbehavior1(cola):
     """
     Un comportamiento del agente

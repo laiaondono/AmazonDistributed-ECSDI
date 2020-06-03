@@ -102,7 +102,7 @@ location_pk = (Nominatim(user_agent='myapplication').geocode("Pekín").latitude,
 
 graph_compra = Graph()
 precio_total_compra = 0.0
-
+ultima_compra = Graph()
 
 def get_count():
     global mss_cnt
@@ -141,6 +141,7 @@ def communication():
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
             # Accion de busqueda
+            print(accion)
             if accion == ONTO.HacerPedido:
                 #guardem el graf de la compra com a variable global
                 global graph_compra
@@ -215,29 +216,40 @@ def communication():
                 return graffactura.serialize(format='xml'), 200
 
             #AgServicioPago ens avisa que ja ha realitzat el cobro i aixi podem realitzar la valoracio
-            if accion == ONTO.CobrarCompra:
-                g = Graph()
-                g.add((accion, RDF.type, ONTO.CobrarCompra))
-                for s, p, o in graph_compra:
-                    if p == ONTO.ProductosCompra:
-                        g.add((accion, ONTO.ProductosCompra, o))
-                    if p == ONTO.TarjetaCredito:
-                        g.add((accion, ONTO.TarjetaCredito, o))
-                    if p == ONTO.DNI:
-                        g.add((accion, ONTO.DNI, o))
-                g.add((accion, ONTO.PrecioTotal, Literal(precio_total_compra)))
-                lote = gm.value(subject=accion, predicate=ONTO.LoteEntregado)
+            elif accion == ONTO.CobrarCompra:
+                print("Cobrem la compra")
                 for s, p, o in gm:
                     if p == ONTO.LoteEntregado:
                         lote = str(o)
-                        print("lote torbat")
-                g.add((accion, ONTO.LoteEntregado, Literal(lote)))
-                print("cobar compra gc")
-                for s, p, o in g:
-                    print(s)
-                    print(p)
-                    print(o)
+                PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos')
+                graphpedidos = Graph()
+                graphpedidos.parse(PedidosFile, format='turtle')
+                subject = ""
+                print("El lote es "+ str(lote))
+                for s,p,o in graphpedidos:
+                    if p == ONTO.Lote :
+                        if str(o) == str(lote):
+                            print("found")
+                            subject = s
+                g = Graph()
+                g.add((accion, RDF.type, ONTO.CobrarCompra))
+                for s,p,o in graphpedidos:
+                    if str(s) == str(subject):
+                        if p == ONTO.ProductosCompra:
+                            print(str(o))
+                            g.add((accion, ONTO.ProductosCompra, Literal(str(o))))
+                        if p == ONTO.TarjetaCredito:
+                            print(str(o))
+                            g.add((accion, ONTO.TarjetaCredito, Literal(str(o))))
+                        if p == ONTO.DNI:
+                            print(str(o))
+                            g.add((accion, ONTO.DNI, Literal(str(o))))
+                        if p == ONTO.PrecioTotal:
+                            print(str(o))
+                            g.add((accion, ONTO.PrecioTotal, Literal(float(o))))
 
+                #lote = gm.value(subject=accion, predicate=ONTO.LoteEntregado)
+                g.add((accion, ONTO.LoteEntregado, Literal(subject[49:])))
                 msg = build_message(g, ACL.request, AgGestorCompra.uri, AgServicioPago.uri, accion, get_count())
                 send_message(msg, AgServicioPago.address)
                 # Avisamos al AgProcessadorOpiniones de que ya se puede realizar la valoracion
@@ -335,7 +347,7 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
 
     global precio_total_compra
     precio_total_compra = preutotal
-    PedidosFile = open('../Data/RegistroPedidos')
+    PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos')
     graphfinal = Graph()
     graphfinal.parse(PedidosFile, format='turtle')
     grafrespuesta=Graph()
@@ -360,17 +372,15 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
             grafrespuesta.add((compra,ONTO.Lote,s)) # TODO pot estar malament
     graphfinal += grafrespuesta
     # Añadimos la nueva compra y lo escribimos otra vez.
-    PedidosFile = open('../Data/RegistroPedidos', 'wb')
+    global ultimacompra
+    ultimacompra = grafrespuesta
+    PedidosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/RegistroPedidos', 'wb')
     PedidosFile.write(graphfinal.serialize(format='turtle'))
     PedidosFile.close()
     grafrespuesta.add((accion, RDF.type, ONTO.ProcesarEnvio))
-    print("rebut gc :)")
-    for s, p, o in grafrespuesta:
-        print(s)
-        print(p)
-        print(o)
     msg = build_message(grafrespuesta, ACL.request, AgGestorCompra.uri, AgAsistente.uri, accion, count)
     send_message(msg, AgAsistente.address)
+    logger.info("El pedido ya esta registrado, esperando a que se entregue...")
 
 
 def agentbehavior1(cola):

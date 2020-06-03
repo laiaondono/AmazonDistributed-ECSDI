@@ -8,21 +8,197 @@ ns2:Historial_10 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_3" .
 
+ns2:Historial_100 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_101 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_102 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_103 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_104 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_105 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_106 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_107 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_108 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_109 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
 ns2:Historial_11 a ns2:Historial ;
     ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_110 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_111 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_112 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_113 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_114 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_115 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_116 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_117 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_118 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_119 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
     ns2:Identificador "ProductoEX_3" .
 
 ns2:Historial_12 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_2" .
 
+ns2:Historial_120 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_121 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_122 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_123 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_124 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_125 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_126 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_127 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_128 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_129 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_1" .
+
 ns2:Historial_13 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_3" .
 
+ns2:Historial_130 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_131 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_12" .
+
+ns2:Historial_132 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_5" .
+
+ns2:Historial_133 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_6" .
+
+ns2:Historial_134 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_14" .
+
+ns2:Historial_135 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_4" .
+
+ns2:Historial_136 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_15" .
+
+ns2:Historial_137 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_138 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_13" .
+
+ns2:Historial_139 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_7" .
+
 ns2:Historial_14 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_140 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_4" .
+
+ns2:Historial_141 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_2" .
+
+ns2:Historial_142 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_143 a ns2:Historial ;
+    ns2:DNI "423121121E" ;
+    ns2:Identificador "Producto_8" .
 
 ns2:Historial_15 a ns2:Historial ;
     ns2:DNI "4154454" ;
@@ -84,31 +260,315 @@ ns2:Historial_28 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "Producto_1" .
 
+ns2:Historial_29 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
 ns2:Historial_3 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_30 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_31 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_32 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_33 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_34 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_35 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_36 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_37 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_38 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_39 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
 
 ns2:Historial_4 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_3" .
 
+ns2:Historial_40 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_41 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_42 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_43 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_44 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_45 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_46 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_47 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_48 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_49 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_15" .
+
 ns2:Historial_5 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_50 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_51 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_4" .
+
+ns2:Historial_52 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_7" .
+
+ns2:Historial_53 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_6" .
+
+ns2:Historial_54 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_55 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_13" .
+
+ns2:Historial_56 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_57 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_1" .
+
+ns2:Historial_58 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_2" .
+
+ns2:Historial_59 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_4" .
 
 ns2:Historial_6 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_3" .
 
+ns2:Historial_60 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_14" .
+
+ns2:Historial_61 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_12" .
+
+ns2:Historial_62 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_11" .
+
+ns2:Historial_63 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_64 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_8" .
+
+ns2:Historial_65 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_4" .
+
+ns2:Historial_66 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_11" .
+
+ns2:Historial_67 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_6" .
+
+ns2:Historial_68 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_12" .
+
+ns2:Historial_69 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_2" .
+
 ns2:Historial_7 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_70 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_71 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_14" .
+
+ns2:Historial_72 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_15" .
+
+ns2:Historial_73 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_74 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_75 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_7" .
+
+ns2:Historial_76 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_13" .
+
+ns2:Historial_77 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_4" .
+
+ns2:Historial_78 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_79 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_8" .
 
 ns2:Historial_8 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_3" .
 
+ns2:Historial_80 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_1" .
+
+ns2:Historial_81 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_4" .
+
+ns2:Historial_82 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_4" .
+
+ns2:Historial_83 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_12" .
+
+ns2:Historial_84 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_5" .
+
+ns2:Historial_85 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_8" .
+
+ns2:Historial_86 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_87 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_15" .
+
+ns2:Historial_88 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_7" .
+
+ns2:Historial_89 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_1" .
+
 ns2:Historial_9 a ns2:Historial ;
     ns2:DNI "4154454" ;
     ns2:Identificador "ProductoEX_2" .
+
+ns2:Historial_90 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_6" .
+
+ns2:Historial_91 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_92 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_13" .
+
+ns2:Historial_93 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_14" .
+
+ns2:Historial_94 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_11" .
+
+ns2:Historial_95 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "Producto_2" .
+
+ns2:Historial_96 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_97 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
+
+ns2:Historial_98 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_3" .
+
+ns2:Historial_99 a ns2:Historial ;
+    ns2:DNI "4154454" ;
+    ns2:Identificador "ProductoEX_1" .
 

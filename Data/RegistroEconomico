@@ -1,0 +1,31 @@
+@prefix ns1: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:RegistroEconomico_0 a ns1:RegistroEconomico ;
+    ns1:Concepto "Compra_2"^^xsd:string ;
+    ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
+    ns1:CuentaOrigen "ESBN1235453"^^xsd:string ;
+    ns1:DNI "423121121E"^^xsd:string ;
+    ns1:Importe "250.0"^^xsd:float .
+
+ns1:RegistroEconomico_1 a ns1:RegistroEconomico ;
+    ns1:Concepto "ProductoEX_3"^^xsd:string ;
+    ns1:CuentaDestino "ESBN00909191"^^xsd:string ;
+    ns1:CuentaOrigen "ESBN8377228748"^^xsd:string ;
+    ns1:DNI "Nike"^^xsd:string ;
+    ns1:Importe "-250.0"^^xsd:float .
+
+ns1:RegistroEconomico_2 a ns1:RegistroEconomico ;
+    ns1:Concepto "Compra_3"^^xsd:string ;
+    ns1:CuentaDestino "ESBN8377228748"^^xsd:string ;
+    ns1:CuentaOrigen "ESNB1233321"^^xsd:string ;
+    ns1:DNI "423121121E"^^xsd:string ;
+    ns1:Importe "595.19"^^xsd:float .
+
+ns1:RegistroEconomico_3 a ns1:RegistroEconomico ;
+    ns1:Concepto "ProductoEX_3"^^xsd:string ;
+    ns1:CuentaDestino "ESBN00909191"^^xsd:string ;
+    ns1:CuentaOrigen "ESBN8377228748"^^xsd:string ;
+    ns1:DNI "Nike"^^xsd:string ;
+    ns1:Importe "-250.0"^^xsd:float .
+

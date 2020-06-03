@@ -86,7 +86,8 @@ gFirstOffers = Graph()
 dsgraph = Graph()
 
 cola1 = Queue()
-
+global obj
+obj = ""
 # Flask stuff
 app = Flask(__name__)
 
@@ -150,6 +151,7 @@ def communication():
             city=""
             priority=0.0
             centro=""
+            print(accion)
             if accion == ONTO.PedirPreciosEnvio:
                 for s, p, o in gm:
                     if p == ONTO.Peso:
@@ -218,33 +220,39 @@ def communication():
                 return gFinal.serialize(format="xml"),200
 
             elif accion == ONTO.EnviarPaquete:
-                global obj
                 for s, p, o in gm:
                     if p == ONTO.LoteFinal:
                         obj = str(o)
+                print("Lote entregado: "+ str(obj))
                 proceso = Process(target=entregar_producto, args=())
                 proceso.start()
-                grr = Graph()
-                return grr.serialize(format="xml"),200
+                obj = str(obj)
+
+                logger.info("Pedido entregado")
+                g = Graph()
+                action = ONTO["CobrarCompra_" + str(get_count())]
+                print("El lote es" + str(obj))
+                g.add((action, RDF.type, ONTO.CobrarCompra))
+                g.add((action, ONTO.LoteEntregado, Literal(obj)))
+                for s, p, o in g:
+                    print(s)
+                    print(p)
+                    print(o)
+                p = Process(target=avisar_entrega,args=(g,action))
+                p.start()
+                return g.serialize(format='xml'),200
 
             else: # CAL??
                 grr = Graph()
                 return grr.serialize(format="xml"),200
 
-
-def entregar_producto(idLote=""):
-    time.sleep(5)
-    print("entrergat :)")
-    g = Graph()
-    action = ONTO["CobrarCompra_" + str(get_count())]
-    g.add((action, RDF.type, ONTO.CobrarCompra))
-    g.add((action, ONTO.LoteEntregado, Literal(idLote)))
-    for s, p, o in g:
-        print(s)
-        print(p)
-        print(o)
+def avisar_entrega(g=Graph(),action=""):
+    time.sleep(3)
     send_message(
         build_message(g, ACL.request, AgTransportista.uri, AgCentroLogistico.uri, action, get_count()), AgCentroLogistico.address)
+def entregar_producto():
+    grr = Graph()
+    return grr.serialize(format="xml"),200
 
 
 @app.route("/Stop")

@@ -171,16 +171,21 @@ def communication():
                 graphrespuesta.add((accion,RDF.type,ONTO.PagarVendedorExterno))
                 if nombre_empresa != "Nike" and nombre_empresa != "IKEA" and nombre_empresa != "Apple":
                     return graphrespuesta.serialize(format='xml'),200
-                elif accion == ONTO.AvisarEnvio:
-                    g = Graph()
-                    action = ONTO["AvisarEnvio_" + str(get_count())]
-                    g.add((action, RDF.type, ONTO.AvisarEnvio))
-                    print("recibidooooo")
-                    return g.serialize(format="xml"),200
                 else:
                     global numeros_cuenta
+                    graphrespuesta = Graph()
+                    accion=ONTO["PagarVendedorExterno"]
+                    graphrespuesta.add((accion,RDF.type,ONTO.PagarVendedorExterno))
                     graphrespuesta.add((accion,ONTO.NumeroCuenta,Literal(numeros_cuenta[str(nombre_empresa)])))
+                    print(numeros_cuenta[str(nombre_empresa)])
                     return graphrespuesta.serialize(format='xml'),200
+            elif accion == ONTO.AvisarEnvio:
+                 g = Graph()
+                 action = ONTO["AvisarEnvio_" + str(get_count())]
+                 g.add((action, RDF.type, ONTO.AvisarEnvio))
+                 print("recibidooooo")
+                 return g.serialize(format="xml"),200
+
 
 
 
