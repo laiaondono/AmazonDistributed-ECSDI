@@ -98,7 +98,7 @@ productos_valorados = []
 productos_valorar_ok = []
 productos_valorar_no_permitido = []
 compraADevolver = ""
-devolucion = [2]
+devolucion = []
 producte_a_valorar = []
 producte_a_devolver = []
 esDevolucion = False
@@ -162,14 +162,13 @@ def comunicacion():
             content = msgdic['content']
             # Averiguamos el tipo de la accion
             accion = gm.value(subject=content, predicate=RDF.type)
-            #Factura completa
-            print(accion)
+
             if accion == ONTO.ProcesarEnvio:
                 global grafo_respuesta
                 grafo_respuesta = gm
                 global completo
                 completo = True
-                gr =Graph()
+                gr = Graph()
                 return gr.serialize(format="xml"),200
 
             # Accion de valorar
@@ -200,11 +199,9 @@ def comunicacion():
                 return gr.serialize(format="xml"),200
 
 
-
-
-
 def hacer_redirect():
     return flask.redirect("http://%s:%d/" % (hostname, port))
+
 
 @app.route("/Stop")
 def stop():
@@ -363,7 +360,7 @@ def mis_productos():
                 info = {'producto': nombre, 'compra': compra}
                 my_products.append(info)
         if not esDevolucion:
-            devolucion = [2]
+            devolucion = []
         else:
             esDevolucion = False
         return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False, datosDevolucion = devolucion)
@@ -399,29 +396,31 @@ def mis_productos():
             gDevolucion.add((accion, ONTO.ProductoADevolver, productoSuj))
             gDevolucion.add((accion, ONTO.MotivoDevolucion, Literal(motivo)))
             gDevolucion.add((accion, ONTO.CompraDevolucion, compraSuj))
+
             msg = build_message(gDevolucion,ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             g = send_message(msg,AgGestorDevoluciones.address)
-
             for s, p, o in g:
                 if p == ONTO.DireccionEnvio:
-                    devolucion[0] = str(o)
+                    devolucion.append(['direccionenvio', str(o)])
                 if p == ONTO.EmpresaMensajeria:
-                    devolucion[1] = str(o)
+                    devolucion.append(['empresamensajeria', str(o)])
             esDevolucion = True
-            return flask.redirect("http://%s:%d/mis_productos" % (hostname, port))
+            return flask.redirect("http://%s:%d/misproductos" % (hostname, port))
 
         elif request.form['submit'] == 'Producto devuelto':
-            producto = request.form['producto']
-            compra = request.form['compra']
+            producto = request.form['productoDevuelto']
+            compraDevuelta = request.form['compraDevuelta']
             accion = ONTO["FinalizarDevolucion_" + str(get_count())]
             g = Graph()
             g.add((accion, RDF.type, ONTO.FinalizarDevolucion))
             g.add((accion, ONTO.ProductoADevolver, Literal(producto)))
             g.add((accion, ONTO.DevueltoPor, Literal(nombreusuario)))
-            g.add((accion, RDF.CompraDevolucion, compra))
+            g.add((accion, ONTO.CompraDevolucion, Literal(compraDevuelta)))
+
             msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             send_message(msg, AgGestorDevoluciones.address)
             # TODO ya se ha procesado tu devolucion
+            return flask.redirect("http://%s:%d/" % (hostname, port))
 
 
 
