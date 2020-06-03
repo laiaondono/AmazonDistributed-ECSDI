@@ -294,7 +294,7 @@ def mis_productos():
     global devolucion
     #TODO html misp roductos 1 equivocado 2 defectuoso 3 no lo quiero
     if request.method == 'GET':
-        PedidosFile = open('../Data/Valoraciones')
+        PedidosFile = open('../Data/RegistroPedidos')
         graphpedidos = Graph()
         graphpedidos.parse(PedidosFile, format='turtle')
         subjects_products=[]
@@ -310,66 +310,24 @@ def mis_productos():
         graphpedidos = Graph()
         graphpedidos.parse(PedidosFile, format='turtle')
         subjects_compra = []
-        productos_user = []
         for s,p,o in graphpedidos:
             if p == ONTO.DNI and str(o) == nombreusuario:
                 subjects_compra.append(s)
-        for s,p,o in graphpedidos:
-            if s in subjects_compra and p == ONTO.ProductosCompra:
-                productos_user.append([str(o), str(s)])
-
-        print(productos_user)
-        print()
-        print()
-        print()
-        for producto in productos_user:
-            PedidosFile = open('../Data/Productos')
-            graphproductos = Graph()
-            graphproductos.parse(PedidosFile, format='xml')
-            PedidosFile = open('../Data/ProductosExternos')
-            graphproductosexternos = Graph()
-            graphproductosexternos.parse(PedidosFile, format='xml')
-            query ="""prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            prefix xsd:<http://www.w3.org/2001/XMLSchema#>
-            prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
-            prefix owl:<http://www.w3.org/2002/07/owl#>
-            SELECT DISTINCT ?producto ?nombre ?marca ?id
-            where {
-                { ?producto rdf:type default:Producto }.
-            ?producto default:Nombre ?nombre .
-            ?producto default:PrecioProducto ?precio .
-            ?producto default:Marca ?marca .
-            ?producto default:Identificador ?id .
-            ?producto default:Valoracion ?valoracion .
-            FILTER( str(?nombre) = '""" + str(producto[0])+"""')}"""
-            graphproductos = graphproductos.query(query)
-            graphproductosexternos = graphproductosexternos.query(query)
-            for row in graphproductos:
-                info = {'producto': row.nombre, 'identificador': row.id, 'marca': row.marca}
-                for i, p in enumerate(productos_user):
-                    if str(p[0]) == str(row.nombre):
-                        print(p[0])
-                        print(row.nombre)
-                        print("it " + str(i))
-                        info['compra'] = p[1]
-                        print(info)
-                        productos_user.pop(i)
-                        if i > 0:
-                            i -= 1
-                        break
-                        #10, 13 2 4 18 20 16 9 15 7 21 3 17 3 2 14 19 12 5 11 8
-
-                #TODO relacionar cada producte amb la compra a la que pertany
-
+        for sub in subjects_products:
+            nombre_productos = []
+            compra = ""
+            for s,p,o in graphpedidos:
+                if str(s) == sub and p == ONTO.ProductosCompra:
+                    nombre_productos.append(str(o))
+                elif str(s) == sub and p == ONTO.Lote:
+                    compra = str(o[49:])
+            for nombre in nombre_productos:
+                info = {'producto': nombre, 'compra': compra}
                 my_products.append(info)
-            for row in graphproductosexternos:
-                info = {'producto': row.nombre, 'identificador': row.id, 'marca': row.marca}
-                my_products.append(info)
-            #print(my_products)
-            if not esDevolucion:
-                devolucion = [2]
-            else:
-                esDevolucion = False
+        if not esDevolucion:
+            devolucion = [2]
+        else:
+            esDevolucion = False
         return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False, datosDevolucion = devolucion)
     else:
         if request.form['submit'] == 'Valorar':
@@ -394,15 +352,15 @@ def mis_productos():
         elif request.form['submit'] == 'Devolver':
             producto = request.form['producto']
             motivo = request.form['motivo']
-            #compra = request.form['compra']
+            compra = request.form['compra']
             gDevolucion = Graph()
             accion = ONTO["DevolverProducto_" + str(get_count())]
             gDevolucion.add((accion, RDF.type, ONTO.DevolverProducto))
             productoSuj = ONTO[producto]
-            #compraSuj = ONTO[compra]
+            compraSuj = ONTO[compra]
             gDevolucion.add((accion, ONTO.ProductoADevolver, productoSuj))
             gDevolucion.add((accion, ONTO.MotivoDevolucion, Literal(motivo)))
-            #gDevolucion.add((accion, ONTO.CompraDevolucion, compraSuj))
+            gDevolucion.add((accion, ONTO.CompraDevolucion, compraSuj))
             msg = build_message(gDevolucion,ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             g = send_message(msg,AgGestorDevoluciones.address)
 
@@ -416,13 +374,13 @@ def mis_productos():
 
         elif request.form['submit'] == 'Producto devuelto':
             producto = request.form['producto']
-            #compra = request.form['compra']
+            compra = request.form['compra']
             accion = ONTO["FinalizarDevolucion_" + str(get_count())]
             g = Graph()
             g.add((accion, RDF.type, ONTO.FinalizarDevolucion))
             g.add((accion, ONTO.ProductoADevolver, Literal(producto)))
             g.add((accion, ONTO.DevueltoPor, Literal(nombreusuario)))
-            #g.add((accion, RDF.CompraDevolucion, compra))
+            g.add((accion, RDF.CompraDevolucion, compra))
             msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             send_message(msg, AgGestorDevoluciones.address)
             # TODO ya se ha procesado tu devolucion
