@@ -12,19 +12,24 @@ Asume que el agente de registro esta en el puerto 9000
 @author: pau-laia-anna
 """
 
-from multiprocessing import Process, Queue
+import random
 import socket
+import string
+from multiprocessing import Queue, Process
+from flask import Flask, request
+from pyparsing import Literal
+import requests
+from rdflib import Namespace, Graph, RDF, Literal, URIRef, XSD
 
-import flask
-from rdflib import Namespace, Graph, RDF, Literal, URIRef
-from flask import Flask, request, render_template
-
+from Agentes import AgCentroLogistico
 from Util.ACLMessages import *
-from Util.FlaskServer import shutdown_server
 from Util.Agent import Agent
-from Util.OntoNamespaces import ONTO, ACL
 from Util.Logging import config_logger
+from Util.OntoNamespaces import ONTO, ACL
+
+from datetime import datetime
 import time
+from Util.FlaskServer import shutdown_server
 __author__ = 'pau-laia-anna'
 logger = config_logger(level=1)
 
@@ -147,10 +152,11 @@ def comunicacion():
                 PedidosFile.close()
                 return gr.serialize(format="xml"),200
 
-            elif accion == ONTO.ValorarPermitido:
+            elif accion == ONTO.ConfirmarValoracion:
+                logger.info("Compra entregada. Ya se pueden valorar productos.")
                 # Avisamos al AgAsistente de que ya se puede realizar la valoracion de los productos del grafo
-                empezar_proceso = Process(target=Valorar, args=(gm,accion))
-                empezar_proceso.start()
+                #empezar_proceso = Process(target=confirmar_valoracion, args=(gm,accion))
+                #empezar_proceso.start()
 
                 #Returnem ACK al AgGestorCompra conforme ho hem rebut
                 grr = Graph()
@@ -224,9 +230,9 @@ def comunicacion():
                     newgraph = Graph()
                     for s, p, o in graphproductos:
                         if str(s) == subject and p == ONTO.Valoracion:
-                            graphproductos.set((s,p,Literal(float(nueva_valoracion))))
+                            graphproductos.set((s,p,Literal(float(nueva_valoracion),datatype=XSD.float)))
                         elif str(s) == subject and p == ONTO.CantidadValoraciones:
-                            graphproductos.set((s,p,Literal(int(cantidad_prod))))
+                            graphproductos.set((s,p,Literal(int(cantidad_prod),datatype=XSD.float)))
                     ProductosFile = open('C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos','wb')
                     ProductosFile.write(graphproductos.serialize(format='xml'))
                 return graphproductos.serialize(format='xml'),200
@@ -237,9 +243,17 @@ def comunicacion():
 
 
 
-def Valorar(gm, accion):
-    msg = build_message(gm, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri, accion, get_count())
+def confirmar_valoracion(gm, accion):
+    """
+    graph_conf =Graph()
+    action = ONTO["ValorarPermitido"]
+    graph_conf.add((action,RDF.type,ONTO.ValorarPermitido))
+    for s,p,o in gm:
+        if p == ONTO.ProductosCompra:
+            graph_conf.add((action,ONTO.Nombre,Literal(str(o))))
+    msg = build_message(graph_conf, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri, accion, get_count())
     send_message(msg, AgAsistente.address)
+    """
     return
 
 def recomendar():

@@ -22,7 +22,7 @@
     <rdf:type rdf:resource="http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto"/>
     <OntologiaECSDI:PrecioProducto rdf:datatype="http://www.w3.org/2001/XMLSchema#double">850.0</OntologiaECSDI:PrecioProducto>
     <OntologiaECSDI:Categoria>Tecnologia</OntologiaECSDI:Categoria>
-    <OntologiaECSDI:Nombre>Televisor PST 50'</OntologiaECSDI:Nombre>
+    <OntologiaECSDI:Nombre>Televisor PST 50</OntologiaECSDI:Nombre>
     <OntologiaECSDI:CantidadValoraciones>1</OntologiaECSDI:CantidadValoraciones>
     <OntologiaECSDI:Marca>AmazonECSDI</OntologiaECSDI:Marca>
   </rdf:Description>

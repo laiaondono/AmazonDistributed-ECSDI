@@ -84,6 +84,10 @@ AgServicioPago = Agent('AgServicioPago',
                        agn.AgServicioPago,
                        'http://%s:9019/comm' % hostname,
                        'http://%s:9019/Stop' % hostname)
+AgVendedorExterno = Agent('AgVendedorExterno',
+                          agn.AgVendedorExterno,
+                          'http://%s:9018/comm' % hostname,
+                          'http://%s:9018/Stop' % hostname)
 
 # Global triplestore graph
 dsgraph = Graph()
@@ -121,7 +125,7 @@ def communication():
 
     msgdic = get_message_properties(gm)
     global graph_compra
-    global precio_total_compra
+    global precio_total_compra,mss_cnt
     gr = None
     if msgdic is None:
         # Si no es, respondemos que no hemos entendido el mensaje
@@ -233,11 +237,32 @@ def communication():
                             subject = s
                 g = Graph()
                 g.add((accion, RDF.type, ONTO.CobrarCompra))
+                productos_externos= []
                 for s,p,o in graphpedidos:
                     if str(s) == str(subject):
                         if p == ONTO.ProductosCompra:
                             print(str(o))
-                            g.add((accion, ONTO.ProductosCompra, Literal(str(o))))
+                            ProductosExternosFile = open("C:/Users/pauca/Documents/GitHub/ECSDI_Practica/Data/ProductosExternos")
+                            grafo_productos_externos = Graph()
+                            grafo_productos_externos.parse(ProductosExternosFile,format='xml')
+                            query= """
+                                prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                                prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+                                prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
+                                prefix owl:<http://www.w3.org/2002/07/owl#>
+                                SELECT DISTINCT ?producto ?id ?empresa ?precio
+                                where {
+                                { ?producto rdf:type default:Producto }.
+                                ?producto default:Identificador ?id . 
+                                ?producto default:Empresa ?empresa .
+                                ?producto default:PrecioProducto ?precio .
+                                ?producto default:Nombre ?nombre .
+                                FILTER( ?nombre = '"""+str(o)+"""')}"""
+                            grafo_productos_externos = grafo_productos_externos.query(query)
+                            for row in grafo_productos_externos:
+                                prod = {'identificador':row.id,'empresa':row.empresa,'precio':row.precio}
+                                productos_externos.append(prod)
+                                break
                         if p == ONTO.TarjetaCredito:
                             print(str(o))
                             g.add((accion, ONTO.TarjetaCredito, Literal(str(o))))
@@ -247,43 +272,47 @@ def communication():
                         if p == ONTO.PrecioTotal:
                             print(str(o))
                             g.add((accion, ONTO.PrecioTotal, Literal(float(o))))
-
                 #lote = gm.value(subject=accion, predicate=ONTO.LoteEntregado)
                 g.add((accion, ONTO.LoteEntregado, Literal(subject[49:])))
                 msg = build_message(g, ACL.request, AgGestorCompra.uri, AgServicioPago.uri, accion, get_count())
                 send_message(msg, AgServicioPago.address)
-                # Avisamos al AgProcessadorOpiniones de que ya se puede realizar la valoracion
-                empezar_proceso = Process(target=avisar_valoracion, args=())
-                empezar_proceso.start()
+                print(productos_externos)
+                for prod in productos_externos:
+                    print(prod['precio'])
+                    graphpago = Graph()
+                    accion = ONTO["PagarVendedorExterno"]
+                    graphpago.add((accion,RDF.type,ONTO.PagarVendedorExterno))
+                    graphpago.add((accion,ONTO.PrecioTotal,Literal(prod['precio'])))
+                    graphpago.add((accion,ONTO.DNI,Literal(prod['empresa'])))
+                    graphpago.add((accion,ONTO.NombreProducto,Literal(prod['identificador'])))
+                    g = Graph()
+                    action = ONTO["PagarVendedorExterno"]
+                    print("Pedimos a la empresa "+ str(prod['empresa']) + " el numero de cuenta.")
+                    g.add((action, RDF.type,ONTO.PagarVendedorExterno))
+                    g.add((action,ONTO.Nombre, Literal(prod['empresa'])))
+                    msg = build_message(g, ACL.request, AgServicioPago.uri, AgVendedorExterno.uri, action, mss_cnt)
+                    mss_cnt += 1
+                    gnumerocuenta= send_message(msg, AgVendedorExterno.address)
+                    numero_cuenta = ""
+                    for s,p,o in gnumerocuenta:
+                        if p == ONTO.NumeroCuenta:
+                            numero_cuenta = str(o)
+                            break
+                    graphpago.add((accion,ONTO.CuentaDestino,Literal(numero_cuenta)))
+                    msg = build_message(graphpago, ACL.request, AgGestorCompra.uri, AgServicioPago.uri, action, mss_cnt)
+                    mss_cnt += 1
+                    print("Solicitamos el pago de "+ str(prod['identificador']) + ' a la empresa ' +str(prod['empresa']) + "con numero de cuenta "+ str(numero_cuenta))
+                    send_message(msg, AgServicioPago.address)
+                g = Graph()
+                g.add((ONTO["ConfirmarValoracion"],RDF.type,ONTO.ConfirmarValoracion))
+                g.add((ONTO["ConfirmarValoracion"], ONTO.LoteEntregado, Literal(subject[49:])))
+                msg = build_message(g, ACL.request, AgGestorCompra.uri, AgProcesadorOpiniones.uri, ONTO["ConfirmarValoracion"], get_count())
+                send_message(msg, AgProcesadorOpiniones.address)
+
 
                 #Returnem ACK al AgServicioPago conforme ho hem rebut
                 grr = Graph()
                 return grr.serialize(format="xml"),200
-
-def avisar_valoracion():
-    global graph_compra
-
-    # Avisar al AgProcesadorOpiniones que ja pot valorar els productes del graf.
-    graph_valoracio = Graph()
-
-    accion = ONTO["ValorarProducto" + str(get_count())]
-    graph_valoracio.add((accion, RDF.type, ONTO.ValorarProducto))
-
-    msgdic = get_message_properties(graph_compra)
-    content = msgdic['content']
-
-    productos = graph_compra.objects(content, ONTO.ProductosPedido)
-    for producto in productos:
-        # Generamos un nuevo objeto producto y lo añadimos a la relacion
-        nombreProd = graph_compra.value(subject=producto, predicate=ONTO.Nombre)
-        nomSuj = graph_compra.value(predicate=ONTO.Nombre, object=nombreProd)
-        graph_valoracio.add((nomSuj, RDF.type, ONTO.Producto))
-        graph_valoracio.add((nomSuj, ONTO.Nombre, nombreProd))
-        graph_valoracio.add((accion, ONTO.ProductosValoracion, URIRef(nomSuj)))
-
-    msg = build_message(graph_valoracio, ACL.request, AgGestorCompra.uri, AgProcesadorOpiniones.uri, accion, get_count())
-    send_message(msg, AgProcesadorOpiniones.address)
-    return
 
 
 
