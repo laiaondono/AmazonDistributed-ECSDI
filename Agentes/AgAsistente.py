@@ -102,6 +102,7 @@ devolucion = []
 producte_a_valorar = []
 producte_a_devolver = []
 esDevolucion = False
+esdev = False
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -317,7 +318,7 @@ def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = No
 
 @app.route("/misproductos", methods=['GET', 'POST'])
 def mis_productos():
-    global nombreusuario, esDevolucion
+    global nombreusuario, esDevolucion, esdev
     global productos_valorar_no_permitido
     global my_products
 
@@ -368,18 +369,21 @@ def mis_productos():
             devolucion = []
         else:
             esDevolucion = False
-        return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False, datosDevolucion = devolucion)
+        return render_template('mis_productos.html', products=my_products, usuario=nombreusuario, intento = False, datosDevolucion = devolucion, esdev = esdev)
     else:
         if request.form['submit'] == 'Valorar':
-
+            esdev = False
             producto = request.form['producto']
-            val = float(request.form['valoracion'])
+            val = request.form['valoracion']
             graphvaloracion = Graph()
             accion = ONTO["ValorarProducto"]
-            if producto == "" or val < 1 or val > 5:
-                return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True)
+            if val == "":
+                return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True, esdev = False)
+            if producto == "" or float(val) < 1 or float(val) > 5:
+                print("ENTROO")
+                return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True, esdev = False)
             if (producto in productos_valorar_no_permitido):
-                return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = False,valorado = True)
+                return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = False,valorado = True, esdev = False)
             graphvaloracion.add((accion,RDF.type,ONTO.ValorarProducto))
             graphvaloracion.add((accion,ONTO.DNI,Literal(nombreusuario)))
             graphvaloracion.add((accion,ONTO.Nombre,Literal(producto)))
@@ -390,6 +394,7 @@ def mis_productos():
             return flask.redirect("http://%s:%d/" % (hostname, port))
 
         elif request.form['submit'] == 'Devolver':
+            esdev = True
             producto = request.form['producto']
             motivo = request.form['motivo']
             compra = request.form['compra']
@@ -413,6 +418,7 @@ def mis_productos():
             return flask.redirect("http://%s:%d/misproductos" % (hostname, port))
 
         elif request.form['submit'] == 'Producto devuelto':
+            esdev = False
             producto = request.form['productoDevuelto']
             compraDevuelta = request.form['compraDevuelta']
             accion = ONTO["FinalizarDevolucion_" + str(get_count())]

@@ -66,14 +66,16 @@
             {% if intentomotivo %}
                 <p style="color:red;"> Por favor, pon un motivo válido entre 1 y 3.</p>
             {% endif %}
-            {% if not datosDevolucion %}
-                <p>Tu solicitud de devolución no ha sido aceptada.</p>
-            {% else %}
-                <p>Tu solicitud de devolución ha sido aceptada.</p>
-                <p>Para realizar la devolución, envía el producto a la empresa de mensajería {{ datosDevolucion[0][1] }} y a la dirección de envio {{ datosDevolucion[1][1] }}</p>
-                <input type="text" name="productoDevuelto" placeholder="Nombre Producto"/>
-                <br><input type="text" name="compraDevuelta" placeholder="Compra"/><br>
-                <input type="submit" name="submit" value="Producto devuelto">
+            {% if esdev %}
+                {% if not datosDevolucion %}
+                    <p style="color:red;">Tu solicitud de devolución no ha sido aceptada.</p>
+                {% else %}
+                    <p style="color:green;">Tu solicitud de devolución ha sido aceptada.</p>
+                    <p style="color:green;">Para realizar la devolución, envía el producto a la empresa de mensajería {{ datosDevolucion[0][1] }} y a la dirección de envio {{ datosDevolucion[1][1] }}</p>
+                    <input type="text" name="productoDevuelto" placeholder="Nombre Producto"/>
+                    <br><input type="text" name="compraDevuelta" placeholder="Compra"/><br>
+                    <input type="submit" name="submit" value="Producto devuelto">
+                {% endif %}
             {% endif %}
             <p>Si desea valorar el producto, introduce la nota del 1 al 5 en el siguiente espacio.</p>
             <input type="text" name="valoracion" placeholder="Valoración (1-5)"/>
