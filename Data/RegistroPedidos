@@ -1,21 +1,5 @@
 @prefix ns2: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ns2:Compra_0 a ns2:Compra ;
-    ns2:Ciudad "Barcelona"^^xsd:string ;
-    ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-08 18:29:42.962563"^^xsd:string ;
-    ns2:Lote ns2:Compra_0 ;
-    ns2:NombreTransportista "SEUR"^^xsd:string ;
-    ns2:PrecioTotal "1022.0453451875375"^^xsd:float ;
-    ns2:ProductosCompra "Auriculares K430"^^xsd:string,
-        "Gafas Running X549"^^xsd:string,
-        "Gorra Flow"^^xsd:string,
-        "Gorra Nike"^^xsd:string,
-        "Mesa estudio IKEA"^^xsd:string,
-        "Pack Bombillas Bajo consumo"^^xsd:string,
-        "Raqueta tennis XPro"^^xsd:string,
-        "Zapatillas Nike Pegasus"^^xsd:string,
-        "Zapatillas V3"^^xsd:string ;
-    ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
+
 
