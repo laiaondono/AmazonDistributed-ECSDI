@@ -145,7 +145,7 @@ def comunicacion():
 
                     fechaCompra = datetime.datetime.strptime(fecha, '%Y-%m-%d %H:%M:%S.%f')
                     dias_pasados = fechaCompra - datetime.datetime.now()
-                    if dias_pasados.seconds > 30: #TODO mirar unitats --> posar 30 segons
+                    if dias_pasados.seconds > 30:
                         g = Graph()
                         g.add((accion, RDF.type, ONTO.DevolverProducto))
                         return g.serialize(format="xml"),200
@@ -206,7 +206,7 @@ def comunicacion():
                     if str(s) != str(idcompra) and str(o) != str(producto):
                         gr.add((s, p, o))
 
-                #PedidosFile = open('../Data/RegistroPedidos', 'wb') #TODO
+                #PedidosFile = open('../Data/RegistroPedidos', 'wb')
                 #PedidosFile.write(gr.serialize(format='turtle'))
 
                 ProductosFile = open('../Data/Productos')

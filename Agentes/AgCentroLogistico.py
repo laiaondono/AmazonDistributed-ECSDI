@@ -126,8 +126,9 @@ def communication():
                 graph.add((action, RDF.type, ONTO.PedirPreciosEnvio))
                 graph.add((lote,RDF.type,ONTO.Lote))
                 compraSujeto = ""
+                ciudadCL = ""
                 productos = []
-                for s,p,o in gm:
+                for s, p, o in gm:
                     if p == ONTO.Ciudad:
                         graph.add((lote, ONTO.Ciudad, Literal(o,datatype=XSD.string)))
                         compraSujeto = s
@@ -137,10 +138,11 @@ def communication():
                         graph.add((lote, ONTO.PrioridadEntrega, Literal(o,datatype=XSD.float)))
                     elif p == ONTO.NombreCL:
                         graph.add((lote, ONTO.NombreCL,Literal(o,datatype=XSD.string)))
+                        ciudadCL = o
                     elif p == ONTO.PrecioTotal:
                         precioCompra = o.toPython()
                     elif p == ONTO.Peso:
-                        peso_total+=float(o)
+                        peso_total += float(o)
                     elif p == ONTO.Nombre:
                         productos.append(s)
                         graph.add((s, RDF.type, ONTO.Producto))
@@ -149,8 +151,12 @@ def communication():
                 graph.add((lote, ONTO.Peso, Literal(peso_total,datatype=XSD.float)))
                 #La accion es pedir precios envio, y conteine un lote como informacion.
                 graph.add((action, ONTO.Lote, lote))
+
+                logger.info("Pedimos los precios de envío a los transportistas del centro logístico de " + ciudadCL)
                 gr = send_message(
                     build_message(graph, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, action, count), AgTransportista.address)
+
+                logger.info("Hemos recibido las ofertas iniciales")
 
                 gContraoferta = Graph()
                 action = ONTO["PedirControfertasPreciosEnvio_"+ str(count)]
@@ -168,10 +174,15 @@ def communication():
                     precio = gr.value(subject=t, predicate=ONTO.PrecioTransporte)
                     if precio_min > precio.toPython():
                         precio_min = precio.toPython()
-                contraoferta = precio_min * random.uniform(0.85, 0.97)
+                contraoferta = precio_min * random.uniform(0.85, 0.95)
                 gContraoferta.add((action, ONTO.PrecioTransporte, Literal(contraoferta)))
+
+                logger.info("Pedimos que rebajen los precios ofreciéndoles una contraoferta de " + str(contraoferta) + " €")
+
                 gFinal = send_message(
                     build_message(gContraoferta, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, action, count), AgTransportista.address)
+
+                logger.info("Hemos recibido las contraofertas de los transportistas")
 
                 precioFinal = sys.maxsize
                 transportistas = []
@@ -182,6 +193,8 @@ def communication():
                 transportistaFinal = "nom"
                 fechaFinal = "data"
                 if transportistas is not None:
+                    logger.info("Algun transportista ha ofrecido una contraoferta")
+                    logger.info("Elejimos el transportista que ha ofrecido una contraoferta más barata")
                     for t in transportistas:
                         precio = gFinal.value(subject=t, predicate=ONTO.PrecioTransporte)
                         if precio.toPython() < precioFinal:
@@ -190,6 +203,7 @@ def communication():
                             idTransportistaFinal = gFinal.value(subject=t, predicate=ONTO.Identificador)
                             fechaFinal = gFinal.value(subject=t, predicate=ONTO.Fecha)
                 else:
+                    logger.info("Todos los transportistas han rechazado la contraoferta")
                     for t in gr.objects(content, ONTO.Transportista):
                         precio = gr.value(subject=t, predicate=ONTO.PrecioTransporte)
                         if precio.toPython() < precioFinal:
@@ -197,7 +211,7 @@ def communication():
                             transportistaFinal = gFinal.value(subject=t, predicate=ONTO.Nombre)
                             idTransportistaFinal = gFinal.value(subject=t, predicate=ONTO.Identificador)
                             fechaFinal = gFinal.value(subject=t, predicate=ONTO.Fecha)
-
+                precioEnvio = precioFinal
                 precioFinal += precioCompra
 
                 transportista = ONTO[idTransportistaFinal]
@@ -213,7 +227,8 @@ def communication():
                 grafo_confirmacion.add((accion, ONTO.Identificador, Literal(idTransportistaFinal)))
                 grafo_confirmacion.add((transportista, ONTO.NombreTransportista, Literal(transportistaFinal)))
                 grafo_confirmacion.add((accion, ONTO.LoteFinal, idLote))
-                #grafo_confirmacion.add((action, ONTO.Compra, idLote))
+
+                logger.info("El transportista elejido es " + transportistaFinal + ", que entregará el lote por " + str(precioEnvio))
 
                 hay_prod_ext = False
                 for p in productos:
@@ -271,12 +286,18 @@ def tidyup():
 
     """
     pass
+
+
 def confirmacion_entregado_gestor(g=Graph(),action=""):
     send_message(
         build_message(g, ACL.request, AgCentroLogistico.uri, AgGestorCompra.uri, action, get_count()), AgGestorCompra.address)
+
+
 def confirmacion(g=Graph(),action=""):
     send_message(
         build_message(g, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, action, get_count()), AgTransportista.address)
+
+
 def agentbehavior1(cola):
     """
     Un comportamiento del agente

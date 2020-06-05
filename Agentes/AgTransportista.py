@@ -163,10 +163,13 @@ def communication():
                     elif p == ONTO.NombreCL:
                         centro = str(o)
 
+                logger.info("Hemos recibido un lote del centro logístico de " + city + " para ser entregado")
+                logger.info("Calculamos el precio que cada transportista pide por el envío de este lote")
+
                 #id transoprtista, nombre, fecha prevista y precio
                 action = ONTO["PedirPreciosEnvio_"+str(get_count())]
                 gOfertas = Graph()
-                gOfertas.add((action, RDF.type, ONTO.PedirPreciosEnvio)) #TODO afegir lote o compra!! al graf gofertas
+                gOfertas.add((action, RDF.type, ONTO.PedirPreciosEnvio))
                 cl = []
                 if centro == "Barcelona":
                     global bcn
@@ -191,18 +194,25 @@ def communication():
                     gOfertas.add((trSuj, ONTO.PrecioTransporte, Literal(precio_envio)))
                     logger.info("Transportista: " + tr[0] + " / Fecha: " + str(fecha)+  " / Precio_envio: "+ str(precio_envio))
                 gFirstOffers = gOfertas
+
+                for s, p, o in gOfertas:
+                    if p == ONTO.Nombre:
+                        for s2, p2, o2 in gOfertas:
+                            if s == s2 and p == ONTO.PrecioTransporte:
+                                logger.info("El transportista " + o + " ofrece un precio de " + str(o2.toPython()))
+
                 return gOfertas.serialize(format="xml"),200
 
             elif accion == ONTO.PedirContraofertasPreciosEnvio:
                 gFinal = gFirstOffers
-                #grr.remove(None, RDF.type, None)
                 action = ONTO["PedirContraofertasPreciosEnvio_"+str(get_count())]
                 gFinal.add((action, RDF.type, ONTO.PedirContraofertasPreciosEnvio))
-                #TODO treure acció pedir precios envio
 
                 for s, p, o in gm:
                     if p == ONTO.PrecioTransporte:
                         contraoferta = o
+
+                logger.info("Hemos recibido una contraoferta del centro logístico")
 
                 transportistas = []
                 for s, p, o in gFinal:
@@ -211,10 +221,12 @@ def communication():
                 for t in transportistas:
                     offer = gFinal.value(subject=t, predicate=ONTO.PrecioTransporte)
                     if contraoferta.toPython() < 0.75 * offer.toPython():
+                        logger.info("El transportista " + t[63:] + " rechaza la contraoferta")
                         gFinal.remove((t, None, None))
                         gFinal.remove((None, None, t))
                     else:
                         segunda_oferta = offer.toPython() * random.uniform(0.80, 0.97)
+                        logger.info("El transportista " + t[63:] + " acepta la contraoferta y ofrece un segundo precio de envío de " + str(segunda_oferta) + "€")
                         gFinal.set((t, ONTO.PrecioTransporte, Literal(segunda_oferta)))
                 return gFinal.serialize(format="xml"),200
 
