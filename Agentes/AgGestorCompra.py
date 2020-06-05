@@ -386,7 +386,7 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
         elif p == ONTO.NombreTransportista:
             grafrespuesta.add((compra,ONTO.NombreTransportista,Literal(o,datatype=XSD.string)))
         elif p == ONTO.Lote:
-            grafrespuesta.add((compra,ONTO.Lote,s)) # TODO pot estar malament
+            grafrespuesta.add((compra,ONTO.Lote,s))
     grafrespuesta.add((compra,ONTO.PrecioTotal,Literal(precio_total_compra, datatype=XSD.float)))
     graphfinal += grafrespuesta
     # Añadimos la nueva compra y lo escribimos otra vez.

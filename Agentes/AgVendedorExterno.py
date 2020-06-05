@@ -80,7 +80,7 @@ def add_product():
             productName = request.form['productName']
             price = request.form['price']
             brand = request.form['brand']
-            category = request.form['category'] #TODO aixo no es correcteeeee
+            category = request.form['category']
             weight = request.form['weight']
             global errorsList
             errorsList = ["no", "no", "no", "no"]

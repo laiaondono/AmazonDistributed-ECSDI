@@ -149,7 +149,6 @@ def communication():
                 graph.add((lote, ONTO.Peso, Literal(peso_total,datatype=XSD.float)))
                 #La accion es pedir precios envio, y conteine un lote como informacion.
                 graph.add((action, ONTO.Lote, lote))
-                # TODO FIPA-CONTRACT NEt
                 gr = send_message(
                     build_message(graph, ACL.request, AgCentroLogistico.uri, AgTransportista.uri, action, count), AgTransportista.address)
 
@@ -157,7 +156,7 @@ def communication():
                 action = ONTO["PedirControfertasPreciosEnvio_"+ str(count)]
                 gContraoferta.add((action, RDF.type, ONTO.PedirContraofertasPreciosEnvio))
                 gContraoferta.add((lote, RDF.type, ONTO.Lote))
-                gContraoferta.add((action, ONTO.LoteContraofertas, lote)) #TODO nomes passo sujeto lote
+                gContraoferta.add((action, ONTO.LoteContraofertas, lote))
 
 
                 transportista = []
@@ -167,7 +166,7 @@ def communication():
                 precio_min = sys.maxsize
                 for t in transportista:
                     precio = gr.value(subject=t, predicate=ONTO.PrecioTransporte)
-                    if precio_min > precio.toPython(): #TODO mirar si precio és float o literal
+                    if precio_min > precio.toPython():
                         precio_min = precio.toPython()
                 contraoferta = precio_min * random.uniform(0.85, 0.97)
                 gContraoferta.add((action, ONTO.PrecioTransporte, Literal(contraoferta)))
@@ -205,7 +204,7 @@ def communication():
                 gm.add((transportista,RDF.type,ONTO.Transportista))
                 gm.add((transportista,ONTO.NombreTransportista,Literal(transportistaFinal)))
                 gm.add((compraSujeto, ONTO.EntregadaPor, transportista))
-                gm.add((compraSujeto, ONTO.Lote, lote)) # TODO OJO que es SUJETOOOO NO OBJETO
+                gm.add((compraSujeto, ONTO.Lote, lote))
                 gm.add((compraSujeto, ONTO.FechaEntrega, Literal(fechaFinal)))
                 gm.add((compraSujeto, ONTO.PrecioTotal, Literal(precioFinal)))
                 grafo_confirmacion = Graph()

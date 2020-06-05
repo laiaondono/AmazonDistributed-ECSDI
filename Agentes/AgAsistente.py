@@ -248,7 +248,6 @@ def search_products():
                     return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
             else:
                 return flask.redirect("http://%s:%d/hacer_pedido" % (hostname, port))
-        # TODO modificar html x si no hi ha cap producte que cumpleixi restriccions
 
 
 def buscar_productos(name = None, minPrice = 0.0, maxPrice = 10000.0, brand = None, valoracion=0.0):
@@ -324,7 +323,6 @@ def mis_productos():
     global my_products
 
     global devolucion
-    #TODO html misp roductos 1 equivocado 2 defectuoso 3 no lo quiero
     if request.method == 'GET':
         ValoracionFile = open('../Data/Valoraciones')
         graphvaloracion = Graph()
@@ -430,7 +428,6 @@ def mis_productos():
 
             msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             send_message(msg, AgGestorDevoluciones.address)
-            # TODO ya se ha procesado tu devolucion
             return flask.redirect("http://%s:%d/" % (hostname, port))
 
 
@@ -439,7 +436,6 @@ def mis_productos():
 def hacer_pedido():
     global products_list
     if request.method == 'GET':
-        # TODO ciudad, prioridad  (que nomes pot ser 1, 2 o 3)y tarjeta credit no pot estar buida
         return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False,campos_error = False)
     else:
         if request.form['submit'] == 'Comprar':

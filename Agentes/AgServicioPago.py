@@ -191,7 +191,7 @@ def comunicacion():
             if accion == ONTO.DevolverDinero:
                 RegistroEconomicoFile = open('../Data/RegistroEconomico')
                 g = Graph()
-                g.parse(RegistroEconomicoFile, format='turtle') #TODO ojo format
+                g.parse(RegistroEconomicoFile, format='turtle')
                 total_registros = 0
                 for s, p, o in g:
                     if p == ONTO.Concepto:
@@ -230,7 +230,7 @@ def comunicacion():
             if accion == ONTO.CobrarVendedorExterno:
                 RegistroEconomicoFile = open('../Data/RegistroEconomico')
                 g = Graph()
-                g.parse(RegistroEconomicoFile, format='turtle') #TODO ojo format
+                g.parse(RegistroEconomicoFile, format='turtle')
                 total_registros = 0
                 for s, p, o in g:
                     if p == ONTO.Concepto:
