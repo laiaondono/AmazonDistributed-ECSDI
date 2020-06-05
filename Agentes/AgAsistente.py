@@ -432,6 +432,8 @@ def mis_productos():
             msg = build_message(g, ACL.request, AgAsistente.uri, AgGestorDevoluciones.uri, accion, mss_cnt)
             send_message(msg, AgGestorDevoluciones.address)
             return flask.redirect("http://%s:%d/" % (hostname, port))
+        else:
+            return flask.redirect("http://%s:%d/" % (hostname, port))
 
 
 
