@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Agente Buscador de productos.
+Agente Asistente.
+
 Esqueleto de agente usando los servicios web de Flask
 
 /comm es la entrada para la recepcion de mensajes del agente
@@ -8,7 +9,7 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
+
 
 @author: pau-laia-anna
 """
@@ -380,7 +381,6 @@ def mis_productos():
             if val == "":
                 return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True, esdev = False)
             if producto == "" or float(val) < 1 or float(val) > 5:
-                print("ENTROO")
                 return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = True, esdev = False)
             if (producto in productos_valorar_no_permitido):
                 return render_template('mis_productos.html', products=my_products, usuario=nombreusuario,intento = False,valorado = True, esdev = False)

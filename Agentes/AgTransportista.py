@@ -1,5 +1,6 @@
 """
-Agente Gestor de Compra.
+Agente Transportista
+
 Esqueleto de agente usando los servicios web de Flask
 
 /comm es la entrada para la recepcion de mensajes del agente
@@ -7,7 +8,6 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
 
 @author: pau-laia-anna
 """
@@ -189,7 +189,7 @@ def communication():
                     dist_fromcentro = calcular_distancia(centro, city)
                     precio_envio = peso_total * tr[2] + dist_fromcentro * tr[3]
                     gOfertas.add((trSuj, ONTO.PrecioTransporte, Literal(precio_envio)))
-                    print("Transportista: " + tr[0] + " / Fecha: " + str(fecha)+  " / Precio_envio: "+ str(precio_envio))
+                    logger.info("Transportista: " + tr[0] + " / Fecha: " + str(fecha)+  " / Precio_envio: "+ str(precio_envio))
                 gFirstOffers = gOfertas
                 return gOfertas.serialize(format="xml"),200
 
@@ -203,7 +203,6 @@ def communication():
                 for s, p, o in gm:
                     if p == ONTO.PrecioTransporte:
                         contraoferta = o
-                        #print("contraoferta: " + str(contraoferta))
 
                 transportistas = []
                 for s, p, o in gFinal:

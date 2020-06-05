@@ -1,36 +1,5 @@
 @prefix ns2: <http://www.owl-ontologies.com/OntologiaECSDI.owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ns2:Compra_0 a ns2:Compra ;
-    ns2:Ciudad "Shangai"^^xsd:string ;
-    ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-04 23:58:20.437391"^^xsd:string ;
-    ns2:Lote ns2:Compra_0 ;
-    ns2:NombreTransportista "FedEx"^^xsd:string ;
-    ns2:PrecioTotal "15.0"^^xsd:float ;
-    ns2:ProductosCompra "Gorra Nike"^^xsd:string ;
-    ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
 
-ns2:Compra_1 a ns2:Compra ;
-    ns2:Ciudad "Shangai"^^xsd:string ;
-    ns2:DNI "4154454" ;
-    ns2:FechaEntrega "2020-06-09 00:03:25.120401"^^xsd:string ;
-    ns2:Lote ns2:Compra_1 ;
-    ns2:NombreTransportista "FedEx"^^xsd:string ;
-    ns2:PrecioTotal "22.233119382663645"^^xsd:float ;
-    ns2:ProductosCompra "Gorra Nike"^^xsd:string ;
-    ns2:TarjetaCredito "ESNB1233321"^^xsd:string .
-
-ns2:Compra_2 a ns2:Compra ;
-    ns2:Ciudad "Mollet del Vallès"^^xsd:string ;
-    ns2:DNI "12345678E" ;
-    ns2:FechaEntrega "2020-06-05 00:36:41.284077"^^xsd:string ;
-    ns2:Lote ns2:Compra_2 ;
-    ns2:NombreTransportista "DHL"^^xsd:string ;
-    ns2:PrecioTotal "21799.162750102427"^^xsd:float ;
-    ns2:ProductosCompra "Coche AmazEC"^^xsd:string,
-        "Iphone XS"^^xsd:string,
-        "Movil S7 Plus"^^xsd:string,
-        "Pack Bombillas Bajo consumo"^^xsd:string ;
-    ns2:TarjetaCredito "ES40 4894 3948 4839"^^xsd:string .
 

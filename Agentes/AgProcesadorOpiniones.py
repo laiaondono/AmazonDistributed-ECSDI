@@ -1,5 +1,6 @@
 """
-Agente Buscador de productos.
+Agente ProcesadorOpiniones
+
 Esqueleto de agente usando los servicios web de Flask
 
 /comm es la entrada para la recepcion de mensajes del agente
@@ -7,7 +8,7 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
+
 
 @author: pau-laia-anna
 """
@@ -44,17 +45,7 @@ agn = Namespace("http://www.agentes.org#")
 mss_cnt = 0
 products_list = []
 
-# Datos del Agente
-global nombreusuario
-nombreusuario = ""
-global compra
-compra = False
-global grafo_respuesta
-grafo_respuesta = Graph()
-global info_bill
-info_bill = {}
-global completo
-completo = False
+
 AgProcesadorOpiniones = Agent('AgProcesadorOpiniones',
                     agn.AgProcesadorOpiniones,
                     'http://%s:%d/comm' % (hostname, port),
@@ -238,25 +229,6 @@ def comunicacion():
                     ProductosFile = open('../Data/ProductosExternos','wb')
                     ProductosFile.write(graphproductos.serialize(format='xml'))
                 return graphproductos.serialize(format='xml'),200
-
-
-
-
-
-
-
-def confirmar_valoracion(gm, accion):
-    """
-    graph_conf =Graph()
-    action = ONTO["ValorarPermitido"]
-    graph_conf.add((action,RDF.type,ONTO.ValorarPermitido))
-    for s,p,o in gm:
-        if p == ONTO.ProductosCompra:
-            graph_conf.add((action,ONTO.Nombre,Literal(str(o))))
-    msg = build_message(graph_conf, ACL.request, AgProcesadorOpiniones.uri, AgAsistente.uri, accion, get_count())
-    send_message(msg, AgAsistente.address)
-    """
-    return
 
 def recomendar():
     while True:

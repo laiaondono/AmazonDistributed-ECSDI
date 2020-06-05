@@ -126,35 +126,6 @@ def communication():
     return gr.serialize(format='xml'), 200
 
 
-@app.route("/searchtest")
-def busca():
-    """
-    Entrypoint de comunicacion
-    """
-    graph = Graph()
-    # WARNING: De moment no m'agafa el PATH relatiu, i li haig de posar l'absolut, s'ha de canviar depen de la màquina que ho executi.
-    ontologyFile = open('../Data/Productos')
-    graph.parse(ontologyFile, format='xml')
-    query = """
-        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
-        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
-        prefix owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?producto ?nombre ?precio 
-        where {
-            { ?producto rdf:type default:Producto } UNION { ?producto rdf:type default:Producto_externo } .
-            ?producto default:Nombre ?nombre .
-            ?producto default:PrecioProducto ?precio
-            FILTER(?precio <10000)
-               }order by asc(UCASE(str(?nombre)))"""
-
-    graph_query = graph.query(query)
-    result = []
-    for row in graph_query:
-        result.append(str(row.nombre) + "/" + str(row.precio))
-    return str(result)
-
-
 @app.route("/Stop")
 def stop():
     """
@@ -181,42 +152,6 @@ def agentbehavior1(cola):
     """
     pass
 
-def añadir_productos():
-    graph = Graph()
-    ontologyFile = open('../Data/Productos')
-    graph.parse(ontologyFile, format='xml')
-
-    for i in range(30):
-        subject = URIRef("http://www.owl-ontologies.com/OntologiaECSDI.owl#Producto_5PLUYF"+ str(random.randint(1000,20000)))
-        graph.add((subject, RDF.type, ONTO.Producto))
-        graph.add((subject, ONTO.Marca, Literal("Nike", datatype=XSD.string)))
-        graph.add((subject, ONTO.Valoracion, Literal(0.0, datatype=XSD.float)))
-        graph.add((subject, ONTO.PrecioProducto, Literal(random.randint(1000, 2000), datatype=XSD.float)))
-        graph.add((subject, ONTO.Identificador, Literal(str(random.randint(1000, 2000)), datatype=XSD.string)))
-        graph.add((subject, ONTO.Nombre, Literal("Producto_5PLUYF"+str(random.randint(1000,20000)), datatype=XSD.string)))
-    result = []
-    query = """
-        prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        prefix xsd:<http://www.w3.org/2001/XMLSchema#>
-        prefix default:<http://www.owl-ontologies.com/OntologiaECSDI.owl#>
-        prefix owl:<http://www.w3.org/2002/07/owl#>
-        SELECT DISTINCT ?producto ?nombre ?precio 
-        where {
-            { ?producto rdf:type default:Producto } UNION { ?producto rdf:type default:Producto_externo } .
-            ?producto default:Nombre ?nombre .
-            ?producto default:PrecioProducto ?precio
-            FILTER(?precio <10000)
-               }order by asc(UCASE(str(?nombre)))"""
-
-    graph_query = graph.query(query)
-    count = 0
-    for row in graph_query:
-        count+=1
-        result.append(str(row.nombre) + "/" + str(row.precio))
-    ofile  = open('../Data/Productos', "wb")
-    ofile.write(graph.serialize(format='xml'))
-    ofile.close()
-    return str(result)
 
 
 def buscar_productos(valoracion=0.0, marca=None, preciomin=0.0, preciomax=sys.float_info.max, nombre=None):

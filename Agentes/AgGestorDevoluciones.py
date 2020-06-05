@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec 27 15:58:13 2013
+Agente Gestor Devoluciones
 
 Esqueleto de agente usando los servicios web de Flask
 
@@ -9,7 +9,6 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
 
 @author: javier
 """

@@ -1,5 +1,6 @@
 """
-Agente Gestor de Compra.
+Agente Centro Logístico.
+
 Esqueleto de agente usando los servicios web de Flask
 
 /comm es la entrada para la recepcion de mensajes del agente
@@ -7,7 +8,6 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
 
 @author: pau-laia-anna
 """
@@ -229,7 +229,6 @@ def communication():
                 return gm.serialize(format="xml"), 200
 
             elif accion == ONTO.CobrarCompra:
-                print("Ya se ha entregado el envio, avisamos del cobro.")
                 for s,p,o in gm:
                     if p == ONTO.LoteEntregado:
                         idLote = str(o)
@@ -243,7 +242,6 @@ def communication():
                 grr = Graph()
                 return grr.serialize(format="xml"),200
             else:
-                # TODO respuesta pedirpreciosenvio y predir contraofertas
                 resposta= Graph()
                 return resposta.serialize(format="xml"),200
 

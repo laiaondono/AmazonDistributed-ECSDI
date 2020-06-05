@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Agente Gestor de Compra.
+
 Esqueleto de agente usando los servicios web de Flask
 
 /comm es la entrada para la recepcion de mensajes del agente
 /Stop es la entrada que para el agente
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
-
 @author: pau-laia-anna
 """
 
@@ -272,7 +272,7 @@ def communication():
                     graphpago.add((accion,ONTO.NombreProducto,Literal(prod['identificador'])))
                     g = Graph()
                     action = ONTO["PagarVendedorExterno"]
-                    print("Pedimos a la empresa "+ str(prod['empresa']) + " el numero de cuenta.")
+                    logger.info("Pedimos a la empresa "+ str(prod['empresa']) + " el numero de cuenta.")
                     g.add((action, RDF.type,ONTO.PagarVendedorExterno))
                     g.add((action,ONTO.Nombre, Literal(prod['empresa'])))
                     msg = build_message(g, ACL.request, AgServicioPago.uri, AgVendedorExterno.uri, action, mss_cnt)
@@ -286,7 +286,7 @@ def communication():
                     graphpago.add((accion,ONTO.CuentaDestino,Literal(numero_cuenta)))
                     msg = build_message(graphpago, ACL.request, AgGestorCompra.uri, AgServicioPago.uri, action, mss_cnt)
                     mss_cnt += 1
-                    print("Solicitamos el pago de "+ str(prod['identificador']) + ' a la empresa ' +str(prod['empresa']) + "con numero de cuenta "+ str(numero_cuenta))
+                    logger.info("Solicitamos el pago de "+ str(prod['identificador']) + ' a la empresa ' +str(prod['empresa']) + "con numero de cuenta "+ str(numero_cuenta))
                     send_message(msg, AgServicioPago.address)
 
                 g = Graph()

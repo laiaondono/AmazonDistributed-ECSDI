@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Agente Gestor de Compra.
+Agente Gestor de Productos.
+
 Esqueleto de agente usando los servicios web de Flask
 
 /comm es la entrada para la recepcion de mensajes del agente
@@ -8,7 +9,7 @@ Esqueleto de agente usando los servicios web de Flask
 
 Tiene una funcion AgentBehavior1 que se lanza como un thread concurrente
 
-Asume que el agente de registro esta en el puerto 9000
+
 
 @author: pau-laia-anna
 """
@@ -46,7 +47,6 @@ agn = Namespace("http://www.agentes.org#")
 
 # Contador de mensajes
 mss_cnt = 6
-
 # Datos del Agente
 AgVendedorExterno = Agent('AgVendedorExterno',
                           agn.AgVendedorExterno,
