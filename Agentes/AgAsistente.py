@@ -112,7 +112,10 @@ def initialize():
     Entrypoint de comunicacion
     """
     global nombreusuario,productos_recomendados
-
+    global products_list,completo,info_bill
+    products_list = []
+    completo = False
+    info_bill = []
     if request.method == 'GET':
         if nombreusuario != "":
             if len(productos_recomendados) == 0:
