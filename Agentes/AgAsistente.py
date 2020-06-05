@@ -434,7 +434,7 @@ def mis_productos():
 
 @app.route("/hacer_pedido", methods=['GET', 'POST'])
 def hacer_pedido():
-    global products_list
+    global products_list,completo,info_bill
     if request.method == 'GET':
         return render_template('nuevo_pedido.html', products=products_list, bill=None,intento=False, completo =False,campos_error = False)
     else:
@@ -476,8 +476,6 @@ def hacer_pedido():
             p.start()
             return render_template('nuevo_pedido.html', products=None, bill=comprar_productos(products_to_buy, city, priority, creditCard),intento=False, completo =False,campos_error = False)
         elif request.form['submit'] == "Visualizar datos completos":
-            global completo
-            global info_bill
             if not completo:
                 return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=True, completo=False)
             else:
@@ -491,6 +489,8 @@ def hacer_pedido():
                         info_bill["PrecioCompleto"]=round(float(o),2)
                 return render_template('nuevo_pedido.html', products=None, bill=info_bill,intento=False, completo =True)
         elif request.form['submit'] == "Volver al inicio":
+            completo = False
+            info_bill = []
             return flask.redirect("http://%s:%d/" % (hostname, port))
         elif request.form['submit'] == 'Volver a buscar':
             graph_historial = Graph();

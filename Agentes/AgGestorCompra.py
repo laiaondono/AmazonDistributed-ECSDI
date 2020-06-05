@@ -360,16 +360,16 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
     graph.add((accion, ONTO.Envia, URIRef(compra)))
     msg = build_message(graph, ACL.request, AgGestorCompra.uri, AgCentroLogistico.uri, accion, count)
     gr = send_message(msg, AgCentroLogistico.address)
-    global precio_total_compra
+    precio_total = 0
     for s,p,o in gr:
-        if p == ONTO.PrecioTotal:
-            precio_total_compra = float(o)
+        if p == ONTO.PrecioTotalCompra:
+            precio_total = float(o)
     PedidosFile = open('../Data/RegistroPedidos')
     graphfinal = Graph()
     graphfinal.parse(PedidosFile, format='turtle')
     grafrespuesta=Graph()
     grafrespuesta.add((compra, RDF.type, ONTO.Compra))
-    grafrespuesta.add((compra, ONTO.PrecioTotal, Literal(precio_total_compra, datatype=XSD.float)))
+    grafrespuesta.add((compra, ONTO.PrecioTotal, Literal(precio_total, datatype=XSD.float)))
     grafrespuesta.add((compra, ONTO.TarjetaCredito, Literal(tarjeta, datatype=XSD.string)))
     grafrespuesta.add((compra, ONTO.Ciudad, Literal(city, datatype=XSD.string)))
     grafrespuesta.add((compra,ONTO.DNI,Literal(dni)))
@@ -387,7 +387,6 @@ def procesar_compra(count=0.0, factura=Graph(), gm=Graph(), preutotal=0.0, conte
             grafrespuesta.add((compra,ONTO.NombreTransportista,Literal(o,datatype=XSD.string)))
         elif p == ONTO.Lote:
             grafrespuesta.add((compra,ONTO.Lote,s))
-    grafrespuesta.add((compra,ONTO.PrecioTotal,Literal(precio_total_compra, datatype=XSD.float)))
     graphfinal += grafrespuesta
     # Añadimos la nueva compra y lo escribimos otra vez.
     global ultimacompra

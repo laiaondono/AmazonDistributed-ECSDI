@@ -220,7 +220,7 @@ def communication():
                 gm.add((compraSujeto, ONTO.EntregadaPor, transportista))
                 gm.add((compraSujeto, ONTO.Lote, lote))
                 gm.add((compraSujeto, ONTO.FechaEntrega, Literal(fechaFinal)))
-                gm.add((compraSujeto, ONTO.PrecioTotal, Literal(precioFinal)))
+                gm.add((compraSujeto, ONTO.PrecioTotalCompra, Literal(precioFinal)))
                 grafo_confirmacion = Graph()
                 accion = ONTO["EnviarPaquete_" + str(count)]
                 grafo_confirmacion.add((accion, RDF.type, ONTO.EnviarPaquete))
