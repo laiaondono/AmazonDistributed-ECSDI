@@ -1,2 +1,2 @@
-# ECSDI_Practica
-Pràctica d'ECSDI Q2 2019-2020
+# AmazonDistributed 
+Simulation of a distributed system based on Amazon website.
